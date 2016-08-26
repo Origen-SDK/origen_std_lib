@@ -7,12 +7,12 @@ using namespace std;
 namespace origen {
 	namespace utils {
 
-		class Version {
+		class version {
 
 			public:
 
-				Version(std::string& version);
-				bool operator<(Version rhs);
+				version(std::string ver);
+				bool operator<(version rhs);
 	   	};
 
 	}

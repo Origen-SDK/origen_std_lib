@@ -39,7 +39,7 @@ tmp/src/%.o: src/%.cpp Makefile
 tmp/test/%.o: test/%.cpp Makefile
 	# Compiling TEST file $<
 	@#@g++ $(CFLAGS) -MMD -MP -c $< -o $@
-	@g++ -MMD -MP -c $< -o $@ -I include
+	@g++ -MMD -MP -c $< -o $@ -I include -I src
 
 # The dependency files are created as an offshoot of the object files,
 # this is a dummy rule to stop them being picked up by the tmp directory rule
