@@ -19,5 +19,6 @@ TEST_CASE("Version comparisons work") {
     REQUIRE( v >= "1.2.3" );
 }
 
-TEST_CASE("Origen.version is alive") {
+TEST_CASE("Origen::version() is alive") {
+	REQUIRE( Origen::version() > "0.0.0" );
 }
