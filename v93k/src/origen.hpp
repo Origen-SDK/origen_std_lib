@@ -3,10 +3,8 @@
 
 #include "origen/utils.hpp"
 
-namespace origen {
+namespace Origen {
 
 }
-
-
 
 #endif

@@ -3,9 +3,10 @@
 
 #include "origen/utils/version.hpp"
 
-namespace origen {
-	namespace utils {
-	};
-};
+namespace Origen {
+	namespace Utils {
+
+	}
+}
 
 #endif
