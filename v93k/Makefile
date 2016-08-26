@@ -12,7 +12,8 @@ ORIGENSRCS = $(shell find src/liborigen_v93k -type f -name "*.cpp")
 ORIGENOBJS = $(ORIGENSRCS:%.cpp=tmp/%.o)
 
 # Sources for building libtml_origen.so
-
+TMLSRCS = $(shell find src/libtml_origen -type f -name "*.cpp")
+TMLOBJS = $(TMLSRCS:%.cpp=tmp/%.o)
 
 # All tests
 TESTDIRS := $(shell find test -type d)
@@ -54,7 +55,7 @@ tmp/src/%.o: src/%.cpp Makefile
 	# Compiling SRC file $<
 	@# -fPIC here is necessary since these will end up in a .so
 	@# -g means include symbols for debugger
-	@g++ -MMD -MP -c -g -fPIC $< -o $@ -I src/liborigen_v93k -I src/libtml_origen
+	@g++ -O0 -g3 -Wall -MMD -MP -c -g -fPIC $< -o $@ -I src/liborigen_v93k -I src/libtml_origen
 
 # Makes all test tmp objects
 tmp/test/%.o: test/%.cpp Makefile
