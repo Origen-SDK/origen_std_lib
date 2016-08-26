@@ -1,6 +1,15 @@
 #ifndef ORIGEN_UTILS_VERSION_INCLUDED
 #define ORIGEN_UTILS_VERSION_INCLUDED
 
+// GCC adds these macros by default, which clobbers our functions
+// of the same name
+#ifdef major
+#undef major
+#endif
+#ifdef minor
+#undef minor
+#endif
+
 #include <string>
 #include <vector>
 using namespace std;
@@ -17,6 +26,10 @@ namespace Origen {
 		//   if (Origen.version < "1.1.0") {
 		//     // Do something
 		//   }
+		//
+		//   if (Origen.version.major() == 2) {
+		//     // Do something
+		//   }
 		class Version {
 
 			private:
@@ -30,10 +43,12 @@ namespace Origen {
 				int minor();
 				int tiny();
 				Version(string ver);
-				Version();
-				bool operator<(string rhs);
 				bool operator==(string rhs);
 				bool operator!=(string rhs);
+				bool operator<(string rhs);
+				bool operator<=(string rhs);
+				bool operator>(string rhs);
+				bool operator>=(string rhs);
 	   	};
 
 	}

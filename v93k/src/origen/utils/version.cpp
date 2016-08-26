@@ -13,12 +13,6 @@ namespace Origen {
 			_tiny = v[2];
 		}
 
-		Version::Version() {
-			_major = 1;
-			_minor = 2;
-			_tiny = 3;
-		}
-
 		int Version::major() {
 			return _major;
 		}
@@ -27,6 +21,38 @@ namespace Origen {
 		}
 		int Version::tiny() {
 			return _tiny;
+		}
+
+		bool Version::operator==(string rhs) {
+			vector<int> v = parse(rhs);
+			return _major == v[0] && _minor == v[1] && _tiny == v[2];
+		}
+
+		bool Version::operator!=(string rhs) {
+			vector<int> v = parse(rhs);
+			return _major != v[0] || _minor != v[1] || _tiny != v[2];
+		}
+
+		bool Version::operator<(string rhs) {
+			vector<int> v = parse(rhs);
+			return _major < v[0] ||
+				   (_major == v[0] && _minor < v[1]) ||
+				   (_major == v[0] && _minor == v[1] && _tiny < v[2]);
+		}
+
+		bool Version::operator<=(string rhs) {
+			return operator==(rhs) || operator<(rhs);
+		}
+
+		bool Version::operator>(string rhs) {
+			vector<int> v = parse(rhs);
+			return _major > v[0] ||
+				   (_major == v[0] && _minor > v[1]) ||
+				   (_major == v[0] && _minor == v[1] && _tiny > v[2]);
+		}
+
+		bool Version::operator>=(string rhs) {
+			return operator==(rhs) || operator>(rhs);
 		}
 
 		vector<int> Version::parse(string ver) {
