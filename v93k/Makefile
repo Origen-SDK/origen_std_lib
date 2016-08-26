@@ -8,17 +8,10 @@ SRCDEPS := $(SRCSRCS:%.cpp=tmp/%.d)
 
 TESTDIRS := $(shell find test -type d)
 TESTSRCS := $(shell find test -type f -name "*.cpp")
-#TESTHDRS := $(shell find test -type f -name "*.hpp")
 TESTOBJS := $(TESTSRCS:%.cpp=tmp/%.o)
 TESTDEPS := $(TESTSRCS:%.cpp=tmp/%.d)
-#TESTOBJS := $(patsubst %.cpp,%.o,$(TESTSRCS))
 
 TMPDIRS := $(TESTDIRS:%=tmp/%) $(SRCDIRS:%=tmp/%)
-
-
-#TESTDIRS=test
-#SRCDIRS=origen/utils origen/tml_Origen
-#OBJFILES := $(patsubst %.c,%.o,$(SRCFILES))
 
 .PHONY: all dist test clean
 
