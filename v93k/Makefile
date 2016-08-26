@@ -1,4 +1,5 @@
 # With thanks to this great tutorial: http://wiki.osdev.org/Makefile
+# Also good: https://www.youtube.com/watch?v=Q1Lnp_Xx7z4
 
 SRCDIRS := $(shell find src -type d)
 SRCSRCS := $(shell find src -type f -name "*.cpp")
