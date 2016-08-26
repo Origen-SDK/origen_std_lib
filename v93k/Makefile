@@ -7,11 +7,11 @@ SRCSRCS := $(shell find src -type f -name "*.cpp")
 SRCOBJS := $(SRCSRCS:%.cpp=tmp/%.o)
 SRCDEPS := $(SRCSRCS:%.cpp=tmp/%.d)
 
-# Sources for building liborigenv93k.so
-ORIGENSRCS = $(shell find src/origen -type f -name "*.cpp") src/origen.cpp
+# Sources for building liborigen_v93k.so
+ORIGENSRCS = $(shell find src/liborigen_v93k -type f -name "*.cpp")
 ORIGENOBJS = $(ORIGENSRCS:%.cpp=tmp/%.o)
 
-# Sources for building tml_origen.so
+# Sources for building libtml_origen.so
 
 
 # All tests
@@ -32,7 +32,7 @@ all: dist test
 
 -include $(SRCDEPS) $(TESTDEPS)
 
-dist: $(TMPDIRS) $(SRCOBJS) binaries/liborigenv93k.so
+dist: $(TMPDIRS) $(SRCOBJS) binaries/liborigen_v93k.so
 
 test: tmp/tests
 	@LD_LIBRARY_PATH=binaries tmp/tests
@@ -43,23 +43,23 @@ debug: tmp/tests
 binaries:
 	@mkdir binaries
 
-binaries/liborigenv93k.so: binaries $(ORIGENOBJS)
-	@g++ -shared $(ORIGENOBJS) -o binaries/liborigenv93k.so
+binaries/liborigen_v93k.so: binaries $(ORIGENOBJS)
+	@g++ -shared $(ORIGENOBJS) -o binaries/liborigen_v93k.so
 
 tmp/tests: $(TMPDIRS) $(TESTOBJS)
-	@g++ $(TESTOBJS) -o tmp/tests -L binaries -l origenv93k
+	@g++ $(TESTOBJS) -o tmp/tests -L binaries -l origen_v93k
 
 # Makes all src tmp objects
 tmp/src/%.o: src/%.cpp Makefile
 	# Compiling SRC file $<
 	@# -fPIC here is necessary since these will end up in a .so
 	@# -g means include symbols for debugger
-	@g++ -MMD -MP -c -g -fPIC $< -o $@ -I src
+	@g++ -MMD -MP -c -g -fPIC $< -o $@ -I src/liborigen_v93k -I src/libtml_origen
 
 # Makes all test tmp objects
 tmp/test/%.o: test/%.cpp Makefile
 	# Compiling TEST file $<
-	@g++ -MMD -MP -c -g $< -o $@ -I include -I src -I test
+	@g++ -MMD -MP -c -g $< -o $@ -I include -I src/liborigen_v93k -I src/libtml_origen -I test
 
 # The dependency files are created as an offshoot of the object files,
 # this is a dummy rule to stop them being picked up by the tmp directory rule
