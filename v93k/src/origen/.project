@@ -30,6 +30,10 @@
 					<value>make</value>
 				</dictionary>
 				<dictionary>
+					<key>org.eclipse.cdt.make.core.buildLocation</key>
+					<value>${workspace_loc:/origen/Debug}</value>
+				</dictionary>
+				<dictionary>
 					<key>org.eclipse.cdt.make.core.cleanBuildTarget</key>
 					<value>clean</value>
 				</dictionary>
@@ -73,6 +77,7 @@
 	<natures>
 		<nature>org.eclipse.cdt.core.cnature</nature>
 		<nature>org.eclipse.cdt.core.ccnature</nature>
+		<nature>com.verigy.itee.utm.project</nature>
 		<nature>org.eclipse.cdt.managedbuilder.core.managedBuildNature</nature>
 		<nature>org.eclipse.cdt.managedbuilder.core.ScannerConfigNature</nature>
 	</natures>
