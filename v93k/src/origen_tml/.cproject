@@ -5,9 +5,9 @@
 			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="com.verigy.itee.utm.editor.debug.488153067" moduleId="org.eclipse.cdt.core.settings" name="Debug">
 				<externalSettings>
 					<externalSetting>
-						<entry flags="VALUE_WORKSPACE_PATH" kind="includePath" name="/tml_origen"/>
-						<entry flags="VALUE_WORKSPACE_PATH" kind="libraryPath" name="/tml_origen/Debug"/>
-						<entry flags="RESOLVED" kind="libraryFile" name="tml_origen"/>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="includePath" name="/origen_tml"/>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="libraryPath" name="/origen_tml/Debug"/>
+						<entry flags="RESOLVED" kind="libraryFile" name="origen_tml"/>
 					</externalSetting>
 				</externalSettings>
 				<extensions>
@@ -20,11 +20,11 @@
 				</extensions>
 			</storageModule>
 			<storageModule moduleId="cdtBuildSystem" version="4.0.0">
-				<configuration artifactExtension="so" artifactName="tml_origen" buildArtefactType="org.eclipse.cdt.build.core.buildArtefactType.sharedLib" buildProperties="org.eclipse.cdt.build.core.buildType=org.eclipse.cdt.build.core.buildType.debug,org.eclipse.cdt.build.core.buildArtefactType=org.eclipse.cdt.build.core.buildArtefactType.sharedLib" cleanCommand="rm -rf" description="" id="com.verigy.itee.utm.editor.debug.488153067" name="Debug" parent="com.verigy.itee.utm.editor.debug">
+				<configuration artifactExtension="so" artifactName="origen_tml" buildArtefactType="org.eclipse.cdt.build.core.buildArtefactType.sharedLib" buildProperties="org.eclipse.cdt.build.core.buildType=org.eclipse.cdt.build.core.buildType.debug,org.eclipse.cdt.build.core.buildArtefactType=org.eclipse.cdt.build.core.buildArtefactType.sharedLib" cleanCommand="rm -rf" description="" id="com.verigy.itee.utm.editor.debug.488153067" name="Debug" parent="com.verigy.itee.utm.editor.debug">
 					<folderInfo id="com.verigy.itee.utm.editor.debug.488153067." name="/" resourcePath="">
 						<toolChain id="com.verigy.itee.utm.editor.toolchain.debug.1335431642" name="Test Method Library Tool Chain" superClass="com.verigy.itee.utm.editor.toolchain.debug">
 							<targetPlatform id="com.verigy.itee.utm.editor.targetplatform.debug.1128325242" isAbstract="false" name="Debug Platform" superClass="com.verigy.itee.utm.editor.targetplatform.debug"/>
-							<builder buildPath="${workspace_loc:/tml_origen/Debug}" id="com.verigy.itee.utm.editor.builder.debug.687829568" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="Gnu Make Builder" parallelizationNumber="1" superClass="com.verigy.itee.utm.editor.builder.debug"/>
+							<builder buildPath="${workspace_loc:/origen_tml/Debug}" id="com.verigy.itee.utm.editor.builder.debug.687829568" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="Gnu Make Builder" parallelizationNumber="1" superClass="com.verigy.itee.utm.editor.builder.debug"/>
 							<tool id="com.verigy.itee.utm.editor.tool.cpp.compiler.debug.1823665152" name="GCC C++ Compiler" superClass="com.verigy.itee.utm.editor.tool.cpp.compiler.debug">
 								<option id="gnu.cpp.compiler.so.debug.option.optimization.level.1625374808" name="Optimization Level" superClass="gnu.cpp.compiler.so.debug.option.optimization.level" value="gnu.cpp.compiler.optimization.level.none" valueType="enumerated"/>
 								<option id="gnu.cpp.compiler.so.debug.option.debugging.level.720547053" name="Debug Level" superClass="gnu.cpp.compiler.so.debug.option.debugging.level" value="gnu.cpp.compiler.debugging.level.max" valueType="enumerated"/>
@@ -79,9 +79,9 @@
 			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="com.verigy.itee.utm.editor.release.1396579840" moduleId="org.eclipse.cdt.core.settings" name="Release">
 				<externalSettings>
 					<externalSetting>
-						<entry flags="VALUE_WORKSPACE_PATH" kind="includePath" name="/tml_origen"/>
-						<entry flags="VALUE_WORKSPACE_PATH" kind="libraryPath" name="/tml_origen/Release"/>
-						<entry flags="RESOLVED" kind="libraryFile" name="tml_origen"/>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="includePath" name="/origen_tml"/>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="libraryPath" name="/origen_tml/Release"/>
+						<entry flags="RESOLVED" kind="libraryFile" name="origen_tml"/>
 					</externalSetting>
 				</externalSettings>
 				<extensions>
@@ -94,11 +94,11 @@
 				</extensions>
 			</storageModule>
 			<storageModule moduleId="cdtBuildSystem" version="4.0.0">
-				<configuration artifactExtension="so" artifactName="tml_origen" buildArtefactType="org.eclipse.cdt.build.core.buildArtefactType.sharedLib" buildProperties="org.eclipse.cdt.build.core.buildType=org.eclipse.cdt.build.core.buildType.release,org.eclipse.cdt.build.core.buildArtefactType=org.eclipse.cdt.build.core.buildArtefactType.sharedLib" cleanCommand="rm -fr" description="" id="com.verigy.itee.utm.editor.release.1396579840" name="Release" parent="com.verigy.itee.utm.editor.release">
+				<configuration artifactExtension="so" artifactName="origen_tml" buildArtefactType="org.eclipse.cdt.build.core.buildArtefactType.sharedLib" buildProperties="org.eclipse.cdt.build.core.buildType=org.eclipse.cdt.build.core.buildType.release,org.eclipse.cdt.build.core.buildArtefactType=org.eclipse.cdt.build.core.buildArtefactType.sharedLib" cleanCommand="rm -fr" description="" id="com.verigy.itee.utm.editor.release.1396579840" name="Release" parent="com.verigy.itee.utm.editor.release">
 					<folderInfo id="com.verigy.itee.utm.editor.release.1396579840." name="/" resourcePath="">
 						<toolChain id="com.verigy.itee.utm.editor.toolchain.release.1223197493" name="Test Method Library Tool Chain" superClass="com.verigy.itee.utm.editor.toolchain.release">
 							<targetPlatform id="com.verigy.itee.utm.editor.targetplatform.release.760204515" isAbstract="false" name="Release Platform" superClass="com.verigy.itee.utm.editor.targetplatform.release"/>
-							<builder buildPath="${workspace_loc:/tml_origen/Release}" id="com.verigy.itee.utm.editor.builder.release.1589064053" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="Gnu Make Builder" parallelizationNumber="1" superClass="com.verigy.itee.utm.editor.builder.release"/>
+							<builder buildPath="${workspace_loc:/origen_tml/Release}" id="com.verigy.itee.utm.editor.builder.release.1589064053" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="Gnu Make Builder" parallelizationNumber="1" superClass="com.verigy.itee.utm.editor.builder.release"/>
 							<tool id="com.verigy.itee.utm.editor.tool.cpp.compiler.release.127757030" name="GCC C++ Compiler" superClass="com.verigy.itee.utm.editor.tool.cpp.compiler.release">
 								<option id="gnu.cpp.compiler.so.release.option.optimization.level.1066695998" name="Optimization Level" superClass="gnu.cpp.compiler.so.release.option.optimization.level" value="gnu.cpp.compiler.optimization.level.most" valueType="enumerated"/>
 								<option id="gnu.cpp.compiler.so.release.option.debugging.level.888945226" name="Debug Level" superClass="gnu.cpp.compiler.so.release.option.debugging.level" value="gnu.cpp.compiler.debugging.level.none" valueType="enumerated"/>
@@ -150,7 +150,7 @@
 		</cconfiguration>
 	</storageModule>
 	<storageModule moduleId="cdtBuildSystem" version="4.0.0">
-		<project id="tml_origen.com.verigy.itee.utm.editor.utmproject.52391091" name="Test Method Library" projectType="com.verigy.itee.utm.editor.utmproject"/>
+		<project id="origen_tml.com.verigy.itee.utm.editor.utmproject.52391091" name="Test Method Library" projectType="com.verigy.itee.utm.editor.utmproject"/>
 	</storageModule>
 	<storageModule moduleId="scannerConfiguration">
 		<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
