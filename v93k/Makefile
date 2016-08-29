@@ -79,12 +79,19 @@ binaries/libtml_origen.so: binaries $(TMLOBJS)
 tmp/tests: $(TMPDIRS) $(TESTOBJS)
 	@g++ $(TESTOBJS) -o tmp/tests -L binaries -l origen
 
-# Makes all src tmp objects
-tmp/src/%.o: src/%.cpp Makefile
+# Makes all origen objects
+tmp/src/origen/%.o: src/origen/%.cpp Makefile
 	# Compiling SRC file $<
 	@# -fPIC here is necessary since these will end up in a .so
 	@# -g means include symbols for debugger
 	@g++ -O0 -g3 -Wall -MMD -MP -c -g -fPIC $< -o $@ $(SMTINC)
+
+# Makes all origen_tml objects
+tmp/src/tml_origen/%.o: src/tml_origen/%.cpp Makefile
+	# Compiling SRC file $<
+	@# -fPIC here is necessary since these will end up in a .so
+	@# -g means include symbols for debugger
+	@g++ -O0 -g3 -Wall -MMD -MP -c -g -fPIC $< -o $@ $(SMTINC) -I src/origen
 
 # Makes all test tmp objects
 tmp/test/%.o: test/%.cpp Makefile
