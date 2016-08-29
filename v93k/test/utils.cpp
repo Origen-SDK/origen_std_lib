@@ -1,5 +1,5 @@
 #include "test_helper.hpp"
-#include "origen/utils/version.hpp"
+#include "origen.hpp"
 
 Origen::Utils::Version v("1.2.3");
 

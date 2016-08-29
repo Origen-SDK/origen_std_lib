@@ -8,11 +8,16 @@
 #endif
 
 #include "origen/utils.hpp"
+#include "origen/test_method.hpp"
+#include "origen/environment.hpp"
 #include "mapi.hpp"
+
+//#define ORIGEN_INIT(...) Origen::_init(this, ##__VA_ARGS__ )
 
 namespace Origen {
 
 	Utils::Version version();
+	Environment& env();
 
 }
 
