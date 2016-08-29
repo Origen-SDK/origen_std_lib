@@ -1,4 +1,4 @@
-#include "origen/utils/version.hpp"
+#include "version.hpp"
 using namespace std;
 
 #include <sstream>
