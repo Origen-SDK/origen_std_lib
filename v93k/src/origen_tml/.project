@@ -3,6 +3,7 @@
 	<name>origen_tml</name>
 	<comment></comment>
 	<projects>
+		<project>origen</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
