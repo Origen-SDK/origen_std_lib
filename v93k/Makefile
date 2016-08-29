@@ -84,7 +84,7 @@ tmp/src/%.o: src/%.cpp Makefile
 	# Compiling SRC file $<
 	@# -fPIC here is necessary since these will end up in a .so
 	@# -g means include symbols for debugger
-	@g++ -O0 -g3 -Wall -MMD -MP -c -g -fPIC $< -o $@ -I src/origen -I src/tml_origen $(SMTINC)
+	@g++ -O0 -g3 -Wall -MMD -MP -c -g -fPIC $< -o $@ $(SMTINC)
 
 # Makes all test tmp objects
 tmp/test/%.o: test/%.cpp Makefile
