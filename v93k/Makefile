@@ -46,6 +46,8 @@ else
 	LINKFLAGS := -lboost_system
 endif
 
+COMPILEFLAGS := -O0 -g3 -Wall -MMD -MP 
+
 .PHONY: all dist test clean debug package
 
 all: dist test
@@ -88,21 +90,17 @@ tmp/tests: $(TMPDIRS) $(TESTOBJS)
 # Makes all origen objects
 tmp/src/origen/%.o: src/origen/%.cpp Makefile
 	# Compiling SRC file $<
-	@# -fPIC here is necessary since these will end up in a .so
-	@# -g means include symbols for debugger
-	@g++ -O0 -g3 -Wall -MMD -MP -c -g -fPIC $< -o $@ $(SMTINC)
+	@g++ $(COMPILEFLAGS) -c -fPIC $< -o $@ $(SMTINC)
 
 # Makes all origen_tml objects
 tmp/src/origen_tml/%.o: src/origen_tml/%.cpp Makefile
 	# Compiling SRC file $<
-	@# -fPIC here is necessary since these will end up in a .so
-	@# -g means include symbols for debugger
-	@g++ -O0 -g3 -Wall -MMD -MP -c -g -fPIC $< -o $@ $(SMTINC) -I src/origen
+	@g++ $(COMPILEFLAGS) -c -fPIC $< -o $@ $(SMTINC) -I src/origen
 
 # Makes all test tmp objects
 tmp/test/%.o: test/%.cpp Makefile
 	# Compiling TEST file $<
-	@g++ -MMD -MP -c -g $< -o $@ -I include -I src/origen -I src/origen_tml -I test $(SMTINC)
+	@g++ -MMD -MP -c -g3 $< -o $@ -I include -I src/origen -I src/origen_tml -I test $(SMTINC)
 
 # The dependency files are created as an offshoot of the object files,
 # this is a dummy rule to stop them being picked up by the tmp directory rule
