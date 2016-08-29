@@ -3,11 +3,17 @@
 
 // GCC adds these macros by default, which clobbers our functions
 // of the same name
+#if (defined(__GNUC__) || defined(__GNUG__)) && !(defined(__clang__) || defined(__INTEL_COMPILER))
+// Not exactly sure the version that this becomes a problem, but for
+// now this fixes the build on the V93K production system
+#if (__GNUC_MINOR__ > 1)
 #ifdef major
 #undef major
 #endif
 #ifdef minor
 #undef minor
+#endif
+#endif
 #endif
 
 #include <string>

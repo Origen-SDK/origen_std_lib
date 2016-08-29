@@ -7,16 +7,16 @@ TEST_CASE("Version comparisons work") {
 	REQUIRE( v.major() == 1);
 	REQUIRE( v.minor() == 2);
 	REQUIRE( v.tiny() == 3);
-    REQUIRE( v == "1.2.3" );
-    REQUIRE( v != "2.2.3" );
-    REQUIRE( v < "2.2.3" );
-    REQUIRE( v < "1.8.3" );
-    REQUIRE( v < "1.2.4" );
-    REQUIRE( v <= "1.2.4" );
-    REQUIRE( v <= "1.2.3" );
-    REQUIRE( v > "1.1.3" );
-    REQUIRE( v >= "1.1.3" );
-    REQUIRE( v >= "1.2.3" );
+	REQUIRE( v == "1.2.3" );
+	REQUIRE( v != "2.2.3" );
+	REQUIRE( v < "2.2.3" );
+	REQUIRE( v < "1.8.3" );
+	REQUIRE( v < "1.2.4" );
+	REQUIRE( v <= "1.2.4" );
+	REQUIRE( v <= "1.2.3" );
+	REQUIRE( v > "1.1.3" );
+	REQUIRE( v >= "1.1.3" );
+	REQUIRE( v >= "1.2.3" );
 }
 
 TEST_CASE("Origen::version() is alive") {

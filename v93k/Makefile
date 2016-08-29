@@ -24,6 +24,16 @@ TESTDEPS := $(TESTSRCS:%.cpp=tmp/%.d)
 TMPDIRS := $(TESTDIRS:%=tmp/%) $(SRCDIRS:%=tmp/%)
 
 
+SMTCODEDIRS := 	-I /opt/hp93000/soc/prod_com/include \
+				-I /opt/hp93000/soc/prod_com/include/MAPI \
+				-I /opt/hp93000/soc/testmethod/include \
+				-I /opt/hp93000/soc/com/include \
+				-I /opt/hp93000/soc/pws/lib \
+				-I /opt/hp93000/soc/segments/tml/include \
+				-I /opt/hp93000/soc/segments/tml/include/ext_include \
+				-I /opt/hp93000/soc/prod_com/rdi/include
+
+
 .PHONY: all dist test clean debug
 
 all: dist test
@@ -55,12 +65,12 @@ tmp/src/%.o: src/%.cpp Makefile
 	# Compiling SRC file $<
 	@# -fPIC here is necessary since these will end up in a .so
 	@# -g means include symbols for debugger
-	@g++ -O0 -g3 -Wall -MMD -MP -c -g -fPIC $< -o $@ -I src/liborigen_v93k -I src/libtml_origen
+	@g++ -O0 -g3 -Wall -MMD -MP -c -g -fPIC $< -o $@ -I src/liborigen_v93k -I src/libtml_origen $(SMTCODEDIRS)
 
 # Makes all test tmp objects
 tmp/test/%.o: test/%.cpp Makefile
 	# Compiling TEST file $<
-	@g++ -MMD -MP -c -g $< -o $@ -I include -I src/liborigen_v93k -I src/libtml_origen -I test
+	@g++ -MMD -MP -c -g $< -o $@ -I include -I src/liborigen_v93k -I src/libtml_origen -I test $(SMTCODEDIRS)
 
 # The dependency files are created as an offshoot of the object files,
 # this is a dummy rule to stop them being picked up by the tmp directory rule
