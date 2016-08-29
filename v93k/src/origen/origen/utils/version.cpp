@@ -23,6 +23,16 @@ namespace Origen {
 			return _tiny;
 		}
 
+		string Version::str() {
+			ostringstream str;
+			str << _major;
+			str << ".";
+			str << _minor;
+			str << ".";
+			str << _tiny;
+			return str.str();
+		}
+
 		bool Version::operator==(string rhs) {
 			vector<int> v = parse(rhs);
 			return _major == v[0] && _minor == v[1] && _tiny == v[2];

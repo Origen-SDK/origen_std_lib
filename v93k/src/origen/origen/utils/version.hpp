@@ -55,6 +55,7 @@ namespace Origen {
 				bool operator<=(string rhs);
 				bool operator>(string rhs);
 				bool operator>=(string rhs);
+				string str();
 	   	};
 
 	}
