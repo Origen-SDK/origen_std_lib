@@ -7,8 +7,4 @@ namespace Origen {
 		return v;
 	}
 
-	Environment& env() {
-		return Environment::getInstance();
-	}
-
 }
