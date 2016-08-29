@@ -23,23 +23,26 @@ TESTDEPS := $(TESTSRCS:%.cpp=tmp/%.d)
 
 TMPDIRS := $(TESTDIRS:%=tmp/%) $(SRCDIRS:%=tmp/%)
 
+SMTROOT := /opt
 
-SMTCODEDIRS := 	-I /opt/hp93000/soc/prod_com/include \
-				-I /opt/hp93000/soc/prod_com/include/MAPI \
-				-I /opt/hp93000/soc/testmethod/include \
-				-I /opt/hp93000/soc/com/include \
-				-I /opt/hp93000/soc/pws/lib \
-				-I /opt/hp93000/soc/segments/tml/include \
-				-I /opt/hp93000/soc/segments/tml/include/ext_include \
-				-I /opt/hp93000/soc/prod_com/rdi/include
+SMTPATHS :=	hp93000/soc/prod_com/include \
+			hp93000/soc/prod_com/include/MAPI \
+			hp93000/soc/testmethod/include \
+			hp93000/soc/com/include \
+			hp93000/soc/pws/lib \
+			hp93000/soc/segments/tml/include \
+			hp93000/soc/segments/tml/include/ext_include \
+			hp93000/soc/prod_com/rdi/include
 
+SMTDIRS := $(SMTPATHS:%=$(SMTROOT)/%)
 
-.PHONY: all dist test clean debug
+SMTDIRSTMP := $(SMTPATHS:%=/tmp/package/%)
+
+SMTINC := $(SMTDIRS:%=-I%)
+
+.PHONY: all dist test clean debug package
 
 all: dist test
-#	@for file in $(SRCFILES); do echo $$file; done
-#	@for file in $(OBJECTS); do echo $$file; done
-#	@for file in $(TMPDIRS); do echo $$file; done
 
 -include $(SRCDEPS) $(TESTDEPS)
 
@@ -50,6 +53,19 @@ test: tmp/tests
 
 debug: tmp/tests
 	@LD_LIBRARY_PATH=binaries gdb tmp/tests
+
+# Package up the 93000 dependencies into a tarball, so that they can
+# be referenced in a dev environment away from the tester
+package: $(SMTDIRSTMP) tmp
+	@for dir in $(SMTDIRS); do \
+		cp -R $$dir $${dir/\/opt/\/tmp\/package}/..; \
+		chmod +w -R $${dir/\/opt/\/tmp\/package}/..; \
+	done
+	@cd /tmp/package; \
+	tar -cvzf hp93000.tar.gz hp93000
+	@mv /tmp/package/hp93000.tar.gz tmp/.
+	#
+	# Created tmp/hp93000.tar.gz
 
 binaries:
 	@mkdir binaries
@@ -65,12 +81,12 @@ tmp/src/%.o: src/%.cpp Makefile
 	# Compiling SRC file $<
 	@# -fPIC here is necessary since these will end up in a .so
 	@# -g means include symbols for debugger
-	@g++ -O0 -g3 -Wall -MMD -MP -c -g -fPIC $< -o $@ -I src/liborigen_v93k -I src/libtml_origen $(SMTCODEDIRS)
+	@g++ -O0 -g3 -Wall -MMD -MP -c -g -fPIC $< -o $@ -I src/liborigen_v93k -I src/libtml_origen $(SMTINC)
 
 # Makes all test tmp objects
 tmp/test/%.o: test/%.cpp Makefile
 	# Compiling TEST file $<
-	@g++ -MMD -MP -c -g $< -o $@ -I include -I src/liborigen_v93k -I src/libtml_origen -I test $(SMTCODEDIRS)
+	@g++ -MMD -MP -c -g $< -o $@ -I include -I src/liborigen_v93k -I src/libtml_origen -I test $(SMTINC)
 
 # The dependency files are created as an offshoot of the object files,
 # this is a dummy rule to stop them being picked up by the tmp directory rule
@@ -81,6 +97,13 @@ tmp/%.d:
 tmp/%:
 	@mkdir -p $@
 
+/tmp/%:
+	@mkdir -p $@
+
+tmp:
+	@mkdir tmp
+
 clean:
 	@rm -fr tmp
 	@rm -fr binaries
+	@rm -fr /tmp/package
