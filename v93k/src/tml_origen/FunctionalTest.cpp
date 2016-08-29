@@ -2,6 +2,7 @@
 
 //for test method API interfaces
 #include "mapi.hpp"
+#include "origen.hpp"
 using namespace std;
 
 /**
