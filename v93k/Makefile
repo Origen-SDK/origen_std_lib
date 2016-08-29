@@ -40,6 +40,12 @@ SMTDIRSTMP := $(SMTPATHS:%=/tmp/package/%)
 
 SMTINC := $(SMTDIRS:%=-I%)
 
+ifeq ($(SMTROOT),/opt)
+	LINKFLAGS := 
+else
+	LINKFLAGS := -lboost_system
+endif
+
 .PHONY: all dist test clean debug package
 
 all: dist test
@@ -71,13 +77,13 @@ binaries:
 	@mkdir binaries
 
 binaries/liborigen.so: binaries $(ORIGENOBJS)
-	@g++ -shared $(ORIGENOBJS) -o binaries/liborigen.so
+	@g++ -shared $(ORIGENOBJS) -o binaries/liborigen.so $(LINKFLAGS)
 
 binaries/liborigen_tml.so: binaries $(TMLOBJS)
-	@g++ -shared $(TMLOBJS) -o binaries/liborigen_tml.so
+	@g++ -shared $(TMLOBJS) -o binaries/liborigen_tml.so $(LINKFLAGS)
 
 tmp/tests: $(TMPDIRS) $(TESTOBJS)
-	@g++ $(TESTOBJS) -o tmp/tests -L binaries -l origen
+	@g++ $(TESTOBJS) -o tmp/tests -L binaries -l origen $(LINKFLAGS)
 
 # Makes all origen objects
 tmp/src/origen/%.o: src/origen/%.cpp Makefile
