@@ -3,8 +3,8 @@
 namespace Origen {
 
 Utils::Version version() {
-	Utils::Version v(ORIGEN_VERSION);
-	return v;
+    Utils::Version v(ORIGEN_VERSION);
+    return v;
 }
 
 }

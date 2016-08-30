@@ -48,7 +48,7 @@ endif
 
 COMPILEFLAGS := -O0 -g3 -Wall -MMD -MP 
 
-.PHONY: all dist test clean debug package
+.PHONY: all dist test clean debug package pretty
 
 all: dist test
 
@@ -61,6 +61,10 @@ test: tmp/tests
 
 debug: tmp/tests
 	@LD_LIBRARY_PATH=binaries gdb tmp/tests
+
+pretty:
+	@astyle --suffix=none --recursive src/*.cpp src/*.hpp
+
 
 # Package up the 93000 dependencies into a tarball, so that they can
 # be referenced in a dev environment away from the tester
