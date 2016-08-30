@@ -13,7 +13,7 @@
 
 namespace Origen {
 
-	Utils::Version version();
+Utils::Version version();
 
 }
 
