@@ -1,5 +1,5 @@
-#ifndef ORIGEN_TEST_METHOD_FUNCTIONAL_TEST_INCLUDED
-#define ORIGEN_TEST_METHOD_FUNCTIONAL_TEST_INCLUDED
+#ifndef ORIGEN_TEST_METHOD_DC_MEASUREMENT_INCLUDED
+#define ORIGEN_TEST_METHOD_DC_MEASUREMENT_INCLUDED
 
 #include "../test_method.hpp"
 #include "mapi.hpp"
@@ -10,10 +10,10 @@ using namespace std;
 namespace Origen {
 namespace TestMethod {
 
-class FunctionalTest {
+class DCMeasurement {
 
 public:
-    virtual ~FunctionalTest() {
+    virtual ~DCMeasurement() {
     }
     ;
     void SMC_backgroundProcessing();
@@ -52,7 +52,7 @@ protected:
     vector<int> results;
 };
 
-void FunctionalTest::executeTest() {
+void DCMeasurement::executeTest() {
 
     int site, physicalSites;
     ARRAY_I sites;
@@ -99,7 +99,7 @@ void FunctionalTest::executeTest() {
 
 //void TestMethod::SMC_backgroundProcessing(const ARRAY_I& sites,
 //		const string& label, const string& vsup) {
-void FunctionalTest::SMC_backgroundProcessing() {
+void DCMeasurement::SMC_backgroundProcessing() {
     if (processFunc()) {
         for (int i = 0; i < activeSites.size(); i++) {
             SMC_TEST("", testSuiteName, LIMIT(TM::GE, 1, TM::LE, 1), results[activeSites[i]]);

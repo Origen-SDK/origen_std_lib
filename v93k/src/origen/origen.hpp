@@ -8,8 +8,6 @@
 #endif
 
 #include "origen/utils.hpp"
-#include "origen/test_method.hpp"
-#include "mapi.hpp"
 
 namespace Origen {
 

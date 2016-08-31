@@ -1,10 +1,9 @@
 #include "testmethod.hpp"
 
+//for test method API interfaces
 #include "mapi.hpp"
-#include "rdi.hpp"
-#include "origen/test_method.hpp"
-
 using namespace std;
+#include "origen/test_method/functional_test.hpp"
 
 /**
  * Test method class.
