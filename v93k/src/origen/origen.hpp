@@ -8,6 +8,7 @@
 #endif
 
 #include "origen/utils.hpp"
+#include "origen/helpers.hpp"
 
 namespace Origen {
 

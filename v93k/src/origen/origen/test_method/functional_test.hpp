@@ -40,9 +40,7 @@ void FunctionalTest::execute() {
 
     ON_FIRST_INVOCATION_BEGIN();
 
-    label = Primary.getLabel();
-    // Enable Smart Calc
-    rdi.hiddenUpload(TA::ALL);
+    rdi.hiddenUpload(TA::ALL); // Enable Smart Calc
     GET_ACTIVE_SITES(activeSites);
     physicalSites = GET_CONFIGURED_SITES(sites);
     results.resize(physicalSites + 1);
@@ -60,8 +58,8 @@ void FunctionalTest::execute() {
     postTestFunc();
 
     FOR_EACH_SITE_BEGIN();
-    site = CURRENT_SITE_NUMBER();
-    results[site] = rdi.id("f1").getPassFail();
+        site = CURRENT_SITE_NUMBER();
+        results[site] = rdi.id("f1").getPassFail();
     FOR_EACH_SITE_END();
 
     if (preProcessFunc()) {
@@ -71,8 +69,7 @@ void FunctionalTest::execute() {
         postProcessFunc();
     }
 
-    ON_FIRST_INVOCATION_END()
-    ;
+    ON_FIRST_INVOCATION_END();
 
 }
 
@@ -81,7 +78,8 @@ void FunctionalTest::execute() {
 void FunctionalTest::SMC_backgroundProcessing() {
     if (processFunc()) {
         for (int i = 0; i < activeSites.size(); i++) {
-            SMC_TEST("", testSuiteName, LIMIT(TM::GE, 1, TM::LE, 1), results[activeSites[i]]);
+            int site = activeSites[i];
+            SMC_TEST(site, "", testSuiteName, LIMIT(TM::GE, 1, TM::LE, 1), results[activeSites[i]]);
         }
     }
     postProcessFunc();

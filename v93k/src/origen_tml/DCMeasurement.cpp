@@ -71,8 +71,9 @@ protected:
    */
   virtual void run()
   {
-    origen.forceValue(mForceValue).pin(mPin).execute();
-    return;
+    origen.applyShutdown(mApplyShutdown).forceValue(mForceValue)
+            .shutdownPattern(mShutdownPattern).measure(mMeasure)
+            .settlingTime(mSettlingTime).pin(mPin).execute();
   }
 
   /**
