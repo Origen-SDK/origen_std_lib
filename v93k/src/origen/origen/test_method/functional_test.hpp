@@ -95,13 +95,9 @@ void FunctionalTest::executeTest() {
 //void TestMethod::SMC_backgroundProcessing(const ARRAY_I& sites,
 //		const string& label, const string& vsup) {
 void FunctionalTest::SMC_backgroundProcessing() {
-    const STRING& pinName = "";
-    const STRING& testName = "";
-    const STRING& testText = "";
-
     if (processFunc()) {
         for (int i = 0; i < activeSites.size(); i++) {
-            SMC_TEST(pinName, testName, V93kLimits::tmLimits, results[activeSites[i]], true, testText);
+            SMC_TEST("", testSuiteName, LIMIT(TM::GE, 1, TM::LE, 1), results[activeSites[i]]);
         }
     }
     postProcessFunc();
