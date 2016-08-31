@@ -71,7 +71,7 @@ protected:
    */
   virtual void run()
   {
-    //Add your test code here.
+    origen.forceValue(mForceValue).pin(mPin).execute();
     return;
   }
 

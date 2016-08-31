@@ -1,7 +1,7 @@
 #ifndef ORIGEN_TEST_METHOD_DC_MEASUREMENT_INCLUDED
 #define ORIGEN_TEST_METHOD_DC_MEASUREMENT_INCLUDED
 
-#include "../test_method.hpp"
+#include "base.hpp"
 #include "mapi.hpp"
 #include "rdi.hpp"
 
@@ -10,49 +10,40 @@ using namespace std;
 namespace Origen {
 namespace TestMethod {
 
-class DCMeasurement {
+class DCMeasurement: public Base {
+
+    int _applyShutdown;
+    string _shutdownPattern;
+    string _measure;
+    double _settlingTime;
+    string _pin;
+    double _forceValue;
+
 
 public:
-    virtual ~DCMeasurement() {
-    }
-    ;
+    virtual ~DCMeasurement() { };
     void SMC_backgroundProcessing();
+    void execute();
+
+    DCMeasurement & applyShutdown(int v) { _applyShutdown = v; return *this; }
+    DCMeasurement & measure(string v) { _measure = v; return *this; }
+    DCMeasurement & settlingTime(double v) { _settlingTime = v; return *this; }
+    DCMeasurement & pin(string v) { _pin = v; return *this; }
+    DCMeasurement & forceValue(double v) { _forceValue = v; return *this; }
 
 protected:
-    // Main APIs to perform a test
-    void executeTest();
+    // All test methods must implement this function
+    DCMeasurement & getThis() { return *this; }
 
-    // Default callback handlers
-    virtual bool preTestFunc() {
-        return true;
-    }
-    ;
-    virtual bool postTestFunc() {
-        return true;
-    }
-    ;
-    virtual bool preProcessFunc() {
-        return true;
-    }
-    ;
-    virtual bool processFunc() {
-        return true;
-    }
-    ;
-    virtual bool postProcessFunc() {
-        return true;
-    }
-    ;
-
-    // Internal variables, declared outside the the main execute function body since
-    // they may be useful in callback functions
+    // Internal variables, declared outside the the execute function body since
+    // they may be useful to refer to in callback functions
     ARRAY_I activeSites;
     string testSuiteName;
     string label;
     vector<int> results;
 };
 
-void DCMeasurement::executeTest() {
+void DCMeasurement::execute() {
 
     int site, physicalSites;
     ARRAY_I sites;
@@ -97,8 +88,6 @@ void DCMeasurement::executeTest() {
 
 }
 
-//void TestMethod::SMC_backgroundProcessing(const ARRAY_I& sites,
-//		const string& label, const string& vsup) {
 void DCMeasurement::SMC_backgroundProcessing() {
     if (processFunc()) {
         for (int i = 0; i < activeSites.size(); i++) {

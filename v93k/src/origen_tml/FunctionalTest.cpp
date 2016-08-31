@@ -28,8 +28,7 @@ protected:
      *This test is invoked per site.
      */
     virtual void run() {
-        executeTest();
-        return;
+        origen.execute();
     }
 
     virtual bool preTestFunc() {

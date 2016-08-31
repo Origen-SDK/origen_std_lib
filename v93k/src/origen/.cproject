@@ -24,11 +24,11 @@
 					<folderInfo id="com.verigy.itee.utm.editor.debug.1736243335." name="/" resourcePath="">
 						<toolChain id="com.verigy.itee.utm.editor.toolchain.debug.526768208" name="Test Method Library Tool Chain" superClass="com.verigy.itee.utm.editor.toolchain.debug">
 							<targetPlatform id="com.verigy.itee.utm.editor.targetplatform.debug.1227304618" isAbstract="false" name="Debug Platform" superClass="com.verigy.itee.utm.editor.targetplatform.debug"/>
-							<builder buildPath="${workspace_loc:/origen/Debug}" id="com.verigy.itee.utm.editor.builder.debug.351877567" managedBuildOn="true" name="Gnu Make Builder.Debug" parallelizationNumber="1" superClass="com.verigy.itee.utm.editor.builder.debug"/>
+							<builder buildPath="${workspace_loc:/origen/Debug}" id="com.verigy.itee.utm.editor.builder.debug.351877567" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="Gnu Make Builder" parallelizationNumber="1" superClass="com.verigy.itee.utm.editor.builder.debug"/>
 							<tool id="com.verigy.itee.utm.editor.tool.cpp.compiler.debug.1041080205" name="GCC C++ Compiler" superClass="com.verigy.itee.utm.editor.tool.cpp.compiler.debug">
-								<option id="gnu.cpp.compiler.so.debug.option.optimization.level.1925859441" superClass="gnu.cpp.compiler.so.debug.option.optimization.level" value="gnu.cpp.compiler.optimization.level.none" valueType="enumerated"/>
-								<option id="gnu.cpp.compiler.so.debug.option.debugging.level.733025063" superClass="gnu.cpp.compiler.so.debug.option.debugging.level" value="gnu.cpp.compiler.debugging.level.max" valueType="enumerated"/>
-								<option id="com.verigy.itee.utm.editor.tool.cpp.compiler.option.debug.1271497711" superClass="com.verigy.itee.utm.editor.tool.cpp.compiler.option.debug" valueType="includePath">
+								<option id="gnu.cpp.compiler.so.debug.option.optimization.level.1925859441" name="Optimization Level" superClass="gnu.cpp.compiler.so.debug.option.optimization.level" value="gnu.cpp.compiler.optimization.level.none" valueType="enumerated"/>
+								<option id="gnu.cpp.compiler.so.debug.option.debugging.level.733025063" name="Debug Level" superClass="gnu.cpp.compiler.so.debug.option.debugging.level" value="gnu.cpp.compiler.debugging.level.max" valueType="enumerated"/>
+								<option id="com.verigy.itee.utm.editor.tool.cpp.compiler.option.debug.1271497711" name="Include paths (-I)" superClass="com.verigy.itee.utm.editor.tool.cpp.compiler.option.debug" valueType="includePath">
 									<listOptionValue builtIn="false" value="${HP83000_ROOT}/prod_com/include"/>
 									<listOptionValue builtIn="false" value="${HP83000_ROOT}/prod_com/include/MAPI"/>
 									<listOptionValue builtIn="false" value="${HP83000_ROOT}/testmethod/include"/>
@@ -41,9 +41,9 @@
 								<inputType id="cdt.managedbuild.tool.gnu.cpp.compiler.input.209100728" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.input"/>
 							</tool>
 							<tool id="com.verigy.itee.utm.editor.tool.c.compiler.debug.1867235224" name="GCC C Compiler" superClass="com.verigy.itee.utm.editor.tool.c.compiler.debug">
-								<option defaultValue="gnu.c.optimization.level.none" id="gnu.c.compiler.so.debug.option.optimization.level.1207381689" superClass="gnu.c.compiler.so.debug.option.optimization.level" valueType="enumerated"/>
-								<option id="gnu.c.compiler.so.debug.option.debugging.level.1223643543" superClass="gnu.c.compiler.so.debug.option.debugging.level" value="gnu.c.debugging.level.max" valueType="enumerated"/>
-								<option id="com.verigy.itee.utm.editor.tool.c.compiler.option.debug.209739423" superClass="com.verigy.itee.utm.editor.tool.c.compiler.option.debug" valueType="includePath">
+								<option defaultValue="gnu.c.optimization.level.none" id="gnu.c.compiler.so.debug.option.optimization.level.1207381689" name="Optimization Level" superClass="gnu.c.compiler.so.debug.option.optimization.level" valueType="enumerated"/>
+								<option id="gnu.c.compiler.so.debug.option.debugging.level.1223643543" name="Debug Level" superClass="gnu.c.compiler.so.debug.option.debugging.level" value="gnu.c.debugging.level.max" valueType="enumerated"/>
+								<option id="com.verigy.itee.utm.editor.tool.c.compiler.option.debug.209739423" name="Include paths (-I)" superClass="com.verigy.itee.utm.editor.tool.c.compiler.option.debug" valueType="includePath">
 									<listOptionValue builtIn="false" value="${HP83000_ROOT}/prod_com/include"/>
 									<listOptionValue builtIn="false" value="${HP83000_ROOT}/prod_com/include/MAPI"/>
 									<listOptionValue builtIn="false" value="${HP83000_ROOT}/testmethod/include"/>
@@ -56,14 +56,15 @@
 								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.19505648" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
 							</tool>
 							<tool id="com.verigy.itee.utm.editor.tool.cpp.linker.debug.1938563655" name="GCC C++ Linker" superClass="com.verigy.itee.utm.editor.tool.cpp.linker.debug">
-								<option defaultValue="true" id="gnu.cpp.link.so.debug.option.shared.2083699773" superClass="gnu.cpp.link.so.debug.option.shared" valueType="boolean"/>
+								<option defaultValue="true" id="gnu.cpp.link.so.debug.option.shared.2083699773" name="Shared (-shared)" superClass="gnu.cpp.link.so.debug.option.shared" valueType="boolean"/>
+								<option id="gnu.cpp.link.option.libs.2067751335" name="Libraries (-l)" superClass="gnu.cpp.link.option.libs" valueType="libs"/>
 								<inputType id="cdt.managedbuild.tool.gnu.cpp.linker.input.682817060" superClass="cdt.managedbuild.tool.gnu.cpp.linker.input">
 									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
 									<additionalInput kind="additionalinput" paths="$(LIBS)"/>
 								</inputType>
 							</tool>
 							<tool id="com.verigy.itee.utm.editor.tool.c.linker.debug.1037339174" name="GCC C Linker" superClass="com.verigy.itee.utm.editor.tool.c.linker.debug">
-								<option defaultValue="true" id="gnu.c.link.so.debug.option.shared.767453553" superClass="gnu.c.link.so.debug.option.shared" valueType="boolean"/>
+								<option defaultValue="true" id="gnu.c.link.so.debug.option.shared.767453553" name="Shared (-shared)" superClass="gnu.c.link.so.debug.option.shared" valueType="boolean"/>
 							</tool>
 							<tool id="com.verigy.itee.utm.editor.tool.assembler.debug.90361569" name="GCC Assembler" superClass="com.verigy.itee.utm.editor.tool.assembler.debug">
 								<inputType id="cdt.managedbuild.tool.gnu.assembler.input.1199081054" superClass="cdt.managedbuild.tool.gnu.assembler.input"/>
@@ -97,11 +98,11 @@
 					<folderInfo id="com.verigy.itee.utm.editor.release.1872827714." name="/" resourcePath="">
 						<toolChain id="com.verigy.itee.utm.editor.toolchain.release.1888321388" name="Test Method Library Tool Chain" superClass="com.verigy.itee.utm.editor.toolchain.release">
 							<targetPlatform id="com.verigy.itee.utm.editor.targetplatform.release.1572822193" isAbstract="false" name="Release Platform" superClass="com.verigy.itee.utm.editor.targetplatform.release"/>
-							<builder buildPath="${workspace_loc:/origen/Release}" id="com.verigy.itee.utm.editor.builder.release.1192243474" managedBuildOn="true" name="Gnu Make Builder.Release" parallelizationNumber="1" superClass="com.verigy.itee.utm.editor.builder.release"/>
+							<builder buildPath="${workspace_loc:/origen/Release}" id="com.verigy.itee.utm.editor.builder.release.1192243474" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="Gnu Make Builder" parallelizationNumber="1" superClass="com.verigy.itee.utm.editor.builder.release"/>
 							<tool id="com.verigy.itee.utm.editor.tool.cpp.compiler.release.2114772302" name="GCC C++ Compiler" superClass="com.verigy.itee.utm.editor.tool.cpp.compiler.release">
-								<option id="gnu.cpp.compiler.so.release.option.optimization.level.2015090904" superClass="gnu.cpp.compiler.so.release.option.optimization.level" value="gnu.cpp.compiler.optimization.level.most" valueType="enumerated"/>
-								<option id="gnu.cpp.compiler.so.release.option.debugging.level.381853213" superClass="gnu.cpp.compiler.so.release.option.debugging.level" value="gnu.cpp.compiler.debugging.level.none" valueType="enumerated"/>
-								<option id="com.verigy.itee.utm.editor.tool.cpp.compiler.option.release.1306493141" superClass="com.verigy.itee.utm.editor.tool.cpp.compiler.option.release" valueType="includePath">
+								<option id="gnu.cpp.compiler.so.release.option.optimization.level.2015090904" name="Optimization Level" superClass="gnu.cpp.compiler.so.release.option.optimization.level" value="gnu.cpp.compiler.optimization.level.most" valueType="enumerated"/>
+								<option id="gnu.cpp.compiler.so.release.option.debugging.level.381853213" name="Debug Level" superClass="gnu.cpp.compiler.so.release.option.debugging.level" value="gnu.cpp.compiler.debugging.level.none" valueType="enumerated"/>
+								<option id="com.verigy.itee.utm.editor.tool.cpp.compiler.option.release.1306493141" name="Include paths (-I)" superClass="com.verigy.itee.utm.editor.tool.cpp.compiler.option.release" valueType="includePath">
 									<listOptionValue builtIn="false" value="${HP83000_ROOT}/prod_com/include"/>
 									<listOptionValue builtIn="false" value="${HP83000_ROOT}/prod_com/include/MAPI"/>
 									<listOptionValue builtIn="false" value="${HP83000_ROOT}/testmethod/include"/>
@@ -114,9 +115,9 @@
 								<inputType id="cdt.managedbuild.tool.gnu.cpp.compiler.input.1643046991" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.input"/>
 							</tool>
 							<tool id="com.verigy.itee.utm.editor.tool.c.compiler.release.1479806226" name="GCC C Compiler" superClass="com.verigy.itee.utm.editor.tool.c.compiler.release">
-								<option defaultValue="gnu.c.optimization.level.most" id="gnu.c.compiler.so.release.option.optimization.level.1864168735" superClass="gnu.c.compiler.so.release.option.optimization.level" valueType="enumerated"/>
-								<option id="gnu.c.compiler.so.release.option.debugging.level.481041040" superClass="gnu.c.compiler.so.release.option.debugging.level" value="gnu.c.debugging.level.none" valueType="enumerated"/>
-								<option id="com.verigy.itee.utm.editor.tool.c.compiler.option.release.312270181" superClass="com.verigy.itee.utm.editor.tool.c.compiler.option.release" valueType="includePath">
+								<option defaultValue="gnu.c.optimization.level.most" id="gnu.c.compiler.so.release.option.optimization.level.1864168735" name="Optimization Level" superClass="gnu.c.compiler.so.release.option.optimization.level" valueType="enumerated"/>
+								<option id="gnu.c.compiler.so.release.option.debugging.level.481041040" name="Debug Level" superClass="gnu.c.compiler.so.release.option.debugging.level" value="gnu.c.debugging.level.none" valueType="enumerated"/>
+								<option id="com.verigy.itee.utm.editor.tool.c.compiler.option.release.312270181" name="Include paths (-I)" superClass="com.verigy.itee.utm.editor.tool.c.compiler.option.release" valueType="includePath">
 									<listOptionValue builtIn="false" value="${HP83000_ROOT}/prod_com/include"/>
 									<listOptionValue builtIn="false" value="${HP83000_ROOT}/prod_com/include/MAPI"/>
 									<listOptionValue builtIn="false" value="${HP83000_ROOT}/testmethod/include"/>
@@ -129,14 +130,14 @@
 								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.473508725" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
 							</tool>
 							<tool id="com.verigy.itee.utm.editor.tool.cpp.linker.release.1191291702" name="GCC C++ Linker" superClass="com.verigy.itee.utm.editor.tool.cpp.linker.release">
-								<option defaultValue="true" id="gnu.cpp.link.so.release.option.shared.905933791" superClass="gnu.cpp.link.so.release.option.shared" valueType="boolean"/>
+								<option defaultValue="true" id="gnu.cpp.link.so.release.option.shared.905933791" name="Shared (-shared)" superClass="gnu.cpp.link.so.release.option.shared" valueType="boolean"/>
 								<inputType id="cdt.managedbuild.tool.gnu.cpp.linker.input.885078798" superClass="cdt.managedbuild.tool.gnu.cpp.linker.input">
 									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
 									<additionalInput kind="additionalinput" paths="$(LIBS)"/>
 								</inputType>
 							</tool>
 							<tool id="com.verigy.itee.utm.editor.tool.c.linker.release.438607908" name="GCC C Linker" superClass="com.verigy.itee.utm.editor.tool.c.linker.release">
-								<option defaultValue="true" id="gnu.c.link.so.release.option.shared.734092585" superClass="gnu.c.link.so.release.option.shared" valueType="boolean"/>
+								<option defaultValue="true" id="gnu.c.link.so.release.option.shared.734092585" name="Shared (-shared)" superClass="gnu.c.link.so.release.option.shared" valueType="boolean"/>
 							</tool>
 							<tool id="com.verigy.itee.utm.editor.tool.assembler.release.565374079" name="GCC Assembler" superClass="com.verigy.itee.utm.editor.tool.assembler.release">
 								<inputType id="cdt.managedbuild.tool.gnu.assembler.input.1818199270" superClass="cdt.managedbuild.tool.gnu.assembler.input"/>
@@ -145,6 +146,7 @@
 					</folderInfo>
 				</configuration>
 			</storageModule>
+			<storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
 		</cconfiguration>
 	</storageModule>
 	<storageModule moduleId="cdtBuildSystem" version="4.0.0">
@@ -165,4 +167,6 @@
 			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfileC"/>
 		</scannerConfigBuildInfo>
 	</storageModule>
+	<storageModule moduleId="refreshScope"/>
+	<storageModule moduleId="org.eclipse.cdt.make.core.buildtargets"/>
 </cproject>

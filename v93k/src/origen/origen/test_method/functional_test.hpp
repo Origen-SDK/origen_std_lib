@@ -1,7 +1,7 @@
 #ifndef ORIGEN_TEST_METHOD_FUNCTIONAL_TEST_INCLUDED
 #define ORIGEN_TEST_METHOD_FUNCTIONAL_TEST_INCLUDED
 
-#include "../test_method.hpp"
+#include "base.hpp"
 #include "mapi.hpp"
 #include "rdi.hpp"
 
@@ -10,41 +10,20 @@ using namespace std;
 namespace Origen {
 namespace TestMethod {
 
-class FunctionalTest {
+class FunctionalTest: public Base  {
 
 public:
     virtual ~FunctionalTest() {
     }
     ;
     void SMC_backgroundProcessing();
+    void execute();
 
 protected:
-    // Main APIs to perform a test
-    void executeTest();
+    // All test methods must implement this function
+    FunctionalTest & getThis() { return *this; }
 
-    // Default callback handlers
-    virtual bool preTestFunc() {
-        return true;
-    }
-    ;
-    virtual bool postTestFunc() {
-        return true;
-    }
-    ;
-    virtual bool preProcessFunc() {
-        return true;
-    }
-    ;
-    virtual bool processFunc() {
-        return true;
-    }
-    ;
-    virtual bool postProcessFunc() {
-        return true;
-    }
-    ;
-
-    // Internal variables, declared outside the the main execute function body since
+    // Internal variables, declared outside the the execute function body since
     // they may be useful in callback functions
     ARRAY_I activeSites;
     string testSuiteName;
@@ -52,7 +31,7 @@ protected:
     vector<int> results;
 };
 
-void FunctionalTest::executeTest() {
+void FunctionalTest::execute() {
 
     int site, physicalSites;
     ARRAY_I sites;
