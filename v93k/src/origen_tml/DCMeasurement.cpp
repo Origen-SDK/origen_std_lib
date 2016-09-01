@@ -19,6 +19,7 @@ protected:
   double  mSettlingTime;
   string  mPin;
   double  mForceValue;
+  int     mRange;
 
 protected:
   /**
@@ -63,6 +64,12 @@ protected:
                  testmethod::TM_PARAMETER_INPUT)
       .setDefault("0")
       .setComment("Value to be forced on the pin during the measurement");
+    addParameter("Range",
+                 "int",
+                 &mRange,
+                 testmethod::TM_PARAMETER_INPUT)
+      .setDefault("0")
+      .setComment("The current range to apply to the measurement, will be calculated if not supplied");
     addLimit("Functional");
   }
 
@@ -71,9 +78,14 @@ protected:
    */
   virtual void run()
   {
-    origen.applyShutdown(mApplyShutdown).forceValue(mForceValue)
-            .shutdownPattern(mShutdownPattern).measure(mMeasure)
-            .settlingTime(mSettlingTime).pin(mPin).execute();
+    origen.applyShutdown(mApplyShutdown)
+          .forceValue(mForceValue)
+          .shutdownPattern(mShutdownPattern)
+          .measure(mMeasure)
+          .settlingTime(mSettlingTime)
+          .pin(mPin)
+          .range(mRange)
+          .execute();
   }
 
   /**

@@ -11,7 +11,7 @@ string extractPinsFromGroup(const string& groupname)
     try{
         pinlist = PinUtility.createPinListFromPinNames(PinUtility.getDigitalPinNamesFromPinList(groupname, TM::ALL_DIGITAL,true,true,PIN_UTILITY::DEFINITION_ORDER));
     } catch(...) {
-        cout << "ERROR! Pingroup " << groupname << " not found." << endl;
+        cout << "ERROR: Pingroup " << groupname << " not found." << endl;
         ERROR_EXIT(TM::ABORT_FLOW);
     }
 

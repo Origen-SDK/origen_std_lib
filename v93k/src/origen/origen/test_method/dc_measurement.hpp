@@ -18,10 +18,18 @@ class DCMeasurement: public Base {
     double _settlingTime;
     string _pin;
     double _forceValue;
+    int _range;
 
 public:
     // Defaults
-    DCMeasurement() { applyShutdown(1); measure("VOLT"); settlingTime(0); forceValue(0); }
+    DCMeasurement() {
+        applyShutdown(1);
+        measure("VOLT");
+        settlingTime(0);
+        forceValue(0);
+        range(0);
+    }
+
     virtual ~DCMeasurement() { }
     void SMC_backgroundProcessing();
     void execute();
@@ -32,12 +40,13 @@ public:
     DCMeasurement & settlingTime(double v) { _settlingTime = v; return *this; }
     DCMeasurement & pin(string v) { _pin = v; return *this; }
     DCMeasurement & forceValue(double v) { _forceValue = v; return *this; }
+    DCMeasurement & range(int v) { _range = v; return *this; }
 
 protected:
     // All test methods must implement this function
     DCMeasurement & getThis() { return *this; }
 
-    // Internal variables, declared outside the the execute function body since
+    // Member/instance variables, declared outside the execute function body since
     // they may be useful to refer to in callback functions
     ARRAY_I activeSites;
     string testSuiteName;
@@ -49,7 +58,6 @@ protected:
 
 void DCMeasurement::execute() {
 
-    double range;
     int site, physicalSites;
     ARRAY_I sites;
 
@@ -78,10 +86,15 @@ void DCMeasurement::execute() {
         //If forcing current, derive iRange from force value,
         //else we're forcing voltage, derive iRange from limits
         limits = GET_LIMIT_OBJECT("Functional");
-        if (_measure == "CURR")
-            range = autorange(_forceValue);
-        else
-            range = autorange(limits);
+        if (!_range) {
+            if (_measure == "CURR") {
+                _range = autorange(_forceValue);
+            } else {
+                //_range = autorange(limits);
+                cout << "ERROR: autorange is not supported yet for voltage measure, you must supply it" << endl;
+                ERROR_EXIT(TM::ABORT_FLOW);
+            }
+        }
 
         RDI_BEGIN();
 
@@ -95,7 +108,7 @@ void DCMeasurement::execute() {
                           .iForce(_forceValue)
                           .relay(TA::ppmuRly_onPPMU_offACDC,TA::ppmuRly_onAC_offDCPPMU)
                           .measWait(_settlingTime)
-                          .iRange(range uA)
+                          .iRange(_range uA)
                           .vMeas()
                           .execute();
                 } else {
@@ -104,7 +117,7 @@ void DCMeasurement::execute() {
                           .vForce(_forceValue)
                           .relay(TA::ppmuRly_onPPMU_offACDC,TA::ppmuRly_onAC_offDCPPMU)
                           .measWait(_settlingTime)
-                          .iRange(range)
+                          .iRange(_range)
                           .iMeas()
                           .execute();
                 }
