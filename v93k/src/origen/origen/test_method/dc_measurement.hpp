@@ -11,6 +11,7 @@ namespace Origen {
 namespace TestMethod {
 
 class DCMeasurement: public Base {
+    void serialProcessing(int site);
 
     int _applyShutdown;
     string _shutdownPattern;
@@ -18,7 +19,7 @@ class DCMeasurement: public Base {
     double _settlingTime;
     string _pin;
     double _forceValue;
-    int _range;
+    int _iRange;
 
 public:
     // Defaults
@@ -27,7 +28,7 @@ public:
         measure("VOLT");
         settlingTime(0);
         forceValue(0);
-        range(0);
+        iRange(0);
     }
 
     virtual ~DCMeasurement() { }
@@ -40,7 +41,7 @@ public:
     DCMeasurement & settlingTime(double v) { _settlingTime = v; return *this; }
     DCMeasurement & pin(string v) { _pin = v; return *this; }
     DCMeasurement & forceValue(double v) { _forceValue = v; return *this; }
-    DCMeasurement & range(int v) { _range = v; return *this; }
+    DCMeasurement & iRange(int v) { _iRange = v; return *this; }
 
 protected:
     // All test methods must implement this function
@@ -65,7 +66,7 @@ void DCMeasurement::execute() {
 
     ON_FIRST_INVOCATION_BEGIN();
 
-        rdi.hiddenUpload(TA::ALL); // Enable Smart Calc
+        enableHiddenUpload();
         GET_ACTIVE_SITES(activeSites);
         physicalSites = GET_CONFIGURED_SITES(sites);
         results.resize(physicalSites + 1);
@@ -86,13 +87,13 @@ void DCMeasurement::execute() {
         //If forcing current, derive iRange from force value,
         //else we're forcing voltage, derive iRange from limits
         limits = GET_LIMIT_OBJECT("Functional");
-        if (!_range) {
+        if (!_iRange) {
             if (_measure == "CURR") {
-                _range = autorange(_forceValue);
+                _iRange = autorange(_forceValue);
             } else {
-                //_range = autorange(limits);
-                cout << "ERROR: autorange is not supported yet for voltage measure, you must supply it" << endl;
-                ERROR_EXIT(TM::ABORT_FLOW);
+                //_iRange = autorange(limits);
+                //cout << "ERROR: autorange is not supported yet for voltage measure, you must supply it" << endl;
+                //ERROR_EXIT(TM::ABORT_FLOW);
             }
         }
 
@@ -108,7 +109,6 @@ void DCMeasurement::execute() {
                           .iForce(_forceValue)
                           .relay(TA::ppmuRly_onPPMU_offACDC,TA::ppmuRly_onAC_offDCPPMU)
                           .measWait(_settlingTime)
-                          .iRange(_range uA)
                           .vMeas()
                           .execute();
                 } else {
@@ -117,7 +117,7 @@ void DCMeasurement::execute() {
                           .vForce(_forceValue)
                           .relay(TA::ppmuRly_onPPMU_offACDC,TA::ppmuRly_onAC_offDCPPMU)
                           .measWait(_settlingTime)
-                          .iRange(_range)
+                          .iRange(_iRange)
                           .iMeas()
                           .execute();
                 }
@@ -132,6 +132,7 @@ void DCMeasurement::execute() {
         FOR_EACH_SITE_BEGIN();
             site = CURRENT_SITE_NUMBER();
             funcResults[site] = rdi.id("f1").getPassFail() && rdi.id("f2").getPassFail();
+            // TODO: This retrieval needs to move to the SMC func in the async case
             results[site] = rdi.id(testSuiteName).getValue();
             //            // Multiplier to make measured value units
             //            // match limits, default Imeas is amps (A)
@@ -141,14 +142,17 @@ void DCMeasurement::execute() {
             //                measResult = measResult * mult;
         FOR_EACH_SITE_END();
 
-        if (preProcessFunc()) {
-            SMC_ARM();
-        } else {
-            processFunc();
-            postProcessFunc();
-        }
+        asyncProcessing(this);
 
     ON_FIRST_INVOCATION_END();
+
+    finalProcessing();
+
+}
+
+void DCMeasurement::serialProcessing(int site) {
+    TESTSET().judgeAndLog_FunctionalTest(funcResults[site]);
+    TESTSET().judgeAndLog_ParametricTest(_pin, testSuiteName, limits, results[site]);
 }
 
 void DCMeasurement::SMC_backgroundProcessing() {

@@ -13,6 +13,7 @@ string raise(string errorMessage);
 string extractPinsFromGroup(const string& groupname);
 int autorange(const LIMIT& limit);
 int autorange(const double& forceValue);
+void synchronize(double timeout = 1);
 
 }
 

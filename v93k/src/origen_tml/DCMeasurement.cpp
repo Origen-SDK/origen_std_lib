@@ -19,7 +19,7 @@ protected:
   double  mSettlingTime;
   string  mPin;
   double  mForceValue;
-  int     mRange;
+  int     mIRange;
 
 protected:
   /**
@@ -64,9 +64,9 @@ protected:
                  testmethod::TM_PARAMETER_INPUT)
       .setDefault("0")
       .setComment("Value to be forced on the pin during the measurement");
-    addParameter("Range",
+    addParameter("IRange",
                  "int",
-                 &mRange,
+                 &mIRange,
                  testmethod::TM_PARAMETER_INPUT)
       .setDefault("0")
       .setComment("The current range to apply to the measurement, will be calculated if not supplied");
@@ -84,7 +84,7 @@ protected:
           .measure(mMeasure)
           .settlingTime(mSettlingTime)
           .pin(mPin)
-          .range(mRange)
+          .iRange(mIRange)
           .execute();
   }
 

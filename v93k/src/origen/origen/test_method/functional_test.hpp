@@ -11,16 +11,15 @@ namespace Origen {
 namespace TestMethod {
 
 class FunctionalTest: public Base  {
+    void serialProcessing(int site);
 
 public:
-    virtual ~FunctionalTest() {
-    }
-    ;
+    virtual ~FunctionalTest() { }
     void SMC_backgroundProcessing();
     void execute();
 
 protected:
-    // All test methods must implement this function
+    // All test methods must implement these functions
     FunctionalTest & getThis() { return *this; }
 
     // Internal variables, declared outside the the execute function body since
@@ -40,7 +39,7 @@ void FunctionalTest::execute() {
 
     ON_FIRST_INVOCATION_BEGIN();
 
-    rdi.hiddenUpload(TA::ALL); // Enable Smart Calc
+    enableHiddenUpload();
     GET_ACTIVE_SITES(activeSites);
     physicalSites = GET_CONFIGURED_SITES(sites);
     results.resize(physicalSites + 1);
@@ -62,19 +61,18 @@ void FunctionalTest::execute() {
         results[site] = rdi.id("f1").getPassFail();
     FOR_EACH_SITE_END();
 
-    if (preProcessFunc()) {
-        SMC_ARM();
-    } else {
-        processFunc();
-        postProcessFunc();
-    }
+    asyncProcessing(this);
 
     ON_FIRST_INVOCATION_END();
 
+    finalProcessing();
+
 }
 
-//void TestMethod::SMC_backgroundProcessing(const ARRAY_I& sites,
-//		const string& label, const string& vsup) {
+void FunctionalTest::serialProcessing(int site) {
+    TESTSET().judgeAndLog_FunctionalTest(results[site]);
+}
+
 void FunctionalTest::SMC_backgroundProcessing() {
     if (processFunc()) {
         for (int i = 0; i < activeSites.size(); i++) {

@@ -4,6 +4,25 @@ using namespace std;
 
 namespace Origen {
 
+// Call to wait for all SMC threads to complete, supply the max amount of seconds to wait
+void synchronize(double timeout)
+{
+    bool ok;
+    int site = CURRENT_SITE_NUMBER();
+
+    if (timeout) {
+        ok = SMC_SYNCHRONIZE(timeout s);
+    } else {
+        ok = SMC_SYNCHRONIZE();
+    }
+
+    if (! ok) {
+        cout << "ERROR: All SMC threads not complete after " << timeout << " second(s) on site " << site << endl;
+        ERROR_EXIT(TM::EXIT_FLOW);
+    }
+}
+
+
 string extractPinsFromGroup(const string& groupname)
 {
     string pinlist;
