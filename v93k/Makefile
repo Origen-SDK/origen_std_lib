@@ -7,6 +7,10 @@ SRCSRCS := $(shell find src -type f -name "*.cpp")
 SRCOBJS := $(SRCSRCS:%.cpp=tmp/%.o)
 SRCDEPS := $(SRCSRCS:%.cpp=tmp/%.d)
 
+TMSRCS := $(shell find src/origen/origen/test_method/ -type f -name "*.hpp")
+TMOBJS := $(TMSRCS:%.hpp=tmp/%.o)
+TMDEPS := $(TMSRCS:%.hpp=tmp/%.d)
+
 # Sources for building liborigen.so
 ORIGENSRCS = $(shell find src/origen -type f -name "*.cpp")
 ORIGENOBJS = $(ORIGENSRCS:%.cpp=tmp/%.o)
@@ -50,11 +54,11 @@ COMPILEFLAGS := -O0 -g3 -Wall -MMD -MP
 
 .PHONY: all dist test clean debug package pretty
 
-all: dist test
+all: dist
 
--include $(SRCDEPS) $(TESTDEPS)
+-include $(SRCDEPS) $(TESTDEPS) $(TMDEPS)
 
-dist: $(TMPDIRS) $(SRCOBJS) binaries/liborigen.so binaries/liborigen_tml.so
+dist: $(TMPDIRS) $(SRCOBJS) $(TMOBJS) binaries/liborigen.so binaries/liborigen_tml.so
 
 test: tmp/tests
 	@LD_LIBRARY_PATH=binaries tmp/tests
@@ -96,10 +100,15 @@ tmp/src/origen/%.o: src/origen/%.cpp Makefile
 	# Compiling SRC file $<
 	@g++ $(COMPILEFLAGS) -c -fPIC $< -o $@ $(SMTINC)
 
+# Makes all origen objects that only have .hpp
+tmp/src/origen/%.o: src/origen/%.hpp Makefile
+	# Compiling SRC file $<
+	@g++ $(COMPILEFLAGS) -c -fPIC -x c++-header $< -o $@ -I src/origen $(SMTINC)
+
 # Makes all origen_tml objects
 tmp/src/origen_tml/%.o: src/origen_tml/%.cpp Makefile
 	# Compiling SRC file $<
-	@g++ $(COMPILEFLAGS) -c -fPIC $< -o $@ $(SMTINC) -I src/origen
+	@g++ $(COMPILEFLAGS) -c -fPIC $< -o $@ -I src/origen $(SMTINC)
 
 # Makes all test tmp objects
 tmp/test/%.o: test/%.cpp Makefile
