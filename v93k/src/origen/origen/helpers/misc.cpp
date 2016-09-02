@@ -4,7 +4,26 @@ using namespace std;
 
 namespace Origen {
 
-// Call to wait for all SMC threads to complete, supply the max amount of seconds to wait
+double calculateFrequency(const ARRAY_I &captureData, double periodInNs) {
+    int	iFreqCount;
+    double dFreq_MHz;
+
+    iFreqCount=0;
+    for(int j=0; j<captureData.size()-1; j++)
+    {
+        if((captureData[j+1] - captureData[j]) == 1){
+            iFreqCount++;
+        }
+    }
+    dFreq_MHz = iFreqCount / ((periodInNs / 1000) * captureData.size());
+    return dFreq_MHz * 1000000;
+}
+
+double calculatePeriod(const ARRAY_I &captureData, double periodInNs) {
+    return 1 / calculateFrequency(captureData, periodInNs);
+}
+
+/// Call to wait for all SMC threads to complete, supply the max amount of seconds to wait
 void synchronize(double timeout)
 {
     bool ok;
@@ -22,7 +41,7 @@ void synchronize(double timeout)
     }
 }
 
-
+/// Supply a pin alias name and get the name of the physical pin returned
 string extractPinsFromGroup(const string& groupname)
 {
     string pinlist;
