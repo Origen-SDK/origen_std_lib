@@ -82,7 +82,7 @@ class TesterStdLibApplication < Origen::Application
     File.open(f, "w") do |f|
       f.write(filtered_data)
     end
-    Origen.app.rc.checkin comment: "Wrote new version in C++ code"
+    Origen.app.rc.checkin f, comment: "Wrote new version in C++ code"
   end
  
   # This will automatically deploy your documentation after every tag
