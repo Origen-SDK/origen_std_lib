@@ -1,7 +1,7 @@
 #ifndef ORIGEN_HPP_INCLUDED
 #define ORIGEN_HPP_INCLUDED
 
-#define ORIGEN_VERSION "0.1.1"
+#define ORIGEN_VERSION "0.2.0"
 
 #ifndef debugger
 #define debugger __asm__("int $3");
