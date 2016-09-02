@@ -1,5 +1,6 @@
 require 'origen'
 require_relative '../config/application.rb'
+require 'origen_testers'
 module TesterStdLib
   # THIS FILE SHOULD ONLY BE USED TO LOAD RUNTIME DEPENDENCIES
   # If this plugin has any development dependencies (e.g. dummy DUT or other models that are only used
@@ -15,5 +16,10 @@ module TesterStdLib
   Dir.glob("#{File.dirname(__FILE__)}/tester_std_lib/**/*.rb").sort.each do |file|
     require file
   end
+
+  def initialize(*args)
+    super
+    if tester.v93k?
+    end
+  end
 end
-OrigenStdLib = TesterStdLib
