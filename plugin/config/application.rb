@@ -73,7 +73,7 @@ class TesterStdLibApplication < Origen::Application
   #  "#{Origen.root}/.ref/#{$dut.class}"
   #end
 
-  def before_release_tag(identifier)#, note, type, selector, options)
+  def before_release_tag(identifier, note, type, selector, options)
     v = Origen::VersionString.new(identifier)
     # Update the version in the C code
     f = "#{Origen.app.rc.root}/v93k/src/origen/origen.hpp"
