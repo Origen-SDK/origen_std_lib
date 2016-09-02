@@ -30,41 +30,41 @@ protected:
   {
     //Add your initialization code here
     //Note: Test Method API should not be used in this method!
-    addParameter("ApplyShutdown",
+    addParameter("applyShutdown",
                  "int",
                  &mApplyShutdown,
                  testmethod::TM_PARAMETER_INPUT)
       .setDefault("1")
       .setComment("Apply a shutdown pattern after taking the measurement");
-    addParameter("ShutdownPattern",
+    addParameter("shutdownPattern",
                  "string",
                  &mShutdownPattern,
                  testmethod::TM_PARAMETER_INPUT)
       .setComment("The name of the shutdown pattern, by default it will be the main pattern name appended with '_part1'");
-    addParameter("Measure",
+    addParameter("measure",
                  "string",
                  &mMeasure,
                  testmethod::TM_PARAMETER_INPUT)
       .setDefault("VOLT")
       .setComment("Measure 'CURR' or 'VOLT' (the default)");
-    addParameter("SettlingTime",
+    addParameter("settlingTime",
                  "double",
                  &mSettlingTime,
                  testmethod::TM_PARAMETER_INPUT)
       .setDefault("0")
       .setComment("Time to wait between running the pattern and taking the measurement, expressed in ms");
-    addParameter("Pin",
+    addParameter("pin",
                  "PinString",
                  &mPin,
                  testmethod::TM_PARAMETER_INPUT)
       .setComment("Pin to be measured");
-    addParameter("ForceValue",
+    addParameter("forceValue",
                  "double",
                  &mForceValue,
                  testmethod::TM_PARAMETER_INPUT)
       .setDefault("0")
       .setComment("Value to be forced on the pin during the measurement");
-    addParameter("IRange",
+    addParameter("iRange",
                  "int",
                  &mIRange,
                  testmethod::TM_PARAMETER_INPUT)

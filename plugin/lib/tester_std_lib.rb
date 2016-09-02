@@ -20,6 +20,7 @@ module TesterStdLib
   def initialize(*args)
     super
     if tester.v93k?
+      TesterStdLib.add_v93k_std_lib(self)
     end
   end
 end

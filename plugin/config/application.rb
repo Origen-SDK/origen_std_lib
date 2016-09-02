@@ -82,14 +82,14 @@ class TesterStdLibApplication < Origen::Application
   #end
 
   # Ensure that all tests pass before allowing a release to continue
-  #def validate_release
-  #  if !system("origen specs") || !system("origen examples")
-  #    puts "Sorry but you can't release with failing tests, please fix them and try again."
-  #    exit 1
-  #  else
-  #    puts "All tests passing, proceeding with release process!"
-  #  end
-  #end
+  def validate_release
+    if !system("origen examples")
+      puts "Sorry but you can't release with failing tests, please fix them and try again."
+      exit 1
+    else
+      puts "All tests passing, proceeding with release process!"
+    end
+  end
 
   # To enabled source-less pattern generation create a class (for example PatternDispatcher)
   # to generate the pattern. This should return false if the requested pattern has been

@@ -33,7 +33,7 @@ protected:
                  testmethod::TM_PARAMETER_INPUT)
       .setDefault("0")
       .setComment("Set to 1 if the limits are expressed as a period instead of a frequency (the default)");
-    addParameter("Pin",
+    addParameter("pin",
                  "PinString",
                  &mPin,
                  testmethod::TM_PARAMETER_INPUT)
