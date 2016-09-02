@@ -1,3 +1,4 @@
+/** @file */ 
 #include "origen.hpp"
 
 namespace Origen {

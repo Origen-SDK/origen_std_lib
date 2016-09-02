@@ -38,6 +38,17 @@ class TesterStdLibApplication < Origen::Application
 
   config.semantically_version = true
 
+  def after_web_site_compile(options={})
+    if options[:api]
+      Dir.chdir "#{Origen.app.rc.root}/v93k" do
+        system "doxygen .doxygen"
+        d = "#{Origen.root}/web/output"
+        FileUtils.mkdir_p(d)
+        FileUtils.mv "html", "#{d}/v93k"
+      end
+    end
+  end
+
   # An example of how to set application specific LSF parameters
   #config.lsf.project = "msg.te"
   

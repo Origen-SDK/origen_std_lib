@@ -11,7 +11,9 @@
     </div>
     <div id="navbar" class="collapse navbar-collapse">
       <ul class="nav navbar-nav">
+        <li class="<%= options[:tab] == :v93k ? 'active' : '' %>"><a href="<%= path "/v93k/annotated.html" %>">V93K</a></li>
         <li class="<%= options[:tab] == :api ? 'active' : '' %>"><a href="<%= path "/api/" %>">API</a></li>
+        <li><a href="https://github.com/Origen-SDK/tester_std_lib">Github</a></li>
         <li class="<%= options[:tab] == :release ? 'active' : '' %>"><a href="<%= path "/release_notes" %>">Release Notes</a></li>
       </ul>
       <%= import "origen/web/logo.html" %>

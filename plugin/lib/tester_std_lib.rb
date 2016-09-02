@@ -16,3 +16,4 @@ module TesterStdLib
     require file
   end
 end
+OrigenStdLib = TesterStdLib
