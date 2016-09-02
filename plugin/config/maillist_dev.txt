@@ -1,0 +1,4 @@
+# Any email addresses listed here will be automatically sent an email whenever you
+# run 'origen rc tag'
+# See here for more info: http://origen-sdk.org/origen/guides/misc/users/#Maillists
+stephen.mcginty@nxp.com

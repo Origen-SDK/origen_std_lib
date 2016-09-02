@@ -1,0 +1,37 @@
+% render "layouts/basic.html" do
+
+%# HTML tags can be embedded in mark down files if you want to do specific custom
+%# formatting like this, but in most cases that is not required.
+<h1><%= Origen.app.namespace %> <span style="font-size: 14px">(<%= Origen.app.version %>)</span></h1>
+
+### Purpose
+
+This plugin...
+
+### How To Install
+
+In your Gemfile add:
+
+~~~ruby
+gem "<%= Origen.app.name %>"
+~~~
+
+or if your application is a plugin, then add this to your <code>.gemspec</code>
+
+~~~ruby
+spec.add_runtime_dependency "<%= Origen.app.name %>", ">= <%= Origen.app.version %>"
+~~~
+
+__NOTE:__  In the case of a plugin, you will also need to <code>require '<%= Origen.app.name %>'</code> somewhere in your environment.
+
+
+### How To Use
+
+Add quickstart documentation here...
+
+
+### How To Setup a Development Environment
+
+Describe how a developer would setup a new workspace for this plugin...
+
+% end

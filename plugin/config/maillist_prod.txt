@@ -1,0 +1,3 @@
+# Any email addresses listed here will be automatically sent an email whenever you
+# run 'origen rc tag' and select a PRODUCTION release
+# See here for more info: http://origen-sdk.org/origen/guides/misc/users/#Maillists
