@@ -72,6 +72,18 @@ class TesterStdLibApplication < Origen::Application
   #config.reference_directory do
   #  "#{Origen.root}/.ref/#{$dut.class}"
   #end
+
+  def before_release_tag(identifier)#, note, type, selector, options)
+    v = Origen::VersionString.new(identifier)
+    # Update the version in the C code
+    f = "#{Origen.app.rc.root}/v93k/src/origen/origen.hpp"
+    data = File.read(f) 
+    filtered_data = data.gsub(/#define ORIGEN_VERSION \"\d+\.\d+\.\d+\"/, "#define ORIGEN_VERSION \"#{v}\"") 
+    File.open(f, "w") do |f|
+      f.write(filtered_data)
+    end
+    Origen.app.rc.checkin comment: "Wrote new version in C++ code"
+  end
  
   # This will automatically deploy your documentation after every tag
   def after_release_email(tag, note, type, selector, options)
