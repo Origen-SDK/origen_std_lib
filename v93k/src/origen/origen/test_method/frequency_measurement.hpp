@@ -46,7 +46,6 @@ protected:
     string testSuiteName;
     string label;
     vector<int> funcResults;
-    vector<ARRAY_I> results;
     LIMIT limits;
 };
 
@@ -62,7 +61,6 @@ void FrequencyMeasurement::execute() {
     enableHiddenUpload();
     GET_ACTIVE_SITES(activeSites);
     physicalSites = GET_CONFIGURED_SITES(sites);
-    results.resize(physicalSites + 1);
     funcResults.resize(physicalSites + 1);
     GET_TESTSUITE_NAME(testSuiteName);
     label = Primary.getLabel();
@@ -88,8 +86,6 @@ void FrequencyMeasurement::execute() {
     FOR_EACH_SITE_BEGIN();
         site = CURRENT_SITE_NUMBER();
         funcResults[site] = rdi.id(testSuiteName).getPassFail();
-        // TODO: This retrieval needs to move to the SMC func in the async case
-        results[site] = rdi.id(testSuiteName).getVector(_pin);
     FOR_EACH_SITE_END();
 
     asyncProcessing(this);
@@ -102,12 +98,13 @@ void FrequencyMeasurement::execute() {
 
 void FrequencyMeasurement::serialProcessing(int site) {
     double result;
-    if (_periodBased) {
-        result = calculateFrequency(results[site], _periodInNs);
-    } else {
-        result = calculatePeriod(results[site], _periodInNs);
-    }
+    ARRAY_I captureData = rdi.site(site).id(testSuiteName).getVector();
 
+    if (_periodBased) {
+        result = calculatePeriod(captureData, _periodInNs);
+    } else {
+        result = calculateFrequency(captureData, _periodInNs);
+    }
     TESTSET().judgeAndLog_FunctionalTest(funcResults[site]);
     TESTSET().judgeAndLog_ParametricTest(_pin, testSuiteName, limits, result);
 }
@@ -117,10 +114,11 @@ void FrequencyMeasurement::SMC_backgroundProcessing() {
     if (processFunc()) {
         for (int i = 0; i < activeSites.size(); i++) {
             int site = activeSites[i];
+            ARRAY_I captureData = rdi.site(site).id(testSuiteName).getVector();
             if (_periodBased) {
-                result = calculateFrequency(results[site], _periodInNs);
+                result = calculatePeriod(captureData, _periodInNs);
             } else {
-                result = calculatePeriod(results[site], _periodInNs);
+                result = calculateFrequency(captureData, _periodInNs);
             }
             SMC_TEST(site, "", testSuiteName, LIMIT(TM::GE, 1, TM::LE, 1), funcResults[site]);
             SMC_TEST(site, _pin, testSuiteName, limits, result);
