@@ -152,7 +152,7 @@ void DCMeasurement::execute() {
 
 void DCMeasurement::serialProcessing(int site) {
     TESTSET().judgeAndLog_FunctionalTest(funcResults[site]);
-    TESTSET().judgeAndLog_ParametricTest(_pin, testSuiteName, limits, results[site]);
+    TESTSET().judgeAndLog_ParametricTest(_pin, testSuiteName, limits, filterResult(results[site]));
 }
 
 void DCMeasurement::SMC_backgroundProcessing() {
@@ -160,7 +160,7 @@ void DCMeasurement::SMC_backgroundProcessing() {
         for (int i = 0; i < activeSites.size(); i++) {
             int site = activeSites[i];
             SMC_TEST(site, "", testSuiteName, LIMIT(TM::GE, 1, TM::LE, 1), funcResults[site]);
-            SMC_TEST(site, _pin, testSuiteName, limits, results[site]);
+            SMC_TEST(site, _pin, testSuiteName, limits, filterResult(results[site]));
         }
     }
     postProcessFunc();

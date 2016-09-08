@@ -41,6 +41,9 @@ protected:
     virtual bool postProcessFunc() {
         return true;
     }
+    virtual double filterResult(double result) {
+        return result;
+    }
     virtual bool async() {
         return _async;
     }

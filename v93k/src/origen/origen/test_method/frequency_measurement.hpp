@@ -106,7 +106,7 @@ void FrequencyMeasurement::serialProcessing(int site) {
         result = calculateFrequency(captureData, _periodInNs);
     }
     TESTSET().judgeAndLog_FunctionalTest(funcResults[site]);
-    TESTSET().judgeAndLog_ParametricTest(_pin, testSuiteName, limits, result);
+    TESTSET().judgeAndLog_ParametricTest(_pin, testSuiteName, limits, filterResult(result));
 }
 
 void FrequencyMeasurement::SMC_backgroundProcessing() {
@@ -121,7 +121,7 @@ void FrequencyMeasurement::SMC_backgroundProcessing() {
                 result = calculateFrequency(captureData, _periodInNs);
             }
             SMC_TEST(site, "", testSuiteName, LIMIT(TM::GE, 1, TM::LE, 1), funcResults[site]);
-            SMC_TEST(site, _pin, testSuiteName, limits, result);
+            SMC_TEST(site, _pin, testSuiteName, limits, filterResult(result));
         }
     }
     postProcessFunc();
