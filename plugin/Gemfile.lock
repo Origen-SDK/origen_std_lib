@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    tester_std_lib (0.2.0)
+    origen_std_lib (0.2.0)
       origen (>= 0.7.29)
       origen_testers
 
@@ -156,4 +156,4 @@ DEPENDENCIES
   byebug
   coveralls
   origen_doc_helpers
-  tester_std_lib!
+  origen_std_lib!

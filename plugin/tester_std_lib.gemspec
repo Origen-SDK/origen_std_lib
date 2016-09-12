@@ -3,12 +3,12 @@ config = File.expand_path('../config', __FILE__)
 require "#{config}/version"
 
 Gem::Specification.new do |spec|
-  spec.name          = "tester_std_lib"
-  spec.version       = TesterStdLib::VERSION
+  spec.name          = "origen_std_lib"
+  spec.version       = OrigenStdLib::VERSION
   spec.authors       = ["Stephen McGinty"]
   spec.email         = ["stephen.mcginty@nxp.com"]
   spec.summary       = "Test program interface drivers for the Origen tester standard library"
-  #spec.homepage      = "http://origen-sdk.org/tester_std_lib"
+  #spec.homepage      = "http://origen-sdk.org/std_lib"
 
   spec.required_ruby_version     = '>= 2'
   spec.required_rubygems_version = '>= 1.8.11'

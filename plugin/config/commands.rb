@@ -54,7 +54,7 @@ else
   # origen -h, you can do this be assigning the required text to @application_commands
   # before handing control back to Origen. Un-comment the example below to get started.
   @application_commands = <<-EOT
-# examples     Run the examples (tests), -c will enable coverage
+ examples     Run the examples (tests), -c will enable coverage
   EOT
 
 end 

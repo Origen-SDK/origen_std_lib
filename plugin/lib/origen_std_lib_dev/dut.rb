@@ -1,4 +1,4 @@
-module TesterStdLibDev
+module OrigenStdLibDev
   class DUT
     include Origen::TopLevel
   end

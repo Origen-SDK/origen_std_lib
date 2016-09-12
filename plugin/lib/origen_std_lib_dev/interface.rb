@@ -1,5 +1,5 @@
 require 'origen_std_lib'
-module TesterStdLibDev
+module OrigenStdLibDev
   class Interface
     include OrigenTesters::ProgramGenerators
     include OrigenStdLib

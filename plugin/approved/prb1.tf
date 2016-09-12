@@ -51,13 +51,13 @@ test1:
 local_flags  = output_on_pass, output_on_fail, value_on_pass, value_on_fail, per_pin_on_pass, per_pin_on_fail;
  site_match = 2;
  site_control = "parallel:";
-test2_990CF69:
+test2_916CE79:
   override = 1;
  override_testf = tm_2;
 local_flags  = output_on_pass, output_on_fail, value_on_pass, value_on_fail, per_pin_on_pass, per_pin_on_fail;
  site_match = 2;
  site_control = "parallel:";
-test3_990CF69:
+test3_916CE79:
   override = 1;
  override_testf = tm_3;
 local_flags  = output_on_pass, output_on_fail, value_on_pass, value_on_fail, per_pin_on_pass, per_pin_on_fail;
@@ -68,8 +68,8 @@ end
 test_flow
 {
   run(test1);
-  run(test2_990CF69);
-  run(test3_990CF69);
+  run(test2_916CE79);
+  run(test3_916CE79);
 }, open,"PRB1", ""
 end
 -------------------------------------------------

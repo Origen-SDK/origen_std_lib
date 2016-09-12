@@ -1,23 +1,23 @@
 require 'origen'
-class TesterStdLibApplication < Origen::Application
+class OrigenStdLibApplication < Origen::Application
 
   # See http://origen-sdk.org/origen/api/Origen/Application/Configuration.html
   # for a full list of the configuration options available
 
   # These attributes should never be changed, the duplication here will be resolved in future
   # by condensing these attributes that do similar things
-  self.name       = "tester_std_lib"
-  self.namespace  = "TesterStdLib"
-  config.name     = "tester_std_lib"
-  config.initials = "TesterStdLib"
+  self.name       = "origen_std_lib"
+  self.namespace  = "OrigenStdLib"
+  config.name     = "origen_std_lib"
+  config.initials = "OrigenStdLib"
   # Change this to point to the revision control repository for this plugin
-  config.rc_url   = "git@github.com:Origen-SDK/tester_std_lib.git"
+  config.rc_url   = "git@github.com:Origen-SDK/origen_std_lib.git"
   config.release_externally = true
 
   # To enable deployment of your documentation to a web server (via the 'origen web'
   # command) fill in these attributes.
-  config.web_directory = "git@github.com:Origen-SDK/Origen-SDK.github.io.git/tester_std_lib"
-  config.web_domain = "http://origen-sdk.org/tester_std_lib"
+  config.web_directory = "git@github.com:Origen-SDK/Origen-SDK.github.io.git/std_lib"
+  config.web_domain = "http://origen-sdk.org/std_lib"
 
   # When false Origen will be less strict about checking for some common coding errors,
   # it is recommended that you leave this to true for better feedback and easier debug.

@@ -1,4 +1,4 @@
-module TesterStdLib
+module OrigenStdLib
   MAJOR = 0
   MINOR = 2
   BUGFIX = 0
