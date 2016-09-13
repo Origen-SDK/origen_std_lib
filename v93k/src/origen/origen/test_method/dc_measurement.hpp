@@ -19,7 +19,7 @@ class DCMeasurement: public Base {
     double _settlingTime;
     string _pin;
     double _forceValue;
-    int _iRange;
+    double _iRange;
 
 public:
     // Defaults
@@ -41,7 +41,7 @@ public:
     DCMeasurement & settlingTime(double v) { _settlingTime = v; return *this; }
     DCMeasurement & pin(string v) { _pin = v; return *this; }
     DCMeasurement & forceValue(double v) { _forceValue = v; return *this; }
-    DCMeasurement & iRange(int v) { _iRange = v; return *this; }
+    DCMeasurement & iRange(double v) { _iRange = v; return *this; }
 
 protected:
     // All test methods must implement this function

@@ -3,7 +3,7 @@ PATH
   specs:
     origen_std_lib (0.2.0)
       origen (>= 0.7.29)
-      origen_testers
+      origen_testers (>= 0.8.1)
 
 GEM
   remote: https://rubygems.org/
@@ -47,7 +47,7 @@ GEM
     highline (1.7.8)
     httparty (0.14.0)
       multi_xml (>= 0.5.2)
-    httpclient (2.8.2.3)
+    httpclient (2.8.2.4)
     i18n (0.7.0)
     json (1.8.3)
     kramdown (1.12.0)
@@ -63,7 +63,7 @@ GEM
     net-ldap (0.15.0)
     nokogiri (1.6.7.2)
       mini_portile2 (~> 2.0.0.rc2)
-    origen (0.7.30)
+    origen (0.7.31)
       activesupport (~> 4.1)
       bundler (~> 1.7)
       coderay (~> 1.1)
@@ -88,9 +88,9 @@ GEM
       yard (~> 0.8)
     origen_doc_helpers (0.4.3)
       origen (>= 0.7.15)
-    origen_testers (0.7.12)
+    origen_testers (0.8.1)
       atp (~> 0.4, >= 0.4.2)
-      origen (>= 0.7.25)
+      origen (>= 0.7.31)
       require_all (~> 1)
     parser (2.3.1.2)
       ast (~> 2.2)

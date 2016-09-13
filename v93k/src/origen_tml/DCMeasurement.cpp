@@ -19,7 +19,7 @@ protected:
   double  mSettlingTime;
   string  mPin;
   double  mForceValue;
-  int     mIRange;
+  double  mIRange;
 
 protected:
   /**
@@ -65,11 +65,11 @@ protected:
       .setDefault("0")
       .setComment("Value to be forced on the pin during the measurement");
     addParameter("iRange",
-                 "int",
+                 "double",
                  &mIRange,
                  testmethod::TM_PARAMETER_INPUT)
       .setDefault("0")
-      .setComment("The current range to apply to the measurement, will be calculated if not supplied");
+      .setComment("The current range to apply to the measurement (in A), will be calculated if not supplied");
     addLimit("Functional");
   }
 

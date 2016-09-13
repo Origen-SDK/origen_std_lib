@@ -78,7 +78,7 @@ class OrigenStdLibApplication < Origen::Application
     # Update the version in the C code
     f = "#{Origen.app.rc.root}/v93k/src/origen/origen.hpp"
     data = File.read(f) 
-    filtered_data = data.gsub(/#define ORIGEN_VERSION \"\d+\.\d+\.\d+\"/, "#define ORIGEN_VERSION \"#{v}\"") 
+    filtered_data = data.sub(/#define ORIGEN_VERSION \"\d+\.\d+\.\d+\"/, "#define ORIGEN_VERSION \"#{v}\"") 
     File.open(f, "w") do |f|
       f.write(filtered_data)
     end
