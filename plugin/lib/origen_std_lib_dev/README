@@ -1,4 +1,4 @@
 This directory should include all of the code that will be required by this plugin whenever
 it is used within a 3rd party application.
 
-Any code that is only for testing, should be placed in lib/tester_std_lib_dev instead.
+Any code that is only for testing, should be placed in lib/origen_std_lib_dev instead.
