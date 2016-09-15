@@ -14,6 +14,7 @@ module OrigenStdLibDev
       i = test_suites.add(name)
       tm = test_methods.origen.dc_measurement
       tm.apply_shutdown = 1
+      tm.check_shutdown = 1
       tm.shutdown_pattern = 'some_pattern'
       tm.measure = 'CURR'
       tm.settling_time = 100

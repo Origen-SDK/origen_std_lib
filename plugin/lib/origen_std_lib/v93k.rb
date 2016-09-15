@@ -11,6 +11,7 @@ module OrigenStdLib
 
                 apply_shutdown:   [:integer, 1],
                 shutdown_pattern: [:string, nil],
+                check_shutdown:   [:integer, 1],
                 measure:          [:string, 'VOLT', %w(VOLT CURR v i voltage current)],
                 settling_time:    [:double, 0],
                 pin:              [:string, nil],

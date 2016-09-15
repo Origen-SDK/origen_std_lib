@@ -14,6 +14,7 @@ testmethodparameters
 tm_2:
   "applyShutdown" = "1";
   "shutdownPattern" = "some_pattern";
+  "checkShutdown" = "1";
   "measure" = "CURR";
   "settlingTime" = "100";
   "pin" = "SOME_PIN";
