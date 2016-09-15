@@ -11,6 +11,6 @@ gem 'origen_doc_helpers'
 #gem 'ruby-debug-ide'
 #gem 'debase'
 #
-# Specify your gem's runtime dependencies in tester_std_lib.gemspec
+# Specify your gem's runtime dependencies in origen_std_lib.gemspec
 # THIS LINE SHOULD BE LEFT AT THE END
 gemspec
