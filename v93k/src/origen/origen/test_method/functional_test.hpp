@@ -49,7 +49,7 @@ void FunctionalTest::execute() {
     RDI_BEGIN();
 
     if (preTestFunc()) {
-        rdi.func("f1").label(label).execute();
+        rdi.func(testSuiteName + "f1").label(label).execute();
     }
 
     RDI_END();
@@ -58,7 +58,7 @@ void FunctionalTest::execute() {
 
     FOR_EACH_SITE_BEGIN();
         site = CURRENT_SITE_NUMBER();
-        results[site] = rdi.id("f1").getPassFail();
+        results[site] = rdi.id(testSuiteName + "f1").getPassFail();
     FOR_EACH_SITE_END();
 
     asyncProcessing(this);

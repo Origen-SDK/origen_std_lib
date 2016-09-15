@@ -20,6 +20,7 @@ protected:
   string  mPin;
   double  mForceValue;
   double  mIRange;
+  int mCheckShutdown;
 
 protected:
   /**
@@ -41,6 +42,12 @@ protected:
                  &mShutdownPattern,
                  testmethod::TM_PARAMETER_INPUT)
       .setComment("The name of the shutdown pattern, by default it will be the main pattern name appended with '_part1'");
+    addParameter("checkShutdown",
+                 "int",
+                 &mCheckShutdown,
+                 testmethod::TM_PARAMETER_INPUT)
+      .setDefault("1")
+      .setComment("Check that the shutdown pattern passed (and fail if not)");
     addParameter("measure",
                  "string",
                  &mMeasure,
@@ -81,6 +88,7 @@ protected:
     origen.applyShutdown(mApplyShutdown)
           .forceValue(mForceValue)
           .shutdownPattern(mShutdownPattern)
+          .checkShutdown(mCheckShutdown)
           .measure(mMeasure)
           .settlingTime(mSettlingTime)
           .pin(mPin)
