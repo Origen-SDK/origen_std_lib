@@ -13,18 +13,31 @@ namespace TestMethod {
 class FunctionalTest: public Base  {
     void serialProcessing(int site);
 
+    string _pin;
+    int _capture;
+    int _bitPerWord;
     int _processResults;
 
 public:
     // Defaults
     FunctionalTest() {
+    	pin("");
+    	capture(0);
         processResults(1);
+        bitPerWord(1);
     }
 
     virtual ~FunctionalTest() { }
     void SMC_backgroundProcessing();
     void execute();
 
+    /// The functional test method can optionally capture data by supplying the number of vectors to capture
+    FunctionalTest & capture(int v) { _capture = v; return *this; }
+    /// If data capture is requested, supply the pin to capture data from
+    FunctionalTest & pin(string v) { _pin = v; return *this; }
+    /// Serial capture data will be grouped into words, specify how many bits per word in the serial stream (default 1)
+    FunctionalTest & bitPerWord(int v) { _bitPerWord = v; return *this; }
+    /// When set to 0 the results of the test will not be judged or logged
     FunctionalTest & processResults(int v) { _processResults = v; return *this; }
 
 protected:
@@ -59,16 +72,26 @@ void FunctionalTest::execute() {
 
     callPreTestFunc();
 
-    SMART_RDI::FUNC & prdi = rdi.func(testSuiteName + "f1").label(label);
+    if (_capture) {
+        SMART_RDI::DIG_CAP & prdi = rdi.digCap(testSuiteName)
+    								   .label(label)
+    								   .pin(extractPinsFromGroup(_pin))
+    								   .bitPerWord(_bitPerWord)
+    								   .samples(_capture);
+    	filterRDI(prdi);
+    	prdi.execute();
 
-	filterRDI(prdi);
-	prdi.execute();
+    } else {
+    	SMART_RDI::FUNC & prdi = rdi.func(testSuiteName).label(label);
+    	filterRDI(prdi);
+    	prdi.execute();
+    }
 
     RDI_END();
 
     FOR_EACH_SITE_BEGIN();
         site = CURRENT_SITE_NUMBER();
-        results[site] = rdi.id(testSuiteName + "f1").getPassFail();
+        results[site] = rdi.id(testSuiteName).getPassFail();
     FOR_EACH_SITE_END();
 
     ON_FIRST_INVOCATION_END();
