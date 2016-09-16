@@ -9,15 +9,11 @@ using namespace std;
 
 namespace Origen {
 
-string raise(string errorMessage);
 string extractPinsFromGroup(const string& groupname);
-int autorange(const LIMIT& limit);
-int autorange(const double& forceValue);
 void synchronize(double timeout = 1);
 double calculateFrequency(const ARRAY_I &captureData, double periodInNs);
 double calculatePeriod(const ARRAY_I &captureData, double periodInNs);
 
 }
-
 
 #endif

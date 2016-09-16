@@ -76,7 +76,7 @@ protected:
                  &mIRange,
                  testmethod::TM_PARAMETER_INPUT)
       .setDefault("0")
-      .setComment("The current range to apply to the measurement (in A), will be calculated if not supplied");
+      .setComment("The current range to apply to the measurement (in A), will be calculated if not supplied (set to 0)");
     addLimit("Functional");
   }
 

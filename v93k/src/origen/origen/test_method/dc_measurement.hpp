@@ -58,7 +58,6 @@ protected:
     vector<int> funcResultsPre;
     vector<int> funcResultsPost;
     vector<double> results;
-    LIMIT limits;
 };
 
 void DCMeasurement::execute() {
@@ -89,17 +88,17 @@ void DCMeasurement::execute() {
             }
         }
 
-        //If forcing current, derive iRange from force value,
-        //else we're forcing voltage, derive iRange from limits
-        limits = GET_LIMIT_OBJECT("Functional");
-        if (!_iRange) {
-            if (_measure == "CURR") {
-                _iRange = autorange(_forceValue);
-            } else {
-                //_iRange = autorange(limits);
-                //cout << "ERROR: autorange is not supported yet for voltage measure, you must supply it" << endl;
-                //ERROR_EXIT(TM::ABORT_FLOW);
-            }
+        if (!_iRange && _measure == "CURR") {
+        	double l = loLimit();
+        	double h = hiLimit();
+        	if (l == 0 && h == 0) {
+                cout << "ERROR: If your current measurement does not have a limit, you must supply the current range" << endl;
+                ERROR_EXIT(TM::ABORT_FLOW);
+        	}
+        	if (abs(l) > abs(h))
+        		_iRange = abs(l);
+        	else
+        	    _iRange = abs(h);
         }
 
         RDI_BEGIN();
@@ -139,13 +138,21 @@ void DCMeasurement::execute() {
             funcResultsPre[site] = rdi.id(testSuiteName + "f1").getPassFail();
             if (_applyShutdown) funcResultsPost[site] = rdi.id(testSuiteName + "f2").getPassFail();
             // TODO: This retrieval needs to move to the SMC func in the async case
-            results[site] = rdi.id(testSuiteName).getValue();
-            //            // Multiplier to make measured value units
-            //            // match limits, default Imeas is amps (A)
-            //            double mult = getUnitMultiplier(limit.Units);
-            //
-            //            if (_measure == "CURR")
-            //                measResult = measResult * mult;
+            if (offline()) {
+            	if (!loLimit() && !hiLimit()) {
+            		results[site] = 0;
+            	} else if(loLimit() && hiLimit()) {
+            		results[site] = ((hiLimit() - loLimit()) / 2) + loLimit();
+            	} else if (loLimit()) {
+            		results[site] = loLimit();
+            	} else {
+            		results[site] = hiLimit();
+            	}
+
+            } else {
+            	results[site] = rdi.id(testSuiteName).getValue();
+            }
+
         FOR_EACH_SITE_END();
 
         asyncProcessing(this);
@@ -157,11 +164,11 @@ void DCMeasurement::execute() {
 }
 
 void DCMeasurement::serialProcessing(int site) {
-    TESTSET().cont(true).judgeAndLog_FunctionalTest(funcResultsPre[site]);
+    TESTSET().cont(true).judgeAndLog_FunctionalTest(funcResultsPre[site] == 1);
     if (_applyShutdown && _checkShutdown) {
-        TESTSET().cont(true).judgeAndLog_FunctionalTest(funcResultsPost[site]);
+        TESTSET().cont(true).judgeAndLog_FunctionalTest(funcResultsPost[site] == 1);
     }
-    TESTSET().judgeAndLog_ParametricTest(_pin, testSuiteName, limits, filterResult(results[site]));
+    TESTSET().judgeAndLog_ParametricTest(_pin, testSuiteName, limits(), filterResult(results[site]));
 }
 
 void DCMeasurement::SMC_backgroundProcessing() {
@@ -170,7 +177,7 @@ void DCMeasurement::SMC_backgroundProcessing() {
             int site = activeSites[i];
             SMC_TEST(site, "", testSuiteName, LIMIT(TM::GE, 1, TM::LE, 1), funcResultsPre[site]);
             if (_applyShutdown && _checkShutdown) SMC_TEST(site, "", testSuiteName, LIMIT(TM::GE, 1, TM::LE, 1), funcResultsPost[site]);
-            SMC_TEST(site, _pin, testSuiteName, limits, filterResult(results[site]));
+            SMC_TEST(site, _pin, testSuiteName, limits(), filterResult(results[site]));
         }
     }
     postProcessFunc();

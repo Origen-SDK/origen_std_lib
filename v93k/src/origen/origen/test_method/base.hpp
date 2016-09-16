@@ -12,7 +12,8 @@ class Base {
     bool _syncup;
 
 public:
-    virtual ~Base() { }
+    virtual ~Base() {
+    }
     Base() {
         async(false);
         syncup(false);
@@ -22,6 +23,37 @@ public:
     Base & syncup(bool v) { _syncup = v; return *this; }
 
 protected:
+    // Returns 1 when running in offline mode
+    int offline() {
+    	int flag;
+        GET_SYSTEM_FLAG("offline", &flag);
+        return flag;
+    }
+
+    // Returns an object containing the test limits, this can be passed to SMT APIs that take a LIMITS
+    // object argument. To actually get the limit values use loLimit() and hiLimit().
+    LIMIT limits() {
+        return GET_LIMIT_OBJECT("Functional");
+    }
+
+    // Returns the high limit value in whole units, i.e. A or V
+    double hiLimit() {
+        double lim = 0.0;
+        double * plim = &lim;
+
+        limits().getHigh(plim);
+        return lim;
+    }
+
+    // Returns the low limit value in whole units, i.e. A or V
+    double loLimit() {
+        double lim = 0.0;
+        double * plim = &lim;
+
+        limits().getLow(plim);
+        return lim;
+    }
+
     // Default callback handlers
     virtual bool preTestFunc() {
         return true;
