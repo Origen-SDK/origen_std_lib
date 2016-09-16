@@ -21,6 +21,7 @@ class DCMeasurement: public Base {
     string _pin;
     double _forceValue;
     double _iRange;
+    int _processResults;
 
 public:
     // Defaults
@@ -31,6 +32,7 @@ public:
         settlingTime(0);
         forceValue(0);
         iRange(0);
+        processResults(1);
     }
 
     virtual ~DCMeasurement() { }
@@ -45,6 +47,7 @@ public:
     DCMeasurement & pin(string v) { _pin = v; return *this; }
     DCMeasurement & forceValue(double v) { _forceValue = v; return *this; }
     DCMeasurement & iRange(double v) { _iRange = v; return *this; }
+    DCMeasurement & processResults(int v) { _processResults = v; return *this; }
 
 protected:
     // All test methods must implement this function
@@ -103,35 +106,39 @@ void DCMeasurement::execute() {
 
         RDI_BEGIN();
 
-        if (preTestFunc()) {
-            rdi.func(testSuiteName + "f1").label(label).execute();
+        callPreTestFunc();
 
-            if (holdStateFunc()) {
-                if(_measure == "VOLT") {
+        rdi.func(testSuiteName + "f1").label(label).execute();
 
-                    rdi.dc(testSuiteName).pin(_pin)
-                          .iForce(_forceValue)
-                          .relay(TA::ppmuRly_onPPMU_offACDC,TA::ppmuRly_onAC_offDCPPMU)
-                          .measWait(_settlingTime)
-                          .vMeas()
-                          .execute();
-                } else {
+        callHoldStateFunc();
 
-                    rdi.dc(testSuiteName).pin(_pin)
-                          .vForce(_forceValue)
-                          .relay(TA::ppmuRly_onPPMU_offACDC,TA::ppmuRly_onAC_offDCPPMU)
-                          .measWait(_settlingTime)
-                          .iRange(_iRange)
-                          .iMeas()
-                          .execute();
-                }
-            }
-            if (_applyShutdown) rdi.func(testSuiteName + "f2").label(_shutdownPattern).execute();
-        }
+		if(_measure == "VOLT") {
+
+			SMART_RDI::dcBase & prdi = rdi.dc(testSuiteName)
+										  .pin(_pin)
+										  .iForce(_forceValue)
+										  .relay(TA::ppmuRly_onPPMU_offACDC,TA::ppmuRly_onAC_offDCPPMU)
+										  .measWait(_settlingTime)
+										  .vMeas();
+			filterRDI(prdi);
+			prdi.execute();
+
+		} else {
+
+			SMART_RDI::dcBase & prdi = rdi.dc(testSuiteName)
+										  .pin(_pin)
+										  .vForce(_forceValue)
+										  .relay(TA::ppmuRly_onPPMU_offACDC,TA::ppmuRly_onAC_offDCPPMU)
+										  .measWait(_settlingTime)
+										  .iRange(_iRange)
+										  .iMeas();
+			filterRDI(prdi);
+			prdi.execute();
+		}
+
+		if (_applyShutdown) rdi.func(testSuiteName + "f2").label(_shutdownPattern).execute();
 
         RDI_END();
-
-        postTestFunc();
 
         FOR_EACH_SITE_BEGIN();
             site = CURRENT_SITE_NUMBER();
@@ -155,32 +162,32 @@ void DCMeasurement::execute() {
 
         FOR_EACH_SITE_END();
 
-        asyncProcessing(this);
-
     ON_FIRST_INVOCATION_END();
 
-    finalProcessing();
-
+    callPostTestFunc(this);
 }
 
 void DCMeasurement::serialProcessing(int site) {
-    TESTSET().cont(true).judgeAndLog_FunctionalTest(funcResultsPre[site] == 1);
-    if (_applyShutdown && _checkShutdown) {
-        TESTSET().cont(true).judgeAndLog_FunctionalTest(funcResultsPost[site] == 1);
-    }
-    TESTSET().judgeAndLog_ParametricTest(_pin, testSuiteName, limits(), filterResult(results[site]));
+	if (_processResults) {
+		TESTSET().cont(true).judgeAndLog_FunctionalTest(funcResultsPre[site] == 1);
+		if (_applyShutdown && _checkShutdown) {
+			TESTSET().cont(true).judgeAndLog_FunctionalTest(funcResultsPost[site] == 1);
+		}
+		TESTSET().judgeAndLog_ParametricTest(_pin, testSuiteName, limits(), filterResult(results[site]));
+	}
 }
 
 void DCMeasurement::SMC_backgroundProcessing() {
-    if (processFunc()) {
-        for (int i = 0; i < activeSites.size(); i++) {
-            int site = activeSites[i];
-            SMC_TEST(site, "", testSuiteName, LIMIT(TM::GE, 1, TM::LE, 1), funcResultsPre[site]);
-            if (_applyShutdown && _checkShutdown) SMC_TEST(site, "", testSuiteName, LIMIT(TM::GE, 1, TM::LE, 1), funcResultsPost[site]);
-            SMC_TEST(site, _pin, testSuiteName, limits(), filterResult(results[site]));
-        }
+	processFunc();
+	for (int i = 0; i < activeSites.size(); i++) {
+		int site = activeSites[i];
+		processFunc(site);
+		if (_processResults) {
+			SMC_TEST(site, "", testSuiteName, LIMIT(TM::GE, 1, TM::LE, 1), funcResultsPre[site]);
+			if (_applyShutdown && _checkShutdown) SMC_TEST(site, "", testSuiteName, LIMIT(TM::GE, 1, TM::LE, 1), funcResultsPost[site]);
+			SMC_TEST(site, _pin, testSuiteName, limits(), filterResult(results[site]));
+		}
     }
-    postProcessFunc();
 }
 
 }

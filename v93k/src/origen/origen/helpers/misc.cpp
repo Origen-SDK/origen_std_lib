@@ -21,7 +21,7 @@ void overlaySubroutine(string subroutinePattern, string pin, int data, int size)
 	}
 
 	// However the downloadUserVectors function only accepts an array, so use this trick
-	// to convert the data to an array
+	// to create an array instance that points to the vector data
 	VECTOR_DATA * vecDataArray = &vecData[0];
 
 	ov.downloadUserVectors(vecDataArray, size);

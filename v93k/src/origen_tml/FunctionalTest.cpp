@@ -31,12 +31,6 @@ protected:
         origen.execute();
     }
 
-    virtual bool preTestFunc() {
-        PUT_DATALOG("Hello from the pre test function!");
-        return true;
-    }
-    ;
-
     /**
      *This function will be invoked once the specified parameter's value is changed.
      *@param parameterIdentifier

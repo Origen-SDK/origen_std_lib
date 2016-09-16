@@ -54,28 +54,48 @@ protected:
         return lim;
     }
 
-    // Default callback handlers
-    virtual bool preTestFunc() {
-        return true;
+    // Called immediately before the first RDI operation is executed
+    virtual void preTestFunc() {
     }
-    virtual bool holdStateFunc() {
-        return true;
+    virtual void preTestFunc(int site) {
     }
-    virtual bool postTestFunc() {
-        return true;
+
+    // Called before the main RDI operation is executed, giving the chance to add
+    // additional settings to it
+    virtual void filterRDI(SMART_RDI::dcBase & prdi) {
     }
-    virtual bool preProcessFunc() {
-        return true;
+    virtual void filterRDI(SMART_RDI::DIG_CAP & prdi) {
     }
-    virtual bool processFunc() {
-        return true;
+    virtual void filterRDI(SMART_RDI::FUNC & prdi) {
     }
-    virtual bool postProcessFunc() {
-        return true;
+
+    // If the test has a hold state, this will be called immediately after the hold
+    // state pattern has run
+    virtual void holdStateFunc() {
     }
+    virtual void holdStateFunc(int site) {
+    }
+
+    // Called after the last RDI operation has executed and all results have been
+    // fetched
+    virtual void postTestFunc() {
+    }
+    virtual void postTestFunc(int site) {
+    }
+
+    // Called immediately before the final result processing. If the test is configured for async
+    // processing then this will be called later in the background. Contrast this with the
+    // postTestFunc which will be called before the main test body completes.
+    virtual void processFunc() {
+    }
+    virtual void processFunc(int site) {
+    }
+
+    // Called before the main test result is judged, giving a chance to transform it
     virtual double filterResult(double result) {
         return result;
     }
+
     virtual bool async() {
         return _async;
     }
@@ -85,39 +105,55 @@ protected:
 
     virtual void serialProcessing(int site) {};
 
-    template <class T>
-    void asyncProcessing(T* obj) {
-        if (async()) {
-            if (preProcessFunc()) {
-                SMC_ARM_internal(obj);
-            } else {
-                processFunc();
-                postProcessFunc();
-            }
-        }
-    }
-
-    void finalProcessing() {
-        if (!async()) {
-            if (preProcessFunc()) {
-                if (processFunc()) {
-                    this->serialProcessing(CURRENT_SITE_NUMBER());
-                }
-            } else {
-                processFunc();
-            }
-            postProcessFunc();
-        } else if (syncup()) {
-            synchronize();
-        }
-    }
-
     void enableHiddenUpload() {
         if (async()) {
             rdi.hiddenUpload(TA::ALL);
         } else {
             rdi.hiddenUpload(TA::NO);
         }
+    }
+
+    void callPreTestFunc() {
+    	if (syncup()) {
+			synchronize();
+		}
+    	ON_FIRST_INVOCATION_BEGIN();
+    	preTestFunc();
+    	FOR_EACH_SITE_BEGIN();
+    	preTestFunc(CURRENT_SITE_NUMBER());
+    	FOR_EACH_SITE_END();
+    	ON_FIRST_INVOCATION_END();
+    }
+
+    void callHoldStateFunc() {
+    	ON_FIRST_INVOCATION_BEGIN();
+    	holdStateFunc();
+    	FOR_EACH_SITE_BEGIN();
+    	holdStateFunc(CURRENT_SITE_NUMBER());
+    	FOR_EACH_SITE_END();
+    	ON_FIRST_INVOCATION_END();
+    }
+
+    template <class T>
+    void callPostTestFunc(T* obj) {
+    	ON_FIRST_INVOCATION_BEGIN();
+    	postTestFunc();
+    	FOR_EACH_SITE_BEGIN();
+    	postTestFunc(CURRENT_SITE_NUMBER());
+    	FOR_EACH_SITE_END();
+    	ON_FIRST_INVOCATION_END();
+
+        if (async()) {
+        	SMC_ARM_internal(obj);
+        } else {
+        	ON_FIRST_INVOCATION_BEGIN();
+        	processFunc();
+        	FOR_EACH_SITE_BEGIN();
+        	processFunc(CURRENT_SITE_NUMBER());
+        	this->serialProcessing(CURRENT_SITE_NUMBER());
+        	FOR_EACH_SITE_END();
+        	ON_FIRST_INVOCATION_END();
+		}
     }
 };
 }

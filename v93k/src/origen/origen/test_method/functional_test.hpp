@@ -13,10 +13,19 @@ namespace TestMethod {
 class FunctionalTest: public Base  {
     void serialProcessing(int site);
 
+    int _processResults;
+
 public:
+    // Defaults
+    FunctionalTest() {
+        processResults(1);
+    }
+
     virtual ~FunctionalTest() { }
     void SMC_backgroundProcessing();
     void execute();
+
+    FunctionalTest & processResults(int v) { _processResults = v; return *this; }
 
 protected:
     // All test methods must implement these functions
@@ -48,39 +57,41 @@ void FunctionalTest::execute() {
 
     RDI_BEGIN();
 
-    if (preTestFunc()) {
-        rdi.func(testSuiteName + "f1").label(label).execute();
-    }
+    callPreTestFunc();
+
+    SMART_RDI::FUNC & prdi = rdi.func(testSuiteName + "f1").label(label);
+
+	filterRDI(prdi);
+	prdi.execute();
 
     RDI_END();
-
-    postTestFunc();
 
     FOR_EACH_SITE_BEGIN();
         site = CURRENT_SITE_NUMBER();
         results[site] = rdi.id(testSuiteName + "f1").getPassFail();
     FOR_EACH_SITE_END();
 
-    asyncProcessing(this);
-
     ON_FIRST_INVOCATION_END();
 
-    finalProcessing();
-
+    callPostTestFunc(this);
 }
 
 void FunctionalTest::serialProcessing(int site) {
-    TESTSET().judgeAndLog_FunctionalTest(results[site]);
+	if (_processResults) {
+		TESTSET().judgeAndLog_FunctionalTest(results[site] == 1);
+	}
 }
 
 void FunctionalTest::SMC_backgroundProcessing() {
-    if (processFunc()) {
-        for (int i = 0; i < activeSites.size(); i++) {
-            int site = activeSites[i];
-            SMC_TEST(site, "", testSuiteName, LIMIT(TM::GE, 1, TM::LE, 1), results[activeSites[i]]);
-        }
-    }
-    postProcessFunc();
+	processFunc();
+
+	for (int i = 0; i < activeSites.size(); i++) {
+		int site = activeSites[i];
+		processFunc(site);
+		if (_processResults) {
+			SMC_TEST(site, "", testSuiteName, LIMIT(TM::GE, 1, TM::LE, 1), results[activeSites[i]]);
+		}
+	}
 }
 
 }

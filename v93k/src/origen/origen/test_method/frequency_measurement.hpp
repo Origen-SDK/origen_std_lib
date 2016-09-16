@@ -17,11 +17,13 @@ class FrequencyMeasurement: public Base  {
     string _pin;
     int _samples;
     int _periodInNs;
+    int _processResults;
 
 public:
     // Defaults
     FrequencyMeasurement() {
         samples(2000);
+        processResults(1);
     }
     virtual ~FrequencyMeasurement() { }
     void SMC_backgroundProcessing();
@@ -35,6 +37,8 @@ public:
     FrequencyMeasurement & samples(int v) { _samples = v; return *this; }
     /// REQUIRED: Supply the period of the captured vectors in nanoseconds
     FrequencyMeasurement & periodInNs(int v) { _periodInNs = v; return *this; }
+    /// When set to 0 the results of the test will not be judged or logged
+    FrequencyMeasurement & processResults(int v) { _processResults = v; return *this; }
 
 protected:
     // All test methods must implement these functions
@@ -46,7 +50,6 @@ protected:
     string testSuiteName;
     string label;
     vector<int> funcResults;
-    LIMIT limits;
 };
 
 void FrequencyMeasurement::execute() {
@@ -64,67 +67,66 @@ void FrequencyMeasurement::execute() {
     funcResults.resize(physicalSites + 1);
     GET_TESTSUITE_NAME(testSuiteName);
     label = Primary.getLabel();
-
     pin(extractPinsFromGroup(_pin));
-    limits = GET_LIMIT_OBJECT("Functional");
 
     RDI_BEGIN();
 
-    if (preTestFunc()) {
-        rdi.digCap(testSuiteName)
-		   .label(label)
-		   .pin(_pin)
-		   .bitPerWord(1)
-		   .samples(_samples)
-		   .execute();
-    }
+    callPreTestFunc();
+
+    SMART_RDI::DIG_CAP & prdi = rdi.digCap(testSuiteName)
+								   .label(label)
+								   .pin(_pin)
+								   .bitPerWord(1)
+								   .samples(_samples);
+
+	filterRDI(prdi);
+	prdi.execute();
 
     RDI_END();
-
-    postTestFunc();
 
     FOR_EACH_SITE_BEGIN();
         site = CURRENT_SITE_NUMBER();
         funcResults[site] = rdi.id(testSuiteName).getPassFail();
     FOR_EACH_SITE_END();
 
-    asyncProcessing(this);
-
     ON_FIRST_INVOCATION_END();
 
-    finalProcessing();
-
+    callPostTestFunc(this);
 }
 
 void FrequencyMeasurement::serialProcessing(int site) {
-    double result;
-    ARRAY_I captureData = rdi.site(site).id(testSuiteName).getVector();
+	if (_processResults) {
+		double result;
+		ARRAY_I captureData = rdi.site(site).id(testSuiteName).getVector();
 
-    if (_periodBased) {
-        result = calculatePeriod(captureData, _periodInNs);
-    } else {
-        result = calculateFrequency(captureData, _periodInNs);
-    }
-    TESTSET().judgeAndLog_FunctionalTest(funcResults[site]);
-    TESTSET().judgeAndLog_ParametricTest(_pin, testSuiteName, limits, filterResult(result));
+		if (_periodBased) {
+			result = calculatePeriod(captureData, _periodInNs);
+		} else {
+			result = calculateFrequency(captureData, _periodInNs);
+		}
+		TESTSET().judgeAndLog_FunctionalTest(funcResults[site]);
+		TESTSET().judgeAndLog_ParametricTest(_pin, testSuiteName, limits(), filterResult(result));
+	}
 }
 
 void FrequencyMeasurement::SMC_backgroundProcessing() {
+	processFunc();
     double result;
-    if (processFunc()) {
-        for (int i = 0; i < activeSites.size(); i++) {
-            int site = activeSites[i];
-            ARRAY_I captureData = rdi.site(site).id(testSuiteName).getVector();
-            if (_periodBased) {
-                result = calculatePeriod(captureData, _periodInNs);
-            } else {
-                result = calculateFrequency(captureData, _periodInNs);
-            }
-            SMC_TEST(site, "", testSuiteName, LIMIT(TM::GE, 1, TM::LE, 1), funcResults[site]);
-            SMC_TEST(site, _pin, testSuiteName, limits, filterResult(result));
-        }
-    }
-    postProcessFunc();
+
+	for (int i = 0; i < activeSites.size(); i++) {
+		int site = activeSites[i];
+		processFunc(site);
+		if (_processResults) {
+			ARRAY_I captureData = rdi.site(site).id(testSuiteName).getVector();
+			if (_periodBased) {
+				result = calculatePeriod(captureData, _periodInNs);
+			} else {
+				result = calculateFrequency(captureData, _periodInNs);
+			}
+			SMC_TEST(site, "", testSuiteName, LIMIT(TM::GE, 1, TM::LE, 1), funcResults[site]);
+			SMC_TEST(site, _pin, testSuiteName, limits(), filterResult(result));
+		}
+	}
 }
 
 }
