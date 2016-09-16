@@ -5,6 +5,28 @@ using namespace std;
 
 namespace Origen {
 
+// Overlays the given data on the given pin, starting from the first vector of the given
+// pattern.
+void overlaySubroutine(string subroutinePattern, string pin, int data, int size) {
+
+	VEC_LABEL_EDIT ov(subroutinePattern, extractPinsFromGroup(pin));
+
+	// Need to use a vector here so the size can be determined at runtime
+	vector<VECTOR_DATA> vecData(size);
+
+	for(int i = 0; i < size; i++) {
+		int val = (data & (1 << i)) >> i;
+		VECTOR_DATA v = {i, val};
+		vecData[i] = v;
+	}
+
+	// However the downloadUserVectors function only accepts an array, so use this trick
+	// to convert the data to an array
+	VECTOR_DATA * vecDataArray = &vecData[0];
+
+	ov.downloadUserVectors(vecDataArray, size);
+}
+
 double calculateFrequency(const ARRAY_I &captureData, double periodInNs) {
     int	iFreqCount;
     double dFreq_MHz;

@@ -13,6 +13,7 @@ string extractPinsFromGroup(const string& groupname);
 void synchronize(double timeout = 1);
 double calculateFrequency(const ARRAY_I &captureData, double periodInNs);
 double calculatePeriod(const ARRAY_I &captureData, double periodInNs);
+void overlaySubroutine(string subroutinePattern, string pin, int data, int size);
 
 }
 
