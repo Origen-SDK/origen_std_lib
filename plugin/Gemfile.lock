@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    origen_std_lib (0.3.0)
+    origen_std_lib (0.4.0)
       origen (>= 0.7.31)
       origen_testers (>= 0.8.1)
 
@@ -88,7 +88,7 @@ GEM
       yard (~> 0.8)
     origen_doc_helpers (0.4.3)
       origen (>= 0.7.15)
-    origen_testers (0.8.1)
+    origen_testers (0.8.3)
       atp (~> 0.4, >= 0.4.2)
       origen (>= 0.7.31)
       require_all (~> 1)
