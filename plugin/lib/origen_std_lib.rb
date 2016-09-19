@@ -5,22 +5,24 @@ module OrigenStdLib
   # THIS FILE SHOULD ONLY BE USED TO LOAD RUNTIME DEPENDENCIES
   # If this plugin has any development dependencies (e.g. dummy DUT or other models that are only used
   # for testing), then these should be loaded from config/boot.rb
+  require 'origen_std_lib/v93k'
 
-  # Example of how to explicitly require a file
-  # require "origen_std_lib/my_file"
-
-  # Load all files in the lib/origen_std_lib directory.
-  # Note that there is no problem from requiring a file twice (Ruby will ignore
-  # the second require), so if you have a file that must be required first, then
-  # explicitly require it up above and then let this take care of the rest.
-  Dir.glob("#{File.dirname(__FILE__)}/origen_std_lib/**/*.rb").sort.each do |file|
-    require file
+  def includes_origen_std_lib?
+    true
   end
 
-  def initialize(*args)
-    super
-    if tester.v93k?
-      OrigenStdLib.add_v93k_std_lib(self)
+  # Injects the library into the test program interface at the start of
+  # the flow
+  class PersistentCallbackHandlers
+    include Origen::PersistentCallbacks
+
+    def on_flow_start(options)
+      if Origen.interface.respond_to?(:includes_origen_std_lib?) && tester.v93k?
+        OrigenStdLib.add_v93k_std_lib(Origen.interface)
+      end
     end
   end
+  # Instantiate an instance of this class immediately when this file is loaded, this object will
+  # then listen for the remainder of the Origen thread
+  PersistentCallbackHandlers.new
 end
