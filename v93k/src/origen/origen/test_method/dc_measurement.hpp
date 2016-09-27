@@ -178,7 +178,6 @@ void DCMeasurement::serialProcessing(int site) {
 }
 
 void DCMeasurement::SMC_backgroundProcessing() {
-	processFunc();
 	for (int i = 0; i < activeSites.size(); i++) {
 		int site = activeSites[i];
 		processFunc(site);

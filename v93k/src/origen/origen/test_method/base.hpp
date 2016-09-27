@@ -86,8 +86,6 @@ protected:
     // Called immediately before the final result processing. If the test is configured for async
     // processing then this will be called later in the background. Contrast this with the
     // postTestFunc which will be called before the main test body completes.
-    virtual void processFunc() {
-    }
     virtual void processFunc(int site) {
     }
 
@@ -117,21 +115,17 @@ protected:
     	if (syncup()) {
 			synchronize();
 		}
-    	ON_FIRST_INVOCATION_BEGIN();
     	preTestFunc();
     	FOR_EACH_SITE_BEGIN();
     	preTestFunc(CURRENT_SITE_NUMBER());
     	FOR_EACH_SITE_END();
-    	ON_FIRST_INVOCATION_END();
     }
 
     void callHoldStateFunc() {
-    	ON_FIRST_INVOCATION_BEGIN();
     	holdStateFunc();
     	FOR_EACH_SITE_BEGIN();
     	holdStateFunc(CURRENT_SITE_NUMBER());
     	FOR_EACH_SITE_END();
-    	ON_FIRST_INVOCATION_END();
     }
 
     template <class T>
@@ -146,13 +140,8 @@ protected:
         if (async()) {
         	SMC_ARM_internal(obj);
         } else {
-        	ON_FIRST_INVOCATION_BEGIN();
-        	processFunc();
-        	FOR_EACH_SITE_BEGIN();
         	processFunc(CURRENT_SITE_NUMBER());
         	this->serialProcessing(CURRENT_SITE_NUMBER());
-        	FOR_EACH_SITE_END();
-        	ON_FIRST_INVOCATION_END();
 		}
     }
 };

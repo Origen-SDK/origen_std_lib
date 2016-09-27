@@ -110,7 +110,6 @@ void FrequencyMeasurement::serialProcessing(int site) {
 }
 
 void FrequencyMeasurement::SMC_backgroundProcessing() {
-	processFunc();
     double result;
 
 	for (int i = 0; i < activeSites.size(); i++) {
