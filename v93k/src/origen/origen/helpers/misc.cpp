@@ -5,17 +5,18 @@ using namespace std;
 
 namespace Origen {
 
-// Overlays the given data on the given pin, starting from the first vector of the given
-// pattern.
+/// Overlays the given data on the given pin, starting from the first vector of the given pattern
 void overlaySubroutine(string subroutinePattern, string pin, int data, int size) {
-
-	VEC_LABEL_EDIT ov(subroutinePattern, extractPinsFromGroup(pin));
+    string p = extractPinsFromGroup(pin);
+    string pat = subroutinePattern;
+	VEC_LABEL_EDIT ov(pat, p);
 
 	// Need to use a vector here so the size can be determined at runtime
 	vector<VECTOR_DATA> vecData(size);
 
 	for(int i = 0; i < size; i++) {
-		int val = (data & (1 << i)) >> i;
+	    int j = size - 1 - i;
+		int val = (data & (1 << j)) >> j;
 		VECTOR_DATA v = {i, val};
 		vecData[i] = v;
 	}
@@ -26,6 +27,15 @@ void overlaySubroutine(string subroutinePattern, string pin, int data, int size)
 
 	ov.downloadUserVectors(vecDataArray, size);
 }
+
+/// Returns the number of 1's (bits that are set) in the given 32-bit number
+int numberOfOnes(uint32_t i)
+{
+     i = i - ((i >> 1) & 0x55555555);
+     i = (i & 0x33333333) + ((i >> 2) & 0x33333333);
+     return (((i + (i >> 4)) & 0x0F0F0F0F) * 0x01010101) >> 24;
+}
+
 
 double calculateFrequency(const ARRAY_I &captureData, double periodInNs) {
     int	iFreqCount;
