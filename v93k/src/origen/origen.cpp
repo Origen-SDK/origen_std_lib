@@ -8,5 +8,15 @@ Utils::Version version() {
     return v;
 }
 
+vector<Site> Sites;
+
+
+Site& site() {
+    return Sites[CURRENT_SITE_NUMBER()];
+}
+
+Site& site(int site) {
+    return Sites[site];
+}
 
 }

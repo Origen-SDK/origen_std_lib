@@ -15,6 +15,9 @@ double calculateFrequency(const ARRAY_I &captureData, double periodInNs);
 double calculatePeriod(const ARRAY_I &captureData, double periodInNs);
 void overlaySubroutine(string subroutinePattern, string pin, int data, int size);
 int numberOfOnes(uint32_t i);
+int toInt (const string &str, int base = 0);
+vector<string> split(const string &str, char delim);
+void split(const string &str, char delim, vector<string> &elems);
 
 }
 

@@ -21,6 +21,7 @@ module OrigenStdLib
         OrigenStdLib.add_v93k_std_lib(Origen.interface)
       end
     end
+    alias :on_resource_start :on_flow_start
   end
   # Instantiate an instance of this class immediately when this file is loaded, this object will
   # then listen for the remainder of the Origen thread

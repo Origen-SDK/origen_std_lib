@@ -1,9 +1,60 @@
 /** @file */ 
 #include "../helpers.hpp"
+#include <cerrno>
+#include <stdlib.h>
 
 using namespace std;
 
 namespace Origen {
+
+/// Split the given string by the given delimiter and return the results in a vector of strings
+///
+///   split("AB1234-24", '-')   // => ["AB1234", "24"]
+vector<string> split(const string &str, char delim) {
+    vector<string> elems;
+    split(str, delim, elems);
+    return elems;
+}
+
+/// This version places the result in the supplied vector rather than returning a new one
+void split(const string &str, char delim, vector<string> &elems) {
+    stringstream ss;
+    ss.str(str);
+    string item;
+    while (getline(ss, item, delim)) {
+        elems.push_back(item);
+    }
+}
+
+/// Convert the given string to an integer. Works for both decimal and hex strings as
+/// shown in the examples below.
+///
+/// If the string is not successfully converted the site in focus will be binned out.
+///
+///   toInt("0xFF")         // => 255
+///   toInt("FF", 16)       // => 255 (must declare base 16 if no leading 0x)
+///   toInt("255")          // => 255
+int toInt (const string &str, int base)
+{
+    char *end;
+    char *cstr = const_cast<char*>(str.c_str());
+    long  l;
+    errno = 0;
+    l = strtol(cstr, &end, base);
+    if ((errno == ERANGE && l == LONG_MAX) || l > INT_MAX) {
+        cout << "ERROR: String conversion overflowed an integer - " << str << endl;
+        ERROR_EXIT(TM::EXIT_FLOW);
+    }
+    if ((errno == ERANGE && l == LONG_MIN) || l < INT_MIN) {
+        cout << "ERROR: String conversion underflowed an integer - " << str << endl;
+        ERROR_EXIT(TM::EXIT_FLOW);
+    }
+    if (*cstr == '\0' || *end != '\0') {
+        cout << "ERROR: String is not convertible to an integer - " << str << endl;
+        ERROR_EXIT(TM::EXIT_FLOW);
+    }
+    return (int) l;
+}
 
 /// Overlays the given data on the given pin, starting from the first vector of the given pattern
 void overlaySubroutine(string subroutinePattern, string pin, int data, int size) {

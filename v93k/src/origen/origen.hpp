@@ -9,11 +9,14 @@
 
 #include "origen/utils.hpp"
 #include "origen/helpers.hpp"
+#include "origen/site.hpp"
 
 namespace Origen {
 
+extern vector<Site> Sites;
 Utils::Version version();
+Site& site();
+Site& site(int site);
 
 }
-
 #endif
