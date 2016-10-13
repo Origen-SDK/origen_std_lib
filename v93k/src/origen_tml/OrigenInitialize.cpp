@@ -45,10 +45,6 @@ protected:
       Origen::Site site(CURRENT_SITE_NUMBER());
 
       Origen::Sites[CURRENT_SITE_NUMBER()] = site;
-
-      cout << "LotID:" << Origen::site().lotid() << endl;
-      cout << "X:" << Origen::site().x() << endl;
-      cout << "Y:" << Origen::site().y() << endl;
   }
 
   /**

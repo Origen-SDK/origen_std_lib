@@ -2,7 +2,7 @@
 #define ORIGEN_TEST_METHOD_BASE_INCLUDED
 
 #include "../test_method.hpp"
-#include "origen.hpp"
+#include "../../origen.hpp"
 
 namespace Origen {
 namespace TestMethod {
