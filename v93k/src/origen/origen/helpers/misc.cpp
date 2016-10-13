@@ -56,8 +56,37 @@ int toInt (const string &str, int base)
     return (int) l;
 }
 
+/// See toInt, but returns a UInt64 and can therefore handle up to 64-bit hex strings
+uint64_t toUInt64 (const string &str, int base)
+{
+    char *end;
+    char *cstr = const_cast<char*>(str.c_str());
+    unsigned long long int l;
+    errno = 0;
+    l = strtoull(cstr, &end, base);
+    if (errno == ERANGE && l == ULLONG_MAX) {
+        cout << "ERROR: String conversion was out of the range of a UInt64 - " << str << endl;
+        ERROR_EXIT(TM::EXIT_FLOW);
+    }
+    if (*cstr == '\0' || *end != '\0') {
+        cout << "ERROR: String is not convertible to a UInt64 - " << str << endl;
+        ERROR_EXIT(TM::EXIT_FLOW);
+    }
+    return (uint64_t) l;
+}
+
+/// Convert the given number to a hex string
+///
+///   toHex(255)    // => "ff"
+string toHex (const int &val)
+{
+    stringstream stream;
+    stream << hex << val;
+    return stream.str();
+}
+
 /// Overlays the given data on the given pin, starting from the first vector of the given pattern
-void overlaySubroutine(string subroutinePattern, string pin, int data, int size) {
+void overlaySubroutine(string subroutinePattern, string pin, uint64_t data, int size) {
     string p = extractPinsFromGroup(pin);
     string pat = subroutinePattern;
 	VEC_LABEL_EDIT ov(pat, p);
