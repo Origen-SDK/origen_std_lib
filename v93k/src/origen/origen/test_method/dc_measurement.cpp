@@ -142,6 +142,7 @@ void DCMeasurement::serialProcessing(int site) {
 		if (_applyShutdown && _checkShutdown) {
 			TESTSET().cont(true).judgeAndLog_FunctionalTest(funcResultsPost[site] == 1);
 		}
+		cout << testSuiteName << ": " << filterResult(results[site]) << endl;
 		TESTSET().judgeAndLog_ParametricTest(_pin, testSuiteName, limits(), filterResult(results[site]));
 	}
 }

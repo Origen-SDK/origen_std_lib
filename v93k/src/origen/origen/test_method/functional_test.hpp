@@ -30,8 +30,11 @@ public:
     FunctionalTest & bitPerWord(int v);
     FunctionalTest & processResults(int v);
 
+
 protected:
     FunctionalTest & getThis();
+    ARRAY_I capturedData();
+    ARRAY_I capturedData(int);
 
     // Internal variables, declared outside the the execute function body since
     // they may be useful in callback functions
@@ -39,6 +42,7 @@ protected:
     string testSuiteName;
     string label;
     vector<int> results;
+    string pinName;
 };
 
 

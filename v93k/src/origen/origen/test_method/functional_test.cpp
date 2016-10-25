@@ -43,24 +43,28 @@ void FunctionalTest::execute() {
     GET_TESTSUITE_NAME(testSuiteName);
     label = Primary.getLabel();
 
+    if (_capture) {
+        pinName = extractPinsFromGroup(_pin);
+    }
+
     RDI_BEGIN();
 
-    callPreTestFunc();
+        callPreTestFunc();
 
-    if (_capture) {
-        SMART_RDI::DIG_CAP & prdi = rdi.digCap(testSuiteName)
-    								   .label(label)
-    								   .pin(extractPinsFromGroup(_pin))
-    								   .bitPerWord(_bitPerWord)
-    								   .samples(_capture);
-    	filterRDI(prdi);
-    	prdi.execute();
+        if (_capture) {
+            SMART_RDI::DIG_CAP & prdi = rdi.digCap(testSuiteName)
+                                           .label(label)
+                                           .pin(pinName)
+                                           .bitPerWord(_bitPerWord)
+                                           .samples(_capture);
+            filterRDI(prdi);
+            prdi.execute();
 
-    } else {
-    	SMART_RDI::FUNC & prdi = rdi.func(testSuiteName).label(label);
-    	filterRDI(prdi);
-    	prdi.execute();
-    }
+        } else {
+            SMART_RDI::FUNC & prdi = rdi.func(testSuiteName).label(label);
+            filterRDI(prdi);
+            prdi.execute();
+        }
 
     RDI_END();
 
@@ -74,9 +78,19 @@ void FunctionalTest::execute() {
     callPostTestFunc(this);
 }
 
+/// Returns the captured data for the site currently in focus
+ARRAY_I FunctionalTest::capturedData() {
+    return rdi.id(testSuiteName).getVector(pinName);
+}
+
+/// Returns the captured data for the given site number
+ARRAY_I FunctionalTest::capturedData(int site) {
+    return rdi.site(site).id(testSuiteName).getVector(pinName);
+}
+
 void FunctionalTest::serialProcessing(int site) {
-	if (_processResults) {
-		TESTSET().judgeAndLog_FunctionalTest(results[site] == 1);
+	if (_processResults && !_capture) {
+	    TESTSET().judgeAndLog_FunctionalTest(results[site] == 1);
 	}
 }
 
@@ -84,7 +98,7 @@ void FunctionalTest::SMC_backgroundProcessing() {
 	for (int i = 0; i < activeSites.size(); i++) {
 		int site = activeSites[i];
 		processFunc(site);
-		if (_processResults) {
+		if (_processResults && !_capture) {
 			SMC_TEST(site, "", testSuiteName, LIMIT(TM::GE, 1, TM::LE, 1), results[activeSites[i]]);
 		}
 	}
