@@ -18,6 +18,7 @@ int numberOfOnes(uint32_t i);
 int toInt (const string &str, int base = 0);
 vector<string> split(const string &str, char delim);
 void split(const string &str, char delim, vector<string> &elems);
+void initializeSites();
 
 }
 

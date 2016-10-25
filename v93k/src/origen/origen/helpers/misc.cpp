@@ -2,6 +2,7 @@
 #include "../helpers.hpp"
 #include <cerrno>
 #include <stdlib.h>
+#include "../../origen.hpp"
 
 using namespace std;
 
@@ -138,6 +139,27 @@ string extractPinsFromGroup(const string& groupname)
     }
 
     return pinlist;
+}
+
+// Initializes the site objects that are used to store the ECID, this should be called at
+// the start of the test flow if using the Origen.site API
+void initializeSites() {
+    INT num_of_sites;
+    ARRAY_I sites;
+
+    ON_FIRST_INVOCATION_BEGIN();
+
+        num_of_sites = GET_CONFIGURED_SITES(sites);
+
+        // Leave an empty space at 0, easier then to fetch by site number (which start at 1)
+        Origen::Sites.resize(num_of_sites + 1, Origen::Site(0));
+
+    ON_FIRST_INVOCATION_END();
+
+    // Instantiate a new site object and save it in the global site array
+    Origen::Site site(CURRENT_SITE_NUMBER());
+
+    Origen::Sites[CURRENT_SITE_NUMBER()] = site;
 }
 
 }
