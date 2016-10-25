@@ -46,6 +46,7 @@
 								<option id="gnu.c.compiler.so.debug.option.debugging.level.994028361" name="Debug Level" superClass="gnu.c.compiler.so.debug.option.debugging.level" value="gnu.c.debugging.level.max" valueType="enumerated"/>
 								<option id="com.verigy.itee.utm.editor.tool.c.compiler.option.debug.1790214273" name="Include paths (-I)" superClass="com.verigy.itee.utm.editor.tool.c.compiler.option.debug" valueType="includePath">
 									<listOptionValue builtIn="false" value="${HP83000_ROOT}/prod_com/include"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/device/testmethod/sh_lib-EL5-64bit}&quot;"/>
 									<listOptionValue builtIn="false" value="${HP83000_ROOT}/prod_com/include/MAPI"/>
 									<listOptionValue builtIn="false" value="${HP83000_ROOT}/testmethod/include"/>
 									<listOptionValue builtIn="false" value="${HP83000_ROOT}/com/include"/>
@@ -62,7 +63,7 @@
 									<listOptionValue builtIn="false" value="origen"/>
 								</option>
 								<option id="gnu.cpp.link.option.paths.316480972" name="Library search path (-L)" superClass="gnu.cpp.link.option.paths" valueType="libPaths">
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/origen/Debug}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/device/testmethod/sh_lib-EL5-64bit}&quot;"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.cpp.linker.input.53785394" superClass="cdt.managedbuild.tool.gnu.cpp.linker.input">
 									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>

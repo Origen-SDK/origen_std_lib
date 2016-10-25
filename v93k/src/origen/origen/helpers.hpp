@@ -20,6 +20,7 @@ uint64_t toUInt64 (const string&, int = 0);
 vector<string> split(const string&, char);
 void split(const string&, char, vector<string>&);
 string toHex (const int&);
+void initializeSites();
 
 }
 
