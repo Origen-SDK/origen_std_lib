@@ -21,6 +21,11 @@ vector<string> split(const string&, char);
 void split(const string&, char, vector<string>&);
 string toHex (const int&);
 void initializeSites();
+void logParametricTest(string, int, double, LIMIT, string);
+void logFunctionalTest(string, int, bool, string);
+bool isPass(double, LIMIT);
+string loStr(LIMIT);
+string hiStr(LIMIT);
 
 }
 

@@ -43,9 +43,9 @@ void FrequencyMeasurement::execute() {
     label = Primary.getLabel();
     pin(extractPinsFromGroup(_pin));
 
-    RDI_BEGIN();
-
     callPreTestFunc();
+
+    RDI_BEGIN();
 
     SMART_RDI::DIG_CAP & prdi = rdi.digCap(testSuiteName)
 								   .label(label)
@@ -60,7 +60,7 @@ void FrequencyMeasurement::execute() {
 
     FOR_EACH_SITE_BEGIN();
         site = CURRENT_SITE_NUMBER();
-        funcResults[site] = rdi.id(testSuiteName).getPassFail();
+        funcResults[site] = rdi.getBurstPassFail();
     FOR_EACH_SITE_END();
 
     ON_FIRST_INVOCATION_END();
@@ -78,7 +78,10 @@ void FrequencyMeasurement::serialProcessing(int site) {
 		} else {
 			result = calculateFrequency(captureData, _periodInNs);
 		}
-		TESTSET().judgeAndLog_FunctionalTest(funcResults[site]);
+		logFunctionalTest(testSuiteName, site, funcResults[site] == 1, label);
+		TESTSET().judgeAndLog_FunctionalTest(funcResults[site] == 1);
+
+		logParametricTest(testSuiteName, site, filterResult(result), limits(), _pin);
 		TESTSET().judgeAndLog_ParametricTest(_pin, testSuiteName, limits(), filterResult(result));
 	}
 }

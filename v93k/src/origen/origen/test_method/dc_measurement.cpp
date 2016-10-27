@@ -73,9 +73,10 @@ void DCMeasurement::execute() {
         	    _iRange = abs(h);
         }
 
-        RDI_BEGIN();
 
         callPreTestFunc();
+
+        RDI_BEGIN();
 
         rdi.func(testSuiteName + "f1").label(label).execute();
 
@@ -138,12 +139,16 @@ void DCMeasurement::execute() {
 
 void DCMeasurement::serialProcessing(int site) {
 	if (_processResults) {
+	    logFunctionalTest(testSuiteName, site, funcResultsPre[site] == 1, label);
 		TESTSET().cont(true).judgeAndLog_FunctionalTest(funcResultsPre[site] == 1);
-		if (_applyShutdown && _checkShutdown) {
-			TESTSET().cont(true).judgeAndLog_FunctionalTest(funcResultsPost[site] == 1);
-		}
-		cout << testSuiteName << ": " << filterResult(results[site]) << endl;
+
+		logParametricTest(testSuiteName, site, filterResult(results[site]), limits(), _pin);
 		TESTSET().judgeAndLog_ParametricTest(_pin, testSuiteName, limits(), filterResult(results[site]));
+
+        if (_applyShutdown && _checkShutdown) {
+            logFunctionalTest(testSuiteName, site, funcResultsPost[site] == 1, _shutdownPattern);
+            TESTSET().cont(true).judgeAndLog_FunctionalTest(funcResultsPost[site] == 1);
+        }
 	}
 }
 

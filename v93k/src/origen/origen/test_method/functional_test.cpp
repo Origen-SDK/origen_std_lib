@@ -47,9 +47,9 @@ void FunctionalTest::execute() {
         pinName = extractPinsFromGroup(_pin);
     }
 
-    RDI_BEGIN();
+    callPreTestFunc();
 
-        callPreTestFunc();
+    RDI_BEGIN();
 
         if (_capture) {
             SMART_RDI::DIG_CAP & prdi = rdi.digCap(testSuiteName)
@@ -70,7 +70,10 @@ void FunctionalTest::execute() {
 
     FOR_EACH_SITE_BEGIN();
         site = CURRENT_SITE_NUMBER();
-        results[site] = rdi.id(testSuiteName).getPassFail();
+        if (_capture)
+            results[site] = rdi.getBurstPassFail();
+        else
+            results[site] = rdi.id(testSuiteName).getPassFail();
     FOR_EACH_SITE_END();
 
     ON_FIRST_INVOCATION_END();
@@ -89,7 +92,8 @@ ARRAY_I FunctionalTest::capturedData(int site) {
 }
 
 void FunctionalTest::serialProcessing(int site) {
-	if (_processResults && !_capture) {
+	if (_processResults) {
+	    logFunctionalTest(testSuiteName, site, results[site] == 1, label);
 	    TESTSET().judgeAndLog_FunctionalTest(results[site] == 1);
 	}
 }
@@ -98,7 +102,7 @@ void FunctionalTest::SMC_backgroundProcessing() {
 	for (int i = 0; i < activeSites.size(); i++) {
 		int site = activeSites[i];
 		processFunc(site);
-		if (_processResults && !_capture) {
+		if (_processResults) {
 			SMC_TEST(site, "", testSuiteName, LIMIT(TM::GE, 1, TM::LE, 1), results[activeSites[i]]);
 		}
 	}

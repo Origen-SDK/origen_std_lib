@@ -23,7 +23,7 @@ public:
     Base & syncup(bool v) { _syncup = v; return *this; }
 
 protected:
-    // Returns 1 when running in offline mode
+    /// Returns 1 when running in offline mode
     int offline() {
     	int flag;
         GET_SYSTEM_FLAG("offline", &flag);
@@ -36,7 +36,7 @@ protected:
         return GET_LIMIT_OBJECT("Functional");
     }
 
-    // Returns the high limit value in whole units, i.e. A or V
+    /// Returns the high limit value in whole units, i.e. A or V
     double hiLimit() {
         double lim = 0.0;
         double * plim = &lim;
@@ -45,7 +45,7 @@ protected:
         return lim;
     }
 
-    // Returns the low limit value in whole units, i.e. A or V
+    /// Returns the low limit value in whole units, i.e. A or V
     double loLimit() {
         double lim = 0.0;
         double * plim = &lim;
