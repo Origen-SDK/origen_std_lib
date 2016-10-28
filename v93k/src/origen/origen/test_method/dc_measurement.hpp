@@ -22,6 +22,7 @@ class DCMeasurement: public Base {
     double _forceValue;
     double _iRange;
     int _processResults;
+    int _badc;
 
 public:
     DCMeasurement();
@@ -38,6 +39,7 @@ public:
     DCMeasurement & forceValue(double v);
     DCMeasurement & iRange(double v);
     DCMeasurement & processResults(int v);
+    DCMeasurement & badc(int v);
 
 protected:
      DCMeasurement & getThis();

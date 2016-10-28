@@ -21,6 +21,7 @@ protected:
   double  mForceValue;
   double  mIRange;
   int mCheckShutdown;
+  int mBadc;
 
 protected:
   /**
@@ -77,6 +78,12 @@ protected:
                  testmethod::TM_PARAMETER_INPUT)
       .setDefault("0")
       .setComment("The current range to apply to the measurement (in A), will be calculated if not supplied (set to 0)");
+    addParameter("badc",
+                 "int",
+                 &mBadc,
+                 testmethod::TM_PARAMETER_INPUT)
+      .setDefault("0")
+      .setComment("Perform the measurement using the Board ADC (rather than the PPMU)");
     addLimit("Functional");
   }
 
@@ -93,6 +100,7 @@ protected:
           .settlingTime(mSettlingTime)
           .pin(mPin)
           .iRange(mIRange)
+          .badc(mBadc)
           .execute();
   }
 

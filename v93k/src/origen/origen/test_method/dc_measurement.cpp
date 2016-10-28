@@ -15,6 +15,7 @@ DCMeasurement::DCMeasurement() {
     forceValue(0);
     iRange(0);
     processResults(1);
+    badc(0);
 }
 
 DCMeasurement::~DCMeasurement() { }
@@ -28,6 +29,7 @@ DCMeasurement & DCMeasurement::pin(string v) { _pin = v; return *this; }
 DCMeasurement & DCMeasurement::forceValue(double v) { _forceValue = v; return *this; }
 DCMeasurement & DCMeasurement::iRange(double v) { _iRange = v; return *this; }
 DCMeasurement & DCMeasurement::processResults(int v) { _processResults = v; return *this; }
+DCMeasurement & DCMeasurement::badc(int v) { _badc = v; return *this; }
 
 // All test methods must implement this function
 DCMeasurement & DCMeasurement::getThis() { return *this; }
@@ -84,14 +86,26 @@ void DCMeasurement::execute() {
 
 		if(_measure == "VOLT") {
 
-			SMART_RDI::dcBase & prdi = rdi.dc(testSuiteName)
-										  .pin(_pin)
-										  .iForce(_forceValue)
-										  .relay(TA::ppmuRly_onPPMU_offACDC,TA::ppmuRly_onAC_offDCPPMU)
-										  .measWait(_settlingTime)
-										  .vMeas();
-			filterRDI(prdi);
-			prdi.execute();
+			if (_badc) {
+          rdi.dc(testSuiteName)
+             .pin(_pin, TA::BADC)
+             .measWait(_settlingTime)
+             .vMeas()
+             .execute();
+
+			} else {
+			    SMART_RDI::dcBase & prdi = rdi.dc(testSuiteName)
+                                        .pin(_pin)
+                                        .iForce(_forceValue)
+                                        .measWait(_settlingTime)
+                                        .relay(TA::ppmuRly_onPPMU_offACDC,TA::ppmuRly_onAC_offDCPPMU)
+                                        .vMeas();
+			    filterRDI(prdi);
+			    prdi.execute();
+
+			}
+
+
 
 		} else {
 
