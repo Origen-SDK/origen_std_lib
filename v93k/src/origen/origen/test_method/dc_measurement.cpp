@@ -87,11 +87,11 @@ void DCMeasurement::execute() {
 		if(_measure == "VOLT") {
 
 			if (_badc) {
-          rdi.dc(testSuiteName)
-             .pin(_pin, TA::BADC)
-             .measWait(_settlingTime)
-             .vMeas()
-             .execute();
+          		    rdi.dc(testSuiteName)
+			       .pin(_pin, TA::BADC)
+			       .measWait(_settlingTime)
+			       .vMeas()
+			       .execute();
 
 			} else {
 			    SMART_RDI::dcBase & prdi = rdi.dc(testSuiteName)
