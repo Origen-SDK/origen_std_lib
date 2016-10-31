@@ -11,7 +11,7 @@ Site::Site(int number) {
 }
 Site::~Site() {}
 
-/// Set the lot ID to the given value
+/// Set the lot ID to the given value, e.g. "ABC1234"
 void Site::lotid(string val) {
     lotidSet = true;
     _lotid = val;
@@ -31,21 +31,53 @@ string Site::lotid() {
     return _lotid;
 }
 
+/// Returns the lot ID as a 64-bit integer that is suitable for programming to the device.
+/// Each character in the lotID is converted to its ASCII code.
+/// An error will be raised if the length of the current lotID overflows 64-bits.
+uint64_t Site::lotidInt() {
+	string id = lotid();
+ 	stringstream val;
+
+ 	if (id.length() > 8) {
+ 		if (id == "Undefined") {
+ 			id = "Undefine";
+ 		} else {
+ 			cout << "ERROR: Lot ID is greater than 8 characters and cannot be converted to a UInt64: " << id << endl;
+ 			ERROR_EXIT(TM::EXIT_FLOW);
+ 		}
+ 	}
+ 	if (id.length() > 0) val << toHex((int)id.at(0));
+ 	if (id.length() > 1) val << toHex((int)id.at(1));
+ 	if (id.length() > 2) val << toHex((int)id.at(2));
+ 	if (id.length() > 3) val << toHex((int)id.at(3));
+ 	if (id.length() > 4) val << toHex((int)id.at(4));
+ 	if (id.length() > 5) val << toHex((int)id.at(5));
+ 	if (id.length() > 6) val << toHex((int)id.at(6));
+ 	if (id.length() > 7) val << toHex((int)id.at(7));
+
+ 	return toUInt(val.str(), 16);
+}
+
+
 /// Set the wafer number to the given value
 void Site::wafer(int val) {
     waferSet = true;
-    _wafer = val;
+    if (val < 0 || val > 255) {
+        cout << "ERROR: Wafer is out of the range of a UInt8: " << val << endl;
+        ERROR_EXIT(TM::EXIT_FLOW);
+    }
+    _wafer = (uint8_t)val;
 }
 
 /// Get the wafer number. If it has not previously been set to a value it will be automatically queried from the test system.
-int Site::wafer() {
+uint8_t Site::wafer() {
     if (!waferSet) {
         char value[CI_CPI_MAX_MODL_STRING_LEN * 2];
         if (!GetModelfileString(const_cast<char*>("WAFER_ID"), value)) {
             // Expect to return something like "AB1234-15AA", where 15 is the wafer number
-            _wafer = toInt(split((string) value, '-')[1].substr(0, 2));
+            wafer(toInt(split((string) value, '-')[1].substr(0, 2)));
         } else {
-            _wafer = -9999;
+            wafer(0xFF);
         }
         waferSet = true;
     }
@@ -60,10 +92,18 @@ void Site::x(int val) {
 }
 
 /// Get the X co-ord. If it has not previously been set to a value it will be automatically queried from the test system.
-int Site::x() {
+int16_t Site::x() {
     if (!xSet) {
         long lx, ly;
         GetDiePosXYOfSite(_number, &lx, &ly);
+     	if (lx < -32768 || lx > 32767) {
+            cout << "ERROR: X is out of the range of an Int16: " << lx << endl;
+            ERROR_EXIT(TM::EXIT_FLOW);
+     	}
+     	if (ly < -32768 || ly > 32767) {
+            cout << "ERROR: Y is out of the range of an Int16: " << ly << endl;
+            ERROR_EXIT(TM::EXIT_FLOW);
+     	}
         _x = (int) lx;
         _y = (int) ly;
         xSet = true;
@@ -72,6 +112,7 @@ int Site::x() {
     return _x;
 }
 
+
 /// Set the Y co-ordinate to the given value
 void Site::y(int val) {
     ySet = true;
@@ -79,10 +120,18 @@ void Site::y(int val) {
 }
 
 /// Get the Y co-ord. If it has not previously been set to a value it will be automatically queried from the test system.
-int Site::y() {
+int16_t Site::y() {
     if (!ySet) {
         long lx, ly;
         GetDiePosXYOfSite(_number, &lx, &ly);
+     	if (lx < -32768 || lx > 32767) {
+            cout << "ERROR: X is out of the range of an Int16: " << lx << endl;
+            ERROR_EXIT(TM::EXIT_FLOW);
+     	}
+     	if (ly < -32768 || ly > 32767) {
+            cout << "ERROR: Y is out of the range of an Int16: " << ly << endl;
+            ERROR_EXIT(TM::EXIT_FLOW);
+     	}
         _x = (int) lx;
         _y = (int) ly;
         xSet = true;

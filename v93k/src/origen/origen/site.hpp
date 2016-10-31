@@ -9,11 +9,11 @@ namespace Origen {
 class Site {
     string _lotid;
     bool lotidSet;
-    int _wafer;
+    uint8_t _wafer;
     bool waferSet;
-    int _x;
+    int16_t _x;
     bool xSet;
-    int _y;
+    int16_t _y;
     bool ySet;
     int _number;
 
@@ -22,12 +22,13 @@ public:
     Site(int);
     virtual ~Site();
     string lotid();
+    uint64_t lotidInt();
     void lotid(string);
-    int wafer();
+    uint8_t wafer();
     void wafer(int);
-    int x();
+    int16_t x();
     void x(int);
-    int y();
+    int16_t y();
     void y(int);
     /// Returns the site number associated with the given site object
     int number() { return _number; }

@@ -27,7 +27,7 @@ void split(const string &str, char delim, vector<string> &elems) {
     }
 }
 
-/// Convert the given string to an integer. Works for both decimal and hex strings as
+/// Convert the given string to a 64-bit integer. Works for both decimal and hex strings as
 /// shown in the examples below.
 ///
 /// If the string is not successfully converted the site in focus will be binned out.
@@ -35,30 +35,30 @@ void split(const string &str, char delim, vector<string> &elems) {
 ///   toInt("0xFF")         // => 255
 ///   toInt("FF", 16)       // => 255 (must declare base 16 if no leading 0x)
 ///   toInt("255")          // => 255
-int toInt (const string &str, int base)
+int64_t toInt (const string &str, int base)
 {
     char *end;
     char *cstr = const_cast<char*>(str.c_str());
-    long  l;
+    long long int l;
     errno = 0;
-    l = strtol(cstr, &end, base);
-    if ((errno == ERANGE && l == LONG_MAX) || l > INT_MAX) {
-        cout << "ERROR: String conversion overflowed an integer - " << str << endl;
+    l = strtoll(cstr, &end, base);
+    if ((errno == ERANGE && l == LLONG_MAX) || l > LLONG_MAX) {
+        cout << "ERROR: String conversion overflowed a 64-bit integer - " << str << endl;
         ERROR_EXIT(TM::EXIT_FLOW);
     }
-    if ((errno == ERANGE && l == LONG_MIN) || l < INT_MIN) {
-        cout << "ERROR: String conversion underflowed an integer - " << str << endl;
+    if ((errno == ERANGE && l == LLONG_MIN) || l < LLONG_MIN) {
+        cout << "ERROR: String conversion underflowed a 64-bit integer - " << str << endl;
         ERROR_EXIT(TM::EXIT_FLOW);
     }
     if (*cstr == '\0' || *end != '\0') {
-        cout << "ERROR: String is not convertible to an integer - " << str << endl;
+        cout << "ERROR: String is not convertible to a 64-bit integer - " << str << endl;
         ERROR_EXIT(TM::EXIT_FLOW);
     }
-    return (int) l;
+    return (int64_t) l;
 }
 
-/// See toInt, but returns a UInt64 and can therefore handle up to 64-bit hex strings
-uint64_t toUInt64 (const string &str, int base)
+/// See toInt, but returns an unsigned 64-bit integer
+uint64_t toUInt (const string &str, int base)
 {
     char *end;
     char *cstr = const_cast<char*>(str.c_str());
@@ -87,7 +87,7 @@ string toHex (const int &val)
 }
 
 /// Overlays the given data on the given pin, starting from the first vector of the given pattern
-void overlaySubroutine(string subroutinePattern, string pin, uint64_t data, int size) {
+void overlaySubroutine(string subroutinePattern, string pin, int64_t data, int size) {
     string p = extractPinsFromGroup(pin);
     string pat = subroutinePattern;
 	VEC_LABEL_EDIT ov(pat, p);
