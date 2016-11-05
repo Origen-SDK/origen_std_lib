@@ -14,6 +14,7 @@ void synchronize(double = 1);
 double calculateFrequency(const ARRAY_I&, double);
 double calculatePeriod(const ARRAY_I&, double);
 void overlaySubroutine(string, string, int64_t, int);
+void reverseOverlaySubroutine(string, string, int64_t, int);
 int numberOfOnes(uint32_t);
 int64_t toInt (const string&, int = 0);
 uint64_t toUInt (const string&, int = 0);

@@ -96,6 +96,28 @@ void overlaySubroutine(string subroutinePattern, string pin, int64_t data, int s
 	vector<VECTOR_DATA> vecData(size);
 
 	for(int i = 0; i < size; i++) {
+		int val = (data & (1 << i)) >> i;
+		VECTOR_DATA v = {i, val};
+		vecData[i] = v;
+	}
+
+	// However the downloadUserVectors function only accepts an array, so use this trick
+	// to create an array instance that points to the vector data
+	VECTOR_DATA * vecDataArray = &vecData[0];
+
+	ov.downloadUserVectors(vecDataArray, size);
+}
+
+/// Same as overlaySubroutine but the data is applied in reverse order
+void reverseOverlaySubroutine(string subroutinePattern, string pin, int64_t data, int size) {
+    string p = extractPinsFromGroup(pin);
+    string pat = subroutinePattern;
+	VEC_LABEL_EDIT ov(pat, p);
+
+	// Need to use a vector here so the size can be determined at runtime
+	vector<VECTOR_DATA> vecData(size);
+
+	for(int i = 0; i < size; i++) {
 	    int j = size - 1 - i;
 		int val = (data & (1 << j)) >> j;
 		VECTOR_DATA v = {i, val};
