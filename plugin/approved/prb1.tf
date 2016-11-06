@@ -20,6 +20,7 @@ tm_2:
   "pin" = "SOME_PIN";
   "forceValue" = "10.4";
   "iRange" = "1000";
+  "badc" = "0";
 tm_3:
   "periodBased" = "1";
   "pin" = "PINA";
