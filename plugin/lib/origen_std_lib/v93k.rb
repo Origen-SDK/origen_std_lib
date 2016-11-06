@@ -17,6 +17,7 @@ module OrigenStdLib
                 pin:              [:string, nil],
                 force_value:      [:double, 0],
                 i_range:          [:integer, nil],
+                badc:             [:integer, 0],
                 methods:          {
                   finalize: lambda  do |tm|
                     # Clean up the measurement type parameter

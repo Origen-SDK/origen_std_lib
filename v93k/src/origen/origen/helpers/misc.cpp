@@ -78,16 +78,62 @@ uint64_t toUInt (const string &str, int base)
 
 /// Convert the given number to a hex string
 ///
-///   toHex(255)    // => "ff"
-string toHex (const int &val)
+///   toHex(255);    // => "ff"
+string toHex (const uint64_t &val)
 {
     stringstream stream;
     stream << hex << val;
     return stream.str();
 }
 
+/// Convert the given number to a string
+///
+///   toStr(255);    // => "255"
+string toStr (const uint64_t &val)
+{
+    stringstream stream;
+    stream << val;
+    return stream.str();
+}
+
+/// Uppercase the given string
+///
+///   upcase("ff");  // => "FF"
+string upcase(string base) {
+	transform(base.begin(), base.end(), base.begin(), ::toupper);
+	return base;
+}
+
+/// Extend the string to the given size, padding with the given character on the left
+///
+///   lpad("FF", 4, '0');  // => "00FF"
+string lpad(string base, int length, char fill) {
+	stringstream padded;
+	padded << right << setw(length) << setfill(fill) << base;
+	return padded.str();
+}
+
+/// Extend the string to the given size, padding with the given character on the right
+///
+///   rpad("FF", 4, ' ');  // => "FF  "
+string rpad(string base, int length, char fill) {
+	stringstream padded;
+	padded << left << setw(length) << setfill(fill) << base;
+	return padded.str();
+}
+
+/// Returns true if the given number is even
+bool isEven(uint64_t number) {
+	return number % 2 == 0;
+}
+
+/// Returns true if the given number is odd
+bool isOdd(uint64_t number) {
+	return number % 2 != 0;
+}
+
 /// Overlays the given data on the given pin, starting from the first vector of the given pattern
-void overlaySubroutine(string subroutinePattern, string pin, int64_t data, int size) {
+void overlaySubroutine(string subroutinePattern, string pin, uint64_t data, int size) {
     string p = extractPinsFromGroup(pin);
     string pat = subroutinePattern;
 	VEC_LABEL_EDIT ov(pat, p);
@@ -109,7 +155,7 @@ void overlaySubroutine(string subroutinePattern, string pin, int64_t data, int s
 }
 
 /// Same as overlaySubroutine but the data is applied in reverse order
-void reverseOverlaySubroutine(string subroutinePattern, string pin, int64_t data, int size) {
+void reverseOverlaySubroutine(string subroutinePattern, string pin, uint64_t data, int size) {
     string p = extractPinsFromGroup(pin);
     string pat = subroutinePattern;
 	VEC_LABEL_EDIT ov(pat, p);
