@@ -33,6 +33,7 @@ string lpad(string, int, char);
 string rpad(string, int, char);
 bool isEven(uint64_t);
 bool isOdd(uint64_t);
+LIMIT noLimits();
 
 }
 

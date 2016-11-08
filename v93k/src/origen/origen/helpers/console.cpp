@@ -24,6 +24,11 @@ void logParametricTest(string name, int site, double result, LIMIT limits, strin
 
 }
 
+/// Returns a LIMIT object with no limits enabled
+LIMIT noLimits() {
+	return LIMIT(TM::NA, 0, TM::NA, 0);
+}
+
 /// Prints the result of a functional test to the console
 void logFunctionalTest(string name, int site, bool passed, string pattern) {
     cout << site << " ";
