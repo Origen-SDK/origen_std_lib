@@ -17,6 +17,22 @@ void Site::lotid(string val) {
     _lotid = val;
 }
 
+
+/// Set the lot ID based on the integer representation returned from lotidInt
+void Site::lotid(uint64_t val) {
+	string id = "";
+
+	for(int i = 0; i < 8; i++) {
+		int ch = val >> (8 * (7 - i));
+		if (ch != 0) {
+			id = id + (char)ch;
+		}
+	}
+
+	lotid(id);
+}
+
+
 /// Get the lot ID. If it has not previously been set to a value it will be automatically queried from the test system.
 string Site::lotid() {
     if (!lotidSet) {
@@ -73,9 +89,12 @@ void Site::wafer(int val) {
 uint8_t Site::wafer() {
     if (!waferSet) {
         char value[CI_CPI_MAX_MODL_STRING_LEN * 2];
-        if (!GetModelfileString(const_cast<char*>("WAFER_ID"), value)) {
+
+//      if (!GetModelfileString(const_cast<char*>("WAFER_ID"), value)) {
             // Expect to return something like "AB1234-15AA", where 15 is the wafer number
-            wafer(toInt(split((string) value, '-')[1].substr(0, 2)));
+            //wafer(toInt(split((string) value, '-')[1].substr(0, 2)));
+        if (!GetModelfileString(const_cast<char*>("WAFER_NUMBER"), value)) {
+        	wafer(toInt((string) value));
         } else {
             wafer(0xFF);
         }

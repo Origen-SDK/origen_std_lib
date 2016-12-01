@@ -33,7 +33,6 @@ void FunctionalTest::execute() {
     ARRAY_I sites;
 
     RDI_INIT();
-
     ON_FIRST_INVOCATION_BEGIN();
 
     enableHiddenUpload();
@@ -70,10 +69,11 @@ void FunctionalTest::execute() {
 
     FOR_EACH_SITE_BEGIN();
         site = CURRENT_SITE_NUMBER();
-        if (_capture)
-            results[site] = rdi.getBurstPassFail();
-        else
-            results[site] = rdi.id(testSuiteName).getPassFail();
+        if (_capture) {
+            results[site] = rdi.site(site).getBurstPassFail();
+        } else {
+            results[site] = rdi.site(site).id(testSuiteName).getPassFail();
+        }
     FOR_EACH_SITE_END();
 
     ON_FIRST_INVOCATION_END();

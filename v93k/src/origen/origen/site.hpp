@@ -24,6 +24,7 @@ public:
     string lotid();
     uint64_t lotidInt();
     void lotid(string);
+    void lotid(uint64_t);
     uint8_t wafer();
     void wafer(int);
     int16_t x();
