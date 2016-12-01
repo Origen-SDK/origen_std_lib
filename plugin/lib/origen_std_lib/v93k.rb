@@ -1,7 +1,7 @@
 module OrigenStdLib
   def self.add_v93k_std_lib(i)
     i.add_tml :origen,
-              class_name:            'origen_tml',
+              class_name:            'origen',
 
               functional_test:       {
               },

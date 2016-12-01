@@ -8,6 +8,18 @@ using namespace std;
 
 namespace Origen {
 
+
+uint64_t flip(uint64_t input, int size) {
+	uint64_t output = 0;
+	for (int i = 0; i < size; i++) {
+		output <<= 1;
+		output |= input & 1;
+		input >>= 1;
+	}
+	return output;
+}
+
+
 /// Split the given string by the given delimiter and return the results in a vector of strings
 ///
 ///   split("AB1234-24", '-')   // => ["AB1234", "24"]

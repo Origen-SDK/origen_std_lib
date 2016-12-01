@@ -3,7 +3,7 @@
 //for test method API interfaces
 #include "mapi.hpp"
 using namespace std;
-#include "origen/test_method/frequency_measurement.hpp"
+#include "../origen/test_method/frequency_measurement.hpp"
 
 /**
  * Test method class.

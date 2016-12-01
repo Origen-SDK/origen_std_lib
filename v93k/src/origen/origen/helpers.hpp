@@ -34,6 +34,7 @@ string rpad(string, int, char);
 bool isEven(uint64_t);
 bool isOdd(uint64_t);
 LIMIT noLimits();
+uint64_t flip(uint64_t, int);
 
 }
 

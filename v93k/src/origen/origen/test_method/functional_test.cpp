@@ -33,7 +33,6 @@ void FunctionalTest::execute() {
     ARRAY_I sites;
 
     RDI_INIT();
-
     ON_FIRST_INVOCATION_BEGIN();
 
     enableHiddenUpload();
@@ -41,6 +40,8 @@ void FunctionalTest::execute() {
     physicalSites = GET_CONFIGURED_SITES(sites);
     results.resize(physicalSites + 1);
     GET_TESTSUITE_NAME(testSuiteName);
+//    testSuiteName = testSuiteName + toStr(CURRENT_SITE_NUMBER());
+//    cout << testSuiteName << endl;
     label = Primary.getLabel();
 
     if (_capture) {
@@ -62,6 +63,7 @@ void FunctionalTest::execute() {
 
         } else {
             SMART_RDI::FUNC & prdi = rdi.func(testSuiteName).label(label);
+//            SMART_RDI::FUNC & prdi = rdi.func(testSuiteName).burst(label);
             filterRDI(prdi);
             prdi.execute();
         }
@@ -70,10 +72,14 @@ void FunctionalTest::execute() {
 
     FOR_EACH_SITE_BEGIN();
         site = CURRENT_SITE_NUMBER();
-        if (_capture)
-            results[site] = rdi.getBurstPassFail();
-        else
-            results[site] = rdi.id(testSuiteName).getPassFail();
+        if (_capture) {
+            results[site] = rdi.site(site).getBurstPassFail();
+//        	cout << "PRE " << site << ": " << results[site] << endl;
+
+        } else {
+            results[site] = rdi.site(site).id(testSuiteName).getPassFail();
+//            cout << "PRE " << site << ": " << results[site] << endl;
+        }
     FOR_EACH_SITE_END();
 
     ON_FIRST_INVOCATION_END();
@@ -93,6 +99,7 @@ ARRAY_I FunctionalTest::capturedData(int site) {
 
 void FunctionalTest::serialProcessing(int site) {
 	if (_processResults) {
+//		cout << "POST " << site << ": " << results[site] << endl;
 	    logFunctionalTest(testSuiteName, site, results[site] == 1, label);
 	    TESTSET().judgeAndLog_FunctionalTest(results[site] == 1);
 	}
