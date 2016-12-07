@@ -1,0 +1,124 @@
+% render "templates/web/layouts/guides.html" do
+
+<style>
+  img { margin: 20px 0; }
+</style>
+
+This document describes how to obtain the Origen V93K library
+and then install it within a test program.
+
+The guide is split into two parts:
+
+* [Part 1](#Part_1) - Describes how to obtain and add the library to your test program. Everyone must
+  do this part; for example when you have no plans to use it directly in your own code,
+  but you want to use another 3rd party library which depends on Origen.
+
+* [Part 2](#Part_2) - Describes the additional steps that are required if you want to use the Origen
+  APIs within your own code.
+
+
+### Part 1
+
+#### Get the Code
+
+The library is installed by placing a complete copy of the source code within your test program's
+top-level directory (the standard place to put test method libraries).
+
+[See the FAQ](<%= path "faq/#Why_is_the_library_not_installed_at_system_level?" %>) for why this
+approach has been chosen.
+
+If you have access to the web and have Git installed, the easiest
+way is to check it out directly from Github:
+
+~~~text
+cd your/test/program
+git clone https://github.com/Origen-SDK/origen_std_lib.git
+~~~
+
+Then run these commands anytime you want to change version, substituting the version reference as
+appropriate (note that this will blow away any local edits that you may have made to the library):
+
+~~~text
+cd your/test/program/origen_std_lib
+git pull
+git reset --hard <%= Origen.app.version.prefixed %>
+~~~
+
+Alternatively, you can always [download a specific version of the library from our releases page](https://github.com/Origen-SDK/origen_std_lib/releases).
+
+#### Create a preload Symlink
+
+A symlink then needs to be created to add the Origen library to the preload folder within the
+device directory, this ensures
+that it is loaded before any 3rd party libraries that depend on it:
+
+~~~text
+mkdir -p your/device/testmethod/sh_lib\-EL5\-64bit/preload
+pushd your/device/testmethod/sh_lib\-EL5\-64bit/preload 
+ln -s ../liborigen.so liborigen.so
+popd 
+~~~
+
+
+#### Add the Library to your Workspace
+
+With the source code in place, the last step is to make sure that it can be referenced through your
+test program's workspace.
+
+If it has not been automatically detected, then **right-click** within the **Project Explorer** pane
+and select **"Import..."**:
+
+
+<p style="text-align: center">
+  <img src="<%= path "img/install1.png" %>" height="300">
+</p>
+
+
+Then select **"93000"** -> **"Test Method Project"** on the next screen:
+
+
+<p style="text-align: center">
+  <img src="<%= path "img/install2.png" %>" height="450">
+</p>
+
+Accept the defaults on the next screen, making sure that the **"origen"** checkbox is enabled:
+
+<p style="text-align: center">
+  <img src="<%= path "img/install3.png" %>" height="450">
+</p>
+
+
+The Origen test methods will now be available from the test method selector once you build
+the program, and any references to Origen from other libraries should now be valid.
+
+If you do experience any issues at this point, please comment below to get help.
+
+
+### Part 2
+
+If you want to use the Origen library within your own test method library for the first time,
+then these additional steps are required.
+
+From the **"Project Explorer"** pane, **right-click** your library and select **"Properties"**.
+
+Then select the options shown below to add Origen to your project's include path:
+
+<p style="text-align: center">
+  <img src="<%= path "img/use1.png" %>" height="600">
+</p>
+
+It should end up like this, with a new entry for Origen that is relative to the top-level
+workspace:
+
+<p style="text-align: center">
+  <img src="<%= path "img/use2.png" %>" height="600">
+</p>
+
+To check if everything is hooked up correctly, you can add this to one of your source files
+and see if it builds:
+
+~~~cpp
+require "origen.hpp"
+~~~
+
+% end
