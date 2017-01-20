@@ -1,0 +1,19 @@
+---
+title: Origen Std Lib
+---
+<%= render "partials/navbar.html", tab: :guides %>
+
+% index = {}
+% index["V93K"] = {
+%   v93k_intro: "Introduction",
+%   v93k_install: "How to Install",
+% }
+
+% opts = options.merge(index: index, root: "guides", prompt: "Search the guides...")
+% render "doc_helpers/searchable.html", options.merge(opts) do
+
+<%= yield %>
+
+<%= disqus_comments %>
+
+% end

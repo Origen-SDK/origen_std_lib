@@ -49,8 +49,12 @@ void split(const string &str, char delim, vector<string> &elems) {
 ///   toInt("255")          // => 255
 int64_t toInt (const string &str, int base)
 {
+    // Remove trailing whitespace...
+    string mystring = str;
+    mystring.erase(mystring.find_last_not_of(" \n\r\t")+1);
+	
     char *end;
-    char *cstr = const_cast<char*>(str.c_str());
+    char *cstr = const_cast<char*>(mystring.c_str());
     long long int l;
     errno = 0;
     l = strtoll(cstr, &end, base);
@@ -72,8 +76,12 @@ int64_t toInt (const string &str, int base)
 /// See toInt, but returns an unsigned 64-bit integer
 uint64_t toUInt (const string &str, int base)
 {
+    // Remove trailing whitespace...
+    string mystring = str;
+    mystring.erase(mystring.find_last_not_of(" \n\r\t")+1);	
+		
     char *end;
-    char *cstr = const_cast<char*>(str.c_str());
+    char *cstr = const_cast<char*>(mystring.c_str());
     unsigned long long int l;
     errno = 0;
     l = strtoull(cstr, &end, base);

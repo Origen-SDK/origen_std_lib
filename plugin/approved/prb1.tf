@@ -39,11 +39,11 @@ end
 --------------------------------------------------
 testmethods
 tm_1:
-  testmethod_class = "origen_tml.FunctionalTest";
+  testmethod_class = "origen.FunctionalTest";
 tm_2:
-  testmethod_class = "origen_tml.DCMeasurement";
+  testmethod_class = "origen.DCMeasurement";
 tm_3:
-  testmethod_class = "origen_tml.FrequencyMeasurement";
+  testmethod_class = "origen.FrequencyMeasurement";
 end
 --------------------------------------------------
 test_suites

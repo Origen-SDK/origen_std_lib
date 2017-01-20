@@ -78,7 +78,7 @@ void DCMeasurement::execute() {
 
         callPreTestFunc();
 
-        RDI_BEGIN(TA::SINGLE);
+        RDI_BEGIN();
 
         rdi.func(testSuiteName + "f1").label(label).execute();
 
