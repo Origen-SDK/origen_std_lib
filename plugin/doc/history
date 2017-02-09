@@ -1,3 +1,19 @@
+<a class="anchor release_tag" name="v0_8_0"></a>
+<h1><a href="#v0_8_0">Tag: v0.8.0</a></h1>
+
+##### Branch: 'master'
+
+##### by Stephen McGinty on 09-Feb-2017 11:57AM
+
+
+Included the std lib files as part of the gem package, that means you can get them
+from an app like this:
+
+~~~ruby
+# Copy the std lib files to include them in my app's delivery package
+FileUtils.cp\_r("#{Origen.root(:origen\_std\_lib)}/stdlib/v93k", "some\_dir/origen")
+~~~
+
 <a class="anchor release_tag" name="v0_7_0"></a>
 <h1><a href="#v0_7_0">Tag: v0.7.0</a></h1>
 
