@@ -25,7 +25,7 @@
 						<toolChain id="com.verigy.itee.utm.editor.toolchain.debug.526768208" name="Test Method Library Tool Chain" superClass="com.verigy.itee.utm.editor.toolchain.debug">
 							<targetPlatform id="com.verigy.itee.utm.editor.targetplatform.debug.1227304618" isAbstract="false" name="Debug Platform" superClass="com.verigy.itee.utm.editor.targetplatform.debug"/>
 							<builder buildPath="${workspace_loc:/origen/Debug}" id="com.verigy.itee.utm.editor.builder.debug.351877567" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="Gnu Make Builder" parallelizationNumber="1" superClass="com.verigy.itee.utm.editor.builder.debug"/>
-							<tool id="com.verigy.itee.utm.editor.tool.cpp.compiler.debug.1041080205" name="GCC C++ Compiler" superClass="com.verigy.itee.utm.editor.tool.cpp.compiler.debug">
+							<tool commandLinePattern="${COMMAND} ${FLAGS} ${OUTPUT_FLAG} ${OUTPUT_PREFIX}${OUTPUT} ${INPUTS}" id="com.verigy.itee.utm.editor.tool.cpp.compiler.debug.1041080205" name="GCC C++ Compiler" superClass="com.verigy.itee.utm.editor.tool.cpp.compiler.debug">
 								<option id="gnu.cpp.compiler.so.debug.option.optimization.level.1925859441" name="Optimization Level" superClass="gnu.cpp.compiler.so.debug.option.optimization.level" value="gnu.cpp.compiler.optimization.level.none" valueType="enumerated"/>
 								<option id="gnu.cpp.compiler.so.debug.option.debugging.level.733025063" name="Debug Level" superClass="gnu.cpp.compiler.so.debug.option.debugging.level" value="gnu.cpp.compiler.debugging.level.max" valueType="enumerated"/>
 								<option id="com.verigy.itee.utm.editor.tool.cpp.compiler.option.debug.1271497711" name="Include paths (-I)" superClass="com.verigy.itee.utm.editor.tool.cpp.compiler.option.debug" valueType="includePath">
@@ -59,6 +59,7 @@
 							<tool id="com.verigy.itee.utm.editor.tool.cpp.linker.debug.1938563655" name="GCC C++ Linker" superClass="com.verigy.itee.utm.editor.tool.cpp.linker.debug">
 								<option defaultValue="true" id="gnu.cpp.link.so.debug.option.shared.2083699773" name="Shared (-shared)" superClass="gnu.cpp.link.so.debug.option.shared" valueType="boolean"/>
 								<option id="gnu.cpp.link.option.libs.2067751335" name="Libraries (-l)" superClass="gnu.cpp.link.option.libs"/>
+								<option id="gnu.cpp.link.option.soname.365871896" name="Shared object name (-Wl,-soname=)" superClass="gnu.cpp.link.option.soname" value="" valueType="string"/>
 								<inputType id="cdt.managedbuild.tool.gnu.cpp.linker.input.682817060" superClass="cdt.managedbuild.tool.gnu.cpp.linker.input">
 									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
 									<additionalInput kind="additionalinput" paths="$(LIBS)"/>
@@ -168,6 +169,8 @@
 			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfileC"/>
 		</scannerConfigBuildInfo>
 	</storageModule>
-	<storageModule moduleId="refreshScope"/>
+	<storageModule moduleId="refreshScope" versionNumber="1">
+		<resource resourceType="PROJECT" workspacePath="/origen"/>
+	</storageModule>
 	<storageModule moduleId="org.eclipse.cdt.make.core.buildtargets"/>
 </cproject>

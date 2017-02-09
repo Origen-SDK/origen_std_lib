@@ -16,8 +16,8 @@ double calculatePeriod(const ARRAY_I&, double);
 void overlaySubroutine(string, string, uint64_t, int);
 void reverseOverlaySubroutine(string, string, uint64_t, int);
 int numberOfOnes(uint32_t);
-int64_t toInt (const string&, int = 0);
-uint64_t toUInt (const string&, int = 0);
+int64_t toInt (string, int = 0);
+uint64_t toUInt (string, int = 0);
 vector<string> split(const string&, char);
 void split(const string&, char, vector<string>&);
 string toHex (const uint64_t&);
@@ -35,6 +35,9 @@ bool isEven(uint64_t);
 bool isOdd(uint64_t);
 LIMIT noLimits();
 uint64_t flip(uint64_t, int);
+string ltrim(string, const char * remove_chars = " \n\t\r\f\v");
+string rtrim(string, const char * remove_chars = " \n\t\r\f\v");
+string trim(string, const char * remove_chars = " \n\t\r\f\v");
 
 }
 

@@ -8,6 +8,12 @@ namespace Origen {
 
 Site::Site(int number) {
     _number = number;
+    lotidSet = false;
+    waferSet = false;
+    xSet = false;
+    ySet = false;
+    binSet = false;
+    softbinSet = false;
 }
 Site::~Site() {}
 
@@ -54,13 +60,10 @@ uint64_t Site::lotidInt() {
 	string id = lotid();
  	stringstream val;
 
+	// If the ID is > 8 chars then lose the upper chars, making the assuming that the lower ones are
+	// the more significant ones for the purposes of identifying a particular lot
  	if (id.length() > 8) {
- 		if (id == "Undefined") {
- 			id = "Undefine";
- 		} else {
- 			cout << "ERROR: Lot ID is greater than 8 characters and cannot be converted to a UInt64: " << id << endl;
- 			ERROR_EXIT(TM::EXIT_FLOW);
- 		}
+		id = id.substr(id.length() - 8, 8);
  	}
  	if (id.length() > 0) val << toHex((int)id.at(0));
  	if (id.length() > 1) val << toHex((int)id.at(1));
@@ -86,7 +89,7 @@ void Site::wafer(int val) {
 }
 
 /// Get the wafer number. If it has not previously been set to a value it will be automatically queried from the test system.
-uint8_t Site::wafer() {
+int Site::wafer() {
     if (!waferSet) {
         char value[CI_CPI_MAX_MODL_STRING_LEN * 2];
 
@@ -111,7 +114,7 @@ void Site::x(int val) {
 }
 
 /// Get the X co-ord. If it has not previously been set to a value it will be automatically queried from the test system.
-int16_t Site::x() {
+int Site::x() {
     if (!xSet) {
         long lx, ly;
         GetDiePosXYOfSite(_number, &lx, &ly);
@@ -139,7 +142,7 @@ void Site::y(int val) {
 }
 
 /// Get the Y co-ord. If it has not previously been set to a value it will be automatically queried from the test system.
-int16_t Site::y() {
+int Site::y() {
     if (!ySet) {
         long lx, ly;
         GetDiePosXYOfSite(_number, &lx, &ly);
@@ -159,5 +162,59 @@ int16_t Site::y() {
     return _y;
 }
 
+/// Set the site's bin to the given value, but only if a bin has not already been set.
+/// Note that this does not actually bin out the site but just records the bin assignment
+/// in a variable that can be retrieved by calling bin().
+void Site::bin(int val) {
+	if (!binSet) {
+		binSet = true;
+		_bin = val;
+	}
+}
 
+/// Set the site's bin to the given value, but only if a bin has not already been set or
+/// if the force argument is set to true, in which case it will overwrite any previous
+/// assignment.
+/// Note that this does not actually bin out the site but just records the bin assignment
+/// in a variable that can be retrieved by calling bin().
+void Site::bin(int val, bool force) {
+	if (!binSet || force) {
+		binSet = true;
+		_bin = val;
+	}
+}
+
+/// Returns the bin that has been assigned to the site by previously calling bin(int), if no
+/// bin has been assigned then it will return 0.
+int Site::bin() {
+	return (binSet) ? _bin : 0;
+}
+
+/// Set the site's softbin to the given value, but only if a softbin has not already been set.
+/// Note that this does not actually bin out the site but just records the softbin assignment
+/// in a variable that can be retrieved by calling softbin().
+void Site::softbin(int val) {
+	if (!softbinSet) {
+		softbinSet = true;
+		_softbin = val;
+	}
+}
+
+/// Set the site's softbin to the given value, but only if a softbin a has not already been set or
+/// if the force argument is set to true, in which case it will overwrite any previous
+/// assignment.
+/// Note that this does not actually bin out the site but just records the softbin assignment
+/// in a variable that can be retrieved by calling softbin().
+void Site::softbin(int val, bool force) {
+	if (!softbinSet || force) {
+		softbinSet = true;
+		_softbin = val;
+	}
+}
+
+/// Returns the bin that has been assigned to the site by previously calling bin(int), if no
+/// bin has been assigned then it will return 0.
+int Site::softbin() {
+	return (softbinSet) ? _softbin : 0;
+}
 } /* namespace Origen */

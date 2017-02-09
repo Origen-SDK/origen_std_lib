@@ -39,6 +39,26 @@ void split(const string &str, char delim, vector<string> &elems) {
     }
 }
 
+///
+string ltrim(string str, const char * remove_chars /* = " \n\t\r\f\v" */) {
+	str.erase(0, str.find_first_not_of(remove_chars));
+	return str;
+}
+
+
+string rtrim(string str, const char * remove_chars /* = " \n\t\r\f\v" */) {
+	str.erase(str.find_last_not_of(remove_chars)+1);
+	return str;
+}
+
+
+string trim(string str, const char * remove_chars /* = " \n\t\r\f\v" */) {
+	str = rtrim(str, remove_chars);
+	str = ltrim(str, remove_chars);
+	return str;
+}
+
+
 /// Convert the given string to a 64-bit integer. Works for both decimal and hex strings as
 /// shown in the examples below.
 ///
@@ -47,14 +67,15 @@ void split(const string &str, char delim, vector<string> &elems) {
 ///   toInt("0xFF")         // => 255
 ///   toInt("FF", 16)       // => 255 (must declare base 16 if no leading 0x)
 ///   toInt("255")          // => 255
-int64_t toInt (const string &str, int base)
+int64_t toInt (string str, int base)
 {
-    // Remove trailing whitespace...
-    string mystring = str;
-    mystring.erase(mystring.find_last_not_of(" \n\r\t")+1);
-	
+	str = trim(str);        // Remove any whitespace
+	str = ltrim(str, "0");  // Remove any leading 0's
+	if (str == "") {
+		return 0;
+	}
     char *end;
-    char *cstr = const_cast<char*>(mystring.c_str());
+    char *cstr = const_cast<char*>(str.c_str());
     long long int l;
     errno = 0;
     l = strtoll(cstr, &end, base);
@@ -74,14 +95,16 @@ int64_t toInt (const string &str, int base)
 }
 
 /// See toInt, but returns an unsigned 64-bit integer
-uint64_t toUInt (const string &str, int base)
+uint64_t toUInt (string str, int base)
 {
-    // Remove trailing whitespace...
-    string mystring = str;
-    mystring.erase(mystring.find_last_not_of(" \n\r\t")+1);	
-		
+	str = trim(str);        // Remove any whitespace
+	str = ltrim(str, "0");  // Remove any leading 0's
+	if (str == "") {
+		return 0;
+	}
+
     char *end;
-    char *cstr = const_cast<char*>(mystring.c_str());
+    char *cstr = const_cast<char*>(str.c_str());
     unsigned long long int l;
     errno = 0;
     l = strtoull(cstr, &end, base);

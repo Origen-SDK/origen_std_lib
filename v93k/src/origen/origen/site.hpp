@@ -9,13 +9,17 @@ namespace Origen {
 class Site {
     string _lotid;
     bool lotidSet;
-    uint8_t _wafer;
+    int _wafer;
     bool waferSet;
-    int16_t _x;
+    int _x;
     bool xSet;
-    int16_t _y;
+    int _y;
     bool ySet;
     int _number;
+    int _bin;
+    int _softbin;
+    bool binSet;
+    bool softbinSet;
 
 
 public:
@@ -25,12 +29,19 @@ public:
     uint64_t lotidInt();
     void lotid(string);
     void lotid(uint64_t);
-    uint8_t wafer();
+    int wafer();
     void wafer(int);
-    int16_t x();
+    int x();
     void x(int);
-    int16_t y();
+    int y();
     void y(int);
+    int bin();
+    void bin(int);
+    void bin(int, bool);
+    int softbin();
+    void softbin(int);
+    void softbin(int, bool);
+
     /// Returns the site number associated with the given site object
     int number() { return _number; }
 };

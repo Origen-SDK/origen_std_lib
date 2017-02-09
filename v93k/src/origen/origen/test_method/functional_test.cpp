@@ -74,8 +74,11 @@ void FunctionalTest::execute() {
         site = CURRENT_SITE_NUMBER();
         if (_capture) {
             results[site] = rdi.site(site).getBurstPassFail();
+//        	cout << "PRE " << site << ": " << results[site] << endl;
+
         } else {
             results[site] = rdi.site(site).id(testSuiteName).getPassFail();
+//            cout << "PRE " << site << ": " << results[site] << endl;
         }
     FOR_EACH_SITE_END();
 
