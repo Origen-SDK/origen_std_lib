@@ -1,7 +1,8 @@
-{:versions[IC:Origen::VersionString"
+{:versions[IC:Origen::VersionString"
 0.2.0:EFIC;"
 0.3.0;FIC;"
 0.4.0;FIC;"
 0.5.0;FIC;"
 0.6.0;FIC;"
-0.7.0;F
+0.7.0;FIC;"
+0.8.0;F
