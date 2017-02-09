@@ -44,20 +44,19 @@ module OrigenStdLib
                 period_in_ns: [:integer, nil]
               },
 
-              record_bin: {
-                bin: [:integer, nil],
+              record_bin:            {
+                bin:     [:integer, nil],
                 softbin: [:integer, nil]
               },
 
-              apply_bin: {
+              apply_bin:             {
               }
-
   end
 
   # Record the given bin / softbin
   def record_bin(options = {})
     if tester.v93k?
-      n = "delayed"
+      n = 'delayed'
       n += "_bin#{options[:bin]}" if options[:bin]
       n += "_sbin#{options[:softbin]}" if options[:softbin]
       i = test_suites.add(n)
@@ -69,13 +68,13 @@ module OrigenStdLib
       test(i, options.merge(test_ids: :notrack))
     end
   end
-  
+
   # Bins out the device if a delayed bin has been set
   def apply_bin(options = {})
     if tester.v93k?
-      i = test_suites.add("ApplyBin")
-      i.test_method = test_methods.origen.apply_bin()
-      test(i, options.merge(on_fail: { render: "multi_bin;" }, continue: true))
+      i = test_suites.add('ApplyBin')
+      i.test_method = test_methods.origen.apply_bin
+      test(i, options.merge(on_fail: { render: 'multi_bin;' }, continue: true))
     end
   end
 end
