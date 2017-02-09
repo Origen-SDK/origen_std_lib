@@ -1,3 +1,21 @@
+<a class="anchor release_tag" name="v0_7_0"></a>
+<h1><a href="#v0_7_0">Tag: v0.7.0</a></h1>
+
+##### Branch: 'master'
+
+##### by Stephen McGinty on 09-Feb-2017 04:23AM
+
+
+Added interface helpers for implementing delayed binning:
+
+~~~ruby
+# Record that a test has failed, but don't apply yet
+record\_bin(bin: 10, softbin: 100)
+
+# Bin out if any bins have been previously applied
+apply\_bin
+~~~
+
 <a class="anchor release_tag" name="v0_6_0"></a>
 <h1><a href="#v0_6_0">Tag: v0.6.0</a></h1>
 
