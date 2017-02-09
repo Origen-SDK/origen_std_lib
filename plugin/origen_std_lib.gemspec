@@ -18,7 +18,7 @@ Gem::Specification.new do |spec|
   # need to be added to if you have any custom directories
   spec.files         = Dir["lib/**/*.rb", "templates/**/*", "config/**/*.rb",
                            "bin/*", "lib/tasks/**/*.rake", "pattern/**/*.rb",
-                           "program/**/*.rb"
+                           "program/**/*.rb", "stdlib/**/*"
                           ]
   spec.executables   = []
   spec.require_paths = ["lib"]

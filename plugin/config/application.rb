@@ -38,6 +38,19 @@ class OrigenStdLibApplication < Origen::Application
 
   config.semantically_version = true
 
+  # Copy the std lib into the app area for inclusion in the gem package
+  def before_release_gem
+    d = "#{Origen.root}/stdlib/v93k"
+    FileUtils.rm_rf(d)  if File.exist?(d)
+    FileUtils.mkdir_p(d)
+    FileUtils.cp_r("#{Origen.root}/../v93k/src/origen", d)
+  end
+
+  # Get rid of the local std lib copy after building
+  def after_release_gem
+    FileUtils.rm_rf "#{Origen.root}/stdlib"
+  end
+
   def after_web_site_compile(options={})
     if options[:api]
       Dir.chdir "#{Origen.app.rc.root}/v93k" do
