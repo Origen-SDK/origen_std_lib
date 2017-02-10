@@ -1,3 +1,14 @@
+<a class="anchor release_tag" name="v0_8_1"></a>
+<h1><a href="#v0_8_1">Tag: v0.8.1</a></h1>
+
+##### Branch: 'master'
+
+##### by Stephen McGinty on 10-Feb-2017 02:39AM
+
+
+As 0.8 but ensures that compiled binaries and other cruft are not included in the gen
+build
+
 <a class="anchor release_tag" name="v0_8_0"></a>
 <h1><a href="#v0_8_0">Tag: v0.8.0</a></h1>
 
