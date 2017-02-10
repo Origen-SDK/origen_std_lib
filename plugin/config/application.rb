@@ -43,6 +43,9 @@ class OrigenStdLibApplication < Origen::Application
     d = "#{Origen.root}/stdlib/v93k"
     FileUtils.rm_rf(d)  if File.exist?(d)
     FileUtils.mkdir_p(d)
+    # Remove all untracked files, e.g. compiled binaries
+    system "git clean -f -d -x #{Origen.root}/../v93k"
+    system "git clean -f -d #{Origen.root}/../v93k"
     FileUtils.cp_r("#{Origen.root}/../v93k/src/origen", d)
   end
 
