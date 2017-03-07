@@ -228,6 +228,12 @@ int numberOfOnes(uint32_t i)
      return (((i + (i >> 4)) & 0x0F0F0F0F) * 0x01010101) >> 24;
 }
 
+/// Returns the number of 0's (bits that are not set) in the given 32-bit number
+int numberOfZeros(uint32_t i)
+{
+     return 32 - numberOfOnes(i);
+}
+
 
 double calculateFrequency(const ARRAY_I &captureData, double periodInNs) {
     int	iFreqCount;

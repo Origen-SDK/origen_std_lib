@@ -16,6 +16,7 @@ double calculatePeriod(const ARRAY_I&, double);
 void overlaySubroutine(string, string, uint64_t, int);
 void reverseOverlaySubroutine(string, string, uint64_t, int);
 int numberOfOnes(uint32_t);
+int numberOfZeros(uint32_t);
 int64_t toInt (string, int = 0);
 uint64_t toUInt (string, int = 0);
 vector<string> split(const string&, char);
