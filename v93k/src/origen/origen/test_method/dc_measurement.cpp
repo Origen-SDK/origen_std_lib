@@ -41,6 +41,8 @@ void DCMeasurement::execute() {
 
     RDI_INIT();
 
+    pin(extractPinsFromGroup(_pin));
+	
     ON_FIRST_INVOCATION_BEGIN();
 
         enableHiddenUpload();
@@ -52,7 +54,7 @@ void DCMeasurement::execute() {
         GET_TESTSUITE_NAME(testSuiteName);
         label = Primary.getLabel();
 
-        pin(extractPinsFromGroup(_pin));
+        
 
         if (_applyShutdown) {
             if (_shutdownPattern.empty()) {
