@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    origen_std_lib (0.8.2)
+    origen_std_lib (0.8.3)
       origen (>= 0.7.34)
       origen_testers (>= 0.8.1)
 
@@ -17,7 +17,7 @@ GEM
     ast (2.3.0)
     astrolabe (1.3.1)
       parser (~> 2.2)
-    atp (0.5.3)
+    atp (0.5.4)
       ast (~> 2)
       origen (>= 0.2.3)
       sexpistol (~> 0.0)
@@ -88,8 +88,8 @@ GEM
       yard (~> 0.8)
     origen_doc_helpers (0.4.4)
       origen (>= 0.7.15)
-    origen_testers (0.9.1)
-      atp (~> 0.5.3)
+    origen_testers (0.9.3)
+      atp (~> 0.5.4)
       origen (>= 0.7.40)
       require_all (~> 1)
     parser (2.4.0.0)
@@ -160,4 +160,4 @@ DEPENDENCIES
   rake
 
 BUNDLED WITH
-   1.13.4
+   1.13.6
