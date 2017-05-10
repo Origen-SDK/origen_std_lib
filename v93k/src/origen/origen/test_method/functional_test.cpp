@@ -32,7 +32,6 @@ void FunctionalTest::execute() {
     int site, physicalSites;
     ARRAY_I sites;
 
-    RDI_INIT();
     ON_FIRST_INVOCATION_BEGIN();
 
     enableHiddenUpload();
@@ -101,7 +100,7 @@ void FunctionalTest::serialProcessing(int site) {
 	if (_processResults) {
 //		cout << "POST " << site << ": " << results[site] << endl;
 	    logFunctionalTest(testSuiteName, site, results[site] == 1, label);
-	    TESTSET().judgeAndLog_FunctionalTest(results[site] == 1);
+	    TESTSET().testnumber(testnumber()).judgeAndLog_FunctionalTest(results[site] == 1);
 	}
 }
 

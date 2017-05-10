@@ -30,6 +30,8 @@ protected:
      *This test is invoked per site.
      */
     virtual void run() {
+    	RDI_INIT();
+
         origen.execute();
 
 //    	string label = Primary.getLabel();

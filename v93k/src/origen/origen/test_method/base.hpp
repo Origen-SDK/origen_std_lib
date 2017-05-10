@@ -36,6 +36,11 @@ protected:
         return GET_LIMIT_OBJECT("Functional");
     }
 
+    // Returns the base test number
+    int testnumber() {
+    	return GET_TESTNUMBER("Functional").getOffset();
+    }
+
     /// Returns the high limit value in whole units, i.e. A or V
     double hiLimit() {
         double lim = 0.0;

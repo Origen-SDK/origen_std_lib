@@ -61,6 +61,8 @@ protected:
    */
   virtual void run()
   {
+	  RDI_INIT();
+
       origen.periodBased(mPeriodBased)
             .pin(mPin)
             .samples(mSamples)

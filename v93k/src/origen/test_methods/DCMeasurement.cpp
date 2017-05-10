@@ -92,6 +92,8 @@ protected:
    */
   virtual void run()
   {
+	RDI_INIT();
+
     origen.applyShutdown(mApplyShutdown)
           .forceValue(mForceValue)
           .shutdownPattern(mShutdownPattern)

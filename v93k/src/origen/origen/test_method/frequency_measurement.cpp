@@ -31,8 +31,6 @@ void FrequencyMeasurement::execute() {
     int site, physicalSites;
     ARRAY_I sites;
 
-    RDI_INIT();
-
     ON_FIRST_INVOCATION_BEGIN();
 
     enableHiddenUpload();
@@ -79,10 +77,10 @@ void FrequencyMeasurement::serialProcessing(int site) {
 			result = calculateFrequency(captureData, _periodInNs);
 		}
 		logFunctionalTest(testSuiteName, site, funcResults[site] == 1, label);
-		TESTSET().judgeAndLog_FunctionalTest(funcResults[site] == 1);
+		TESTSET().testnumber(testnumber()).judgeAndLog_FunctionalTest(funcResults[site] == 1);
 
 		logParametricTest(testSuiteName, site, filterResult(result), limits(), _pin);
-		TESTSET().judgeAndLog_ParametricTest(_pin, testSuiteName, limits(), filterResult(result));
+		TESTSET().testnumber(testnumber() + 1).judgeAndLog_ParametricTest(_pin, testSuiteName, limits(), filterResult(result));
 	}
 }
 
