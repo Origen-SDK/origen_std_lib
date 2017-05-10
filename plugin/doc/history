@@ -1,3 +1,15 @@
+<a class="anchor release_tag" name="v0_9_0"></a>
+<h1><a href="#v0_9_0">Tag: v0.9.0</a></h1>
+
+##### Branch: 'master'
+
+##### by Stephen McGinty on 10-May-2017 10:15AM
+
+
+* Added support for test numbers
+* Calling RDI\_INIT() is now the responsibility of the top-level test method and all
+  lower level calls have now been removed
+
 <a class="anchor release_tag" name="v0_8_3"></a>
 <h1><a href="#v0_8_3">Tag: v0.8.3</a></h1>
 

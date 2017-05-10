@@ -1,7 +1,7 @@
 module OrigenStdLib
   MAJOR = 0
-  MINOR = 8
-  BUGFIX = 3
+  MINOR = 9
+  BUGFIX = 0
   DEV = nil
 
   VERSION = [MAJOR, MINOR, BUGFIX].join(".") + (DEV ? ".pre#{DEV}" : '')
