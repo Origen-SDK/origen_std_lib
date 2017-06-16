@@ -77,7 +77,7 @@ void FrequencyMeasurement::serialProcessing(int site) {
 			result = calculateFrequency(captureData, _periodInNs);
 		}
 		logFunctionalTest(testSuiteName, site, funcResults[site] == 1, label);
-		TESTSET().testnumber(testnumber()).judgeAndLog_FunctionalTest(funcResults[site] == 1);
+		TESTSET().testnumber(testnumber()).testname(testSuiteName).judgeAndLog_FunctionalTest(funcResults[site] == 1);
 
 		logParametricTest(testSuiteName, site, filterResult(result), limits(), _pin);
 		TESTSET().testnumber(testnumber() + 1).judgeAndLog_ParametricTest(_pin, testSuiteName, limits(), filterResult(result));

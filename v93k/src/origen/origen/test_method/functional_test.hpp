@@ -17,6 +17,7 @@ class FunctionalTest: public Base  {
     int _capture;
     int _bitPerWord;
     int _processResults;
+    string _pattern;
 
 public:
     FunctionalTest();
@@ -29,7 +30,7 @@ public:
     FunctionalTest & pin(string v);
     FunctionalTest & bitPerWord(int v);
     FunctionalTest & processResults(int v);
-
+    FunctionalTest & pattern(string v);
 
 protected:
     FunctionalTest & getThis();

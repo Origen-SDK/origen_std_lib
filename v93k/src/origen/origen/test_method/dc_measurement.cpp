@@ -154,14 +154,14 @@ void DCMeasurement::execute() {
 void DCMeasurement::serialProcessing(int site) {
 	if (_processResults) {
 	    logFunctionalTest(testSuiteName, site, funcResultsPre[site] == 1, label);
-		TESTSET().testnumber(testnumber()).cont(true).judgeAndLog_FunctionalTest(funcResultsPre[site] == 1);
+		TESTSET().testnumber(testnumber()).cont(true).testname(testSuiteName + "_PRE").judgeAndLog_FunctionalTest(funcResultsPre[site] == 1);
 
 		logParametricTest(testSuiteName, site, filterResult(results[site]), limits(), _pin);
 		TESTSET().testnumber(testnumber() + 1).judgeAndLog_ParametricTest(_pin, testSuiteName, limits(), filterResult(results[site]));
 
         if (_applyShutdown && _checkShutdown) {
             logFunctionalTest(testSuiteName, site, funcResultsPost[site] == 1, _shutdownPattern);
-            TESTSET().testnumber(testnumber() + 1).cont(true).judgeAndLog_FunctionalTest(funcResultsPost[site] == 1);
+            TESTSET().testnumber(testnumber() + 2).cont(true).testname(testSuiteName + "_POST").judgeAndLog_FunctionalTest(funcResultsPost[site] == 1);
         }
 	}
 }

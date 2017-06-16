@@ -11,6 +11,7 @@ FunctionalTest::FunctionalTest() {
     capture(0);
     processResults(1);
     bitPerWord(1);
+    pattern("");
 }
 
 FunctionalTest::~FunctionalTest() { }
@@ -23,6 +24,8 @@ FunctionalTest & FunctionalTest::pin(string v) { _pin = v; return *this; }
 FunctionalTest & FunctionalTest::bitPerWord(int v) { _bitPerWord = v; return *this; }
 /// When set to 0 the results of the test will not be judged or logged
 FunctionalTest & FunctionalTest::processResults(int v) { _processResults = v; return *this; }
+/// Override the pattern argument from the test suite
+FunctionalTest & FunctionalTest::pattern(string v) { _pattern = v; return *this; }
 
 // All test methods must implement this function
 FunctionalTest & FunctionalTest::getThis() { return *this; }
@@ -41,7 +44,11 @@ void FunctionalTest::execute() {
     GET_TESTSUITE_NAME(testSuiteName);
 //    testSuiteName = testSuiteName + toStr(CURRENT_SITE_NUMBER());
 //    cout << testSuiteName << endl;
-    label = Primary.getLabel();
+    if (_pattern == "") {
+    	label = Primary.getLabel();
+    } else {
+    	label = _pattern;
+    }
 
     if (_capture) {
         pinName = extractPinsFromGroup(_pin);
@@ -100,7 +107,7 @@ void FunctionalTest::serialProcessing(int site) {
 	if (_processResults) {
 //		cout << "POST " << site << ": " << results[site] << endl;
 	    logFunctionalTest(testSuiteName, site, results[site] == 1, label);
-	    TESTSET().testnumber(testnumber()).judgeAndLog_FunctionalTest(results[site] == 1);
+	    TESTSET().testnumber(testnumber()).testname(testSuiteName).judgeAndLog_FunctionalTest(results[site] == 1);
 	}
 }
 
