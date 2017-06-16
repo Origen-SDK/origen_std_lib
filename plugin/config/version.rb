@@ -1,6 +1,6 @@
 module OrigenStdLib
   MAJOR = 0
-  MINOR = 9
+  MINOR = 10
   BUGFIX = 0
   DEV = nil
 

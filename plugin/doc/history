@@ -1,3 +1,14 @@
+<a class="anchor release_tag" name="v0_10_0"></a>
+<h1><a href="#v0_10_0">Tag: v0.10.0</a></h1>
+
+##### Branch: 'master'
+
+##### by Stephen McGinty on 16-Jun-2017 07:51AM
+
+
+Improved test name inclusion in V93K logging of functional tests, and added the ability
+to override the pattern/label in a functional test.
+
 <a class="anchor release_tag" name="v0_9_0"></a>
 <h1><a href="#v0_9_0">Tag: v0.9.0</a></h1>
 
