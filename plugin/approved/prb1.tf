@@ -69,6 +69,8 @@ end
 --------------------------------------------------
 test_flow
 {
+  {
+  }, open,"Init Flow Control Vars", ""
   run(test1);
   run(test2_916CE79);
   run(test3_916CE79);
