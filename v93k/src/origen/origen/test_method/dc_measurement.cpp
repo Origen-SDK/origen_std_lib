@@ -157,7 +157,7 @@ void DCMeasurement::serialProcessing(int site) {
 		TESTSET().testnumber(testnumber()).cont(true).testname(testSuiteName + "_PRE").judgeAndLog_FunctionalTest(funcResultsPre[site] == 1);
 
 		logParametricTest(testSuiteName, site, filterResult(results[site]), limits(), _pin);
-		TESTSET().testnumber(testnumber() + 1).judgeAndLog_ParametricTest(_pin, testSuiteName, limits(), filterResult(results[site]));
+		TESTSET().testnumber(testnumber() + 1).cont(true).judgeAndLog_ParametricTest(_pin, testSuiteName, limits(), filterResult(results[site]));
 
         if (_applyShutdown && _checkShutdown) {
             logFunctionalTest(testSuiteName, site, funcResultsPost[site] == 1, _shutdownPattern);
