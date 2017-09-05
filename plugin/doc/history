@@ -1,3 +1,15 @@
+<a class="anchor release_tag" name="v0_10_1"></a>
+<h1><a href="#v0_10_1">Tag: v0.10.1</a></h1>
+
+##### Branch: 'master'
+
+##### by Stephen McGinty on 05-Sep-2017 12:34PM
+
+
+Bugfix to ensure that all components of a V93K test are logged. Previously it would stop
+logging after one failed on all sites except site 1.
+Now all sites will behave like site 1 and log everything.
+
 <a class="anchor release_tag" name="v0_10_0"></a>
 <h1><a href="#v0_10_0">Tag: v0.10.0</a></h1>
 
