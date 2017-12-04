@@ -147,6 +147,14 @@ string upcase(string base) {
 	return base;
 }
 
+/// Lowercase the given string
+///
+///   downcase("FF");  // => "ff"
+string downcase(string base) {
+	transform(base.begin(), base.end(), base.begin(), ::tolower);
+	return base;
+}
+
 /// Extend the string to the given size, padding with the given character on the left
 ///
 ///   lpad("FF", 4, '0');  // => "00FF"
@@ -174,6 +182,36 @@ bool isEven(uint64_t number) {
 bool isOdd(uint64_t number) {
 	return number % 2 != 0;
 }
+
+/// Overlays the given data on the given pin, starting from the first vector of the given pattern
+/// must provide the waveform indices used for output high and low
+void overlaySubroutineOutput(string subroutinePattern, string pin, uint64_t data, int size, int loOutputIndex, int hiOutputIndex) {
+    string p = extractPinsFromGroup(pin);
+    //string pat = getTdiLabelName(subroutinePattern);
+    string pat = subroutinePattern;
+	VEC_LABEL_EDIT ov(pat, p);
+
+	// Need to use a vector here so the size can be determined at runtime
+	vector<VECTOR_DATA> vecData(size);
+
+	for(int i = 0; i < size; i++) {
+
+		int val = (data & (1 << i)) >> i;
+		if (val == 1)
+			val = hiOutputIndex;
+		else
+			val = loOutputIndex;
+		VECTOR_DATA v = {i, val};
+		vecData[i] = v;
+	}
+
+	// However the downloadUserVectors function only accepts an array, so use this trick
+	// to create an array instance that points to the vector data
+	VECTOR_DATA * vecDataArray = &vecData[0];
+
+	ov.downloadUserVectors(vecDataArray, size);
+}
+
 
 /// Overlays the given data on the given pin, starting from the first vector of the given pattern
 void overlaySubroutine(string subroutinePattern, string pin, uint64_t data, int size) {
@@ -272,6 +310,21 @@ void synchronize(double timeout)
     }
 }
 
+// Check to see if a pin exists in current pin config
+bool pinExists(const string& pinName) {
+    stringstream fw_command;
+    string fw_answer;
+    bool result;
+
+    fw_command << "dfpn? (" << pinName << ")" << endl;
+
+    FW_TASK(fw_command.str(), fw_answer);
+    fw_command.str(std::string());
+
+    result = !(fw_answer.empty());
+    return result;
+}
+
 /// Supply a pin alias name and get the name of the physical pin returned
 string extractPinsFromGroup(const string& groupname)
 {
@@ -306,6 +359,87 @@ void initializeSites() {
     Origen::Site site(CURRENT_SITE_NUMBER());
 
     Origen::Sites[CURRENT_SITE_NUMBER()] = site;
+}
+
+double getUnitMultiplier(const string& units) {
+	double mult;
+
+	if     (units.find("nA") != string::npos)  { mult = 1e9; }
+	else if(units.find("uA") != string::npos)  { mult = 1e6; }
+	else if(units.find("mA") != string::npos)  { mult = 1e3; }
+	else if(units.find("A") != string::npos)   { mult = 1; }
+	else if(units.find("nV") != string::npos)  { mult = 1e9; }
+	else if(units.find("uV") != string::npos)  { mult = 1e6; }
+	else if(units.find("mV") != string::npos)  { mult = 1e3; }
+	else if(units.find("V") != string::npos)   { mult = 1; }
+	else if(units.find("Kohm") != string::npos){ mult = 1e-3; }
+	else if(units.find("ns") != string::npos)  { mult = 1e9; }
+	else if(units.find("us") != string::npos)  { mult = 1e6; }
+	else if(units.find("ms") != string::npos)  { mult = 1e3; }
+	else if(units.find("s") != string::npos)   { mult = 1; }
+	else if(units.find("KHz") != string::npos)  { mult = 1e-3; }
+	else if(units.find("MHz") != string::npos)  { mult = 1e-6; }
+	else 									   { mult = 1; }
+
+	return mult;
+}
+
+string getLabelFromBurst(const string& burst, const string& port) {
+
+	  ////////////////////////////////////////////////////////////////////
+	  // Note this function will always return the first label in a burst
+	  ////////////////////////////////////////////////////////////////////
+	  string answer;
+	  stringstream ss;
+
+	  ss << "sqpg? \"" << burst << "\",(" << port << ")" << endl;
+
+	  FW_TASK(ss.str(), answer);
+
+	  ss.str("");
+
+	  int fc = answer.find_first_of("\"")+1;
+	  int len = answer.find_last_of("\"") - fc;
+
+	  return(answer.substr(fc, len));
+
+}
+
+string checksum16bits(const string& mystring) {
+
+	long flag;
+	long poly = 0xa001;
+	long crc =  0xffff;
+	string crc16;
+
+	vector<char> ch(mystring.begin(), mystring.end());
+
+	for(unsigned int i=0; i<ch.size(); i++) {
+
+		crc ^= static_cast<int>(ch[i]);
+
+		for(unsigned int j=0; j<8; j++) {
+
+			flag = crc & long(0x1);
+			crc /= long(0x2);
+
+			if(flag == 1)
+				crc ^= poly;
+		}
+	}
+
+	unsigned n;
+	stringstream ss;
+	ss << hex << (crc & long(0xffff));
+	ss >> n;
+	ss.str("");
+
+	bitset<16> bstr(n);
+
+	crc16 = bstr.to_string();
+
+	return crc16;
+
 }
 
 }
