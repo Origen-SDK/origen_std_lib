@@ -26,22 +26,6 @@ void logString(string testname, int testnr, string stringToLog) {
 	PUT_DATALOG(dtr_text.str());
 }
 
-void tokenize( vector<string> & strVector, const  string  & string1, const  string  & delimiters)
-{
-        size_t  start = 0, end = 0;
-
-        while ( end != string::npos) {
-                end = string1.find_first_of( delimiters, start);
-                // If at end, use length=maxLength.  Else use length=end-start.
-                strVector.push_back( string1.substr( start,
-                                (end == string::npos) ? string::npos : end - start));
-
-                // If at end, use start=maxSize.  Else use start=end+delimiter.
-                start = (   ( end > (string::npos - delimiters.size()) )
-                                ?  string::npos  :  end + delimiters.size());
-        }
-};
-
 // get_modelfile_value
 //  returns the value of e.g. lot_id, as it is defined in the modelfile
 //  if no value is found in the modelfile, an empty string is returned
