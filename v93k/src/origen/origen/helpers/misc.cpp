@@ -19,6 +19,65 @@ uint64_t flip(uint64_t input, int size) {
 	return output;
 }
 
+// Log string to stdf
+void logString(string testname, int testnr, string stringToLog) {
+	stringstream dtr_text;
+	dtr_text << "STRRES " << CURRENT_SITE_NUMBER() << " pin " << testnr << " (" << testname << ") = (" << stringToLog << ") ()";
+	PUT_DATALOG(dtr_text.str());
+}
+
+void tokenize( vector<string> & strVector, const  string  & string1, const  string  & delimiters)
+{
+        size_t  start = 0, end = 0;
+
+        while ( end != string::npos) {
+                end = string1.find_first_of( delimiters, start);
+                // If at end, use length=maxLength.  Else use length=end-start.
+                strVector.push_back( string1.substr( start,
+                                (end == string::npos) ? string::npos : end - start));
+
+                // If at end, use start=maxSize.  Else use start=end+delimiter.
+                start = (   ( end > (string::npos - delimiters.size()) )
+                                ?  string::npos  :  end + delimiters.size());
+        }
+};
+
+// get_modelfile_value
+//  returns the value of e.g. lot_id, as it is defined in the modelfile
+//  if no value is found in the modelfile, an empty string is returned
+//  if required, error handling has to be done by caller!!!
+string getModelfileValue(string env_var, string default_name) {
+	string rValue;
+
+	// retrieve value of unix environment variable with the name env_var;
+	stringstream ss;
+	string name;
+	ss << getenv(env_var.c_str());
+	ss >> name;
+
+	// if not set, than use the default name
+	if (name.empty()) {
+		name = default_name;
+	}
+
+	// now retrieve value from application model file
+	char value[CI_CPI_MAX_MODL_STRING_LEN * 2];
+
+	long ret = GetModelfileString(const_cast<char*>(name.c_str()), value);
+	switch (ret) {
+	case 0: // OK
+		rValue = value;
+		break;
+	case 1: // Error on name
+		rValue = "";
+		break;
+	default:
+		Error error("getModelFileString",
+				"internal Error occurred, while retrieving modelfile value");
+		throw error;
+	}
+	return rValue;
+}
 
 /// Split the given string by the given delimiter and return the results in a vector of strings
 ///
@@ -28,6 +87,29 @@ vector<string> split(const string &str, char delim) {
     split(str, delim, elems);
     return elems;
 }
+
+/**
+ * splits up a given string in substrings, where substrings are found through given delimter characters
+ *
+ * @param[out] strVector vector of substrings
+ * @param[in]  string string to tokenize
+ * @param[in]  "list" of delimiter characters
+ */
+void tokenize( vector<string> & strVector, const  string  & string1, const  string  & delimiters)
+{
+	size_t  start = 0, end = 0;
+
+	while ( end != string::npos) {
+		end = string1.find_first_of( delimiters, start);
+		// If at end, use length=maxLength.  Else use length=end-start.
+		strVector.push_back( string1.substr( start,
+				(end == string::npos) ? string::npos : end - start));
+
+		// If at end, use start=maxSize.  Else use start=end+delimiter.
+		start = (   ( end > (string::npos - delimiters.size()) )
+				?  string::npos  :  end + delimiters.size());
+	}
+};
 
 /// This version places the result in the supplied vector rather than returning a new one
 void split(const string &str, char delim, vector<string> &elems) {
