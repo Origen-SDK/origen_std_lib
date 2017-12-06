@@ -43,6 +43,13 @@ string ltrim(string, const char * remove_chars = " \n\t\r\f\v");
 string rtrim(string, const char * remove_chars = " \n\t\r\f\v");
 string trim(string, const char * remove_chars = " \n\t\r\f\v");
 
+// Logging
+namespace Logging {
+
+void datalog();
+
+
+}
 }
 
 #endif

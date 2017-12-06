@@ -66,11 +66,10 @@ void FrequencyMeasurement::serialProcessing(int site) {
 		} else {
 			result = calculateFrequency(captureData, _periodInNs);
 		}
-		logFunctionalTest(suiteName, site, funcResults[site] == 1, label);
-		TESTSET().testnumber(testNumber()).cont(true).testname(suiteName).judgeAndLog_FunctionalTest(funcResults[site] == 1);
 
-		logParametricTest(suiteName, site, filterResult(result), limits(), _pin);
-		TESTSET().testnumber(testNumber() + 1).judgeAndLog_ParametricTest(_pin, suiteName, limits(), filterResult(result));
+		judgeAndDatalog(testName() + "_FUNC", invertFunctionalResultIfRequired(funcResults[site]));
+
+		judgeAndDatalog(filterResult(result));
 	}
 }
 
@@ -88,7 +87,7 @@ void FrequencyMeasurement::SMC_backgroundProcessing() {
 				result = calculateFrequency(captureData, _periodInNs);
 			}
 			SMC_TEST(site, "", suiteName, LIMIT(TM::GE, 1, TM::LE, 1), funcResults[site]);
-			SMC_TEST(site, _pin, suiteName, limits(), filterResult(result));
+			SMC_TEST(site, _pin, suiteName, testLimits().TEST_API_LIMIT, filterResult(result));
 		}
 	}
 }

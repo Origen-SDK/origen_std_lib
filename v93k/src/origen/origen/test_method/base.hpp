@@ -41,13 +41,6 @@ protected:
     string _onFailFlag;
 
     int offline();
-
-    // Returns an object containing the test limits, this can be passed to SMT APIs that take a LIMITS
-    // object argument. To actually get the limit values use loLimit() and hiLimit().
-    LIMIT limits() {
-        return GET_LIMIT_OBJECT("Functional");
-    }
-
     void initialize();
     void run();
     int testNumber();
@@ -65,24 +58,6 @@ protected:
     bool isWithinLimits(double, LIMIT);
     LIMIT toNALimit(LIMIT);
     vector<int> suiteFailed;
-
-    /// Returns the high limit value in whole units, i.e. A or V
-    double hiLimit() {
-        double lim = 0.0;
-        double * plim = &lim;
-
-        limits().getHigh(plim);
-        return lim;
-    }
-
-    /// Returns the low limit value in whole units, i.e. A or V
-    double loLimit() {
-        double lim = 0.0;
-        double * plim = &lim;
-
-        limits().getLow(plim);
-        return lim;
-    }
 
     virtual void init() {
     }

@@ -54,16 +54,26 @@ void DCMeasurement::_execute() {
         }
 
         if (!_iRange && _measure == "CURR") {
-        	double l = loLimit();
-        	double h = hiLimit();
-        	if (l == 0 && h == 0) {
+         	double dHigh(0), dLow(0);
+        	TM::COMPARE cHigh, cLow;
+        	testLimits().TEST_API_LIMIT.get(cLow, dLow, cHigh, dHigh);
+
+        	if (cLow == TM::NA) {
+        		dLow = 0;
+        	}
+        	if (cHigh == TM::NA) {
+        		dHigh = 0;
+        	}
+
+        	if (dLow == 0 && dHigh == 0) {
                 cout << "ERROR: If your current measurement does not have a limit, you must supply the current range" << endl;
                 ERROR_EXIT(TM::ABORT_FLOW);
         	}
-        	if (abs(l) > abs(h))
-        		_iRange = abs(l);
-        	else
-        	    _iRange = abs(h);
+        	if (abs(dLow) > abs(dHigh)) {
+        		_iRange = abs(dLow);
+        	} else {
+        	    _iRange = abs(dHigh);
+        	}
         }
 
         RDI_BEGIN();
@@ -94,7 +104,6 @@ void DCMeasurement::_execute() {
 			}
 
 
-
 		} else {
 
 			SMART_RDI::dcBase & prdi = rdi.dc(suiteName)
@@ -118,14 +127,18 @@ void DCMeasurement::_execute() {
             if (_applyShutdown) funcResultsPost[site] = rdi.id(suiteName + "f2").getPassFail();
             // TODO: This retrieval needs to move to the SMC func in the async case
             if (offline()) {
-            	if (!loLimit() && !hiLimit()) {
-            		results[site] = 0;
-            	} else if(loLimit() && hiLimit()) {
-            		results[site] = ((hiLimit() - loLimit()) / 2) + loLimit();
-            	} else if (loLimit()) {
-            		results[site] = loLimit();
+             	double dHigh(0), dLow(0);
+            	TM::COMPARE cHigh, cLow;
+            	testLimits().TEST_API_LIMIT.get(cLow, dLow, cHigh, dHigh);
+
+            	if (cLow != TM::NA && cHigh != TM::NA) {
+            		results[site] = ((dHigh - dLow) / 2) + dLow;
+            	} else if (cLow != TM::NA) {
+            		results[site] = dLow;
+            	} else if (cHigh != TM::NA) {
+            		results[site] = dHigh;
             	} else {
-            		results[site] = hiLimit();
+            		results[site] = 0;
             	}
 
             } else {
@@ -156,7 +169,7 @@ void DCMeasurement::SMC_backgroundProcessing() {
 		if (_processResults) {
 			SMC_TEST(site, "", suiteName, LIMIT(TM::GE, 1, TM::LE, 1), funcResultsPre[site]);
 			if (_applyShutdown && _checkShutdown) SMC_TEST(site, "", suiteName, LIMIT(TM::GE, 1, TM::LE, 1), funcResultsPost[site]);
-			SMC_TEST(site, _pin, suiteName, limits(), filterResult(results[site]));
+			SMC_TEST(site, _pin, suiteName, testLimits().TEST_API_LIMIT, filterResult(results[site]));
 		}
     }
 }
