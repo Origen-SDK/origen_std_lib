@@ -17,6 +17,7 @@ extern vector<Site> Sites;
 Utils::Version version();
 Site& site();
 Site& site(int site);
+extern bool invertFunctionalResults;
 
 }
 #endif

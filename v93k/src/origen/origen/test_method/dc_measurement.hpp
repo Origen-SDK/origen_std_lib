@@ -28,7 +28,6 @@ public:
     DCMeasurement();
     virtual ~DCMeasurement();
     void SMC_backgroundProcessing();
-    void execute();
 
     DCMeasurement & applyShutdown(int v);
     DCMeasurement & shutdownPattern(string v);
@@ -42,12 +41,11 @@ public:
     DCMeasurement & badc(int v);
 
 protected:
-     DCMeasurement & getThis();
+    typedef DCMeasurement super;
+    DCMeasurement & getThis();
+    void _setup();
+    void _execute();
 
-    // Member/instance variables, declared outside the execute function body since
-    // they may be useful to refer to in callback functions
-    ARRAY_I activeSites;
-    string testSuiteName;
     string label;
     vector<int> funcResultsPre;
     vector<int> funcResultsPost;

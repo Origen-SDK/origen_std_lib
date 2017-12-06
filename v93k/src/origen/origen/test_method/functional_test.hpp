@@ -18,29 +18,32 @@ class FunctionalTest: public Base  {
     int _bitPerWord;
     int _processResults;
     string _pattern;
+    string _testNameOverride;
 
 public:
     FunctionalTest();
-
     virtual ~FunctionalTest();
     void SMC_backgroundProcessing();
-    void execute();
 
     FunctionalTest & capture(int v);
     FunctionalTest & pin(string v);
     FunctionalTest & bitPerWord(int v);
     FunctionalTest & processResults(int v);
     FunctionalTest & pattern(string v);
+    FunctionalTest & testName(string v);
+
+    string testName() {
+    	return Base::testName();
+    }
 
 protected:
+    typedef FunctionalTest super;
     FunctionalTest & getThis();
     ARRAY_I capturedData();
     ARRAY_I capturedData(int);
+    void _setup();
+    void _execute();
 
-    // Internal variables, declared outside the the execute function body since
-    // they may be useful in callback functions
-    ARRAY_I activeSites;
-    string testSuiteName;
     string label;
     vector<int> results;
     string pinName;

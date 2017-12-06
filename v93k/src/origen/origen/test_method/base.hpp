@@ -3,32 +3,44 @@
 
 #include "../test_method.hpp"
 #include "../../origen.hpp"
+#include "testmethod.hpp"
+#include "mapi.hpp"
+using namespace std;
 
 namespace Origen {
 namespace TestMethod {
 
-class Base {
+
+class Base: public testmethod::TestMethod {
     bool _async;
     bool _syncup;
 
 public:
-    virtual ~Base() {
-    }
-    Base() {
-        async(false);
-        syncup(false);
-    }
+    Base();
+    virtual ~Base();
 
     Base & async(bool v) { _async = v; return *this; }
     Base & syncup(bool v) { _syncup = v; return *this; }
 
-protected:
-    /// Returns 1 when running in offline mode
-    int offline() {
-    	int flag;
-        GET_SYSTEM_FLAG("offline", &flag);
-        return flag;
+    void execute() {
+    	_execute();
     }
+
+    virtual void SMC_backgroundProcessing() {};
+
+protected:
+
+    int numberOfPhysicalSites;
+    ARRAY_I activeSites;
+    string suiteName;
+    bool bFirstRun;
+
+    string _testName;
+    int    _forcePass;
+    string _onPassFlag;
+    string _onFailFlag;
+
+    int offline();
 
     // Returns an object containing the test limits, this can be passed to SMT APIs that take a LIMITS
     // object argument. To actually get the limit values use loLimit() and hiLimit().
@@ -36,10 +48,23 @@ protected:
         return GET_LIMIT_OBJECT("Functional");
     }
 
-    // Returns the base test number
-    int testnumber() {
-    	return GET_TESTNUMBER("Functional").getOffset();
-    }
+    void initialize();
+    void run();
+    int testNumber();
+    int testNumber(string);
+    TMLimits::LimitInfo testLimits();
+    TMLimits::LimitInfo testLimits(string);
+    void datalog(double);
+    void datalog(string, double);
+    void judgeAndDatalog(double);
+    void judgeAndDatalog(string, double);
+    bool preJudge(double);
+    bool preJudge(string, double);
+    string testName();
+    int invertFunctionalResultIfRequired(int);
+    bool isWithinLimits(double, LIMIT);
+    LIMIT toNALimit(LIMIT);
+    vector<int> suiteFailed;
 
     /// Returns the high limit value in whole units, i.e. A or V
     double hiLimit() {
@@ -59,10 +84,24 @@ protected:
         return lim;
     }
 
-    // Called immediately before the first RDI operation is executed
-    virtual void preTestFunc() {
+    virtual void init() {
     }
-    virtual void preTestFunc(int site) {
+
+    /// For internal use, don't override
+    virtual void _setup() {
+    }
+
+    // Called immediately before the first RDI operation is executed
+    virtual void preBody() {
+    }
+    virtual void preBody(int site) {
+    }
+
+    virtual void body() {
+    	execute();
+    }
+
+    virtual void _execute() {
     }
 
     // Called before the main RDI operation is executed, giving the chance to add
@@ -76,22 +115,22 @@ protected:
 
     // If the test has a hold state, this will be called immediately after the hold
     // state pattern has run
-    virtual void holdStateFunc() {
+    virtual void holdState() {
     }
-    virtual void holdStateFunc(int site) {
+    virtual void holdState(int site) {
     }
 
     // Called after the last RDI operation has executed and all results have been
     // fetched
-    virtual void postTestFunc() {
+    virtual void postBody() {
     }
-    virtual void postTestFunc(int site) {
+    virtual void postBody(int site) {
     }
 
     // Called immediately before the final result processing. If the test is configured for async
     // processing then this will be called later in the background. Contrast this with the
     // postTestFunc which will be called before the main test body completes.
-    virtual void processFunc(int site) {
+    virtual void process(int site) {
     }
 
     // Called before the main test result is judged, giving a chance to transform it
@@ -116,36 +155,36 @@ protected:
         }
     }
 
-    void callPreTestFunc() {
+    void callPreBody() {
     	if (syncup()) {
 			synchronize();
 		}
-    	preTestFunc();
+    	preBody();
     	FOR_EACH_SITE_BEGIN();
-    	preTestFunc(CURRENT_SITE_NUMBER());
+    	preBody(CURRENT_SITE_NUMBER());
     	FOR_EACH_SITE_END();
     }
 
-    void callHoldStateFunc() {
-    	holdStateFunc();
+    void callHoldState() {
+    	holdState();
     	FOR_EACH_SITE_BEGIN();
-    	holdStateFunc(CURRENT_SITE_NUMBER());
+    	holdState(CURRENT_SITE_NUMBER());
     	FOR_EACH_SITE_END();
     }
 
     template <class T>
-    void callPostTestFunc(T* obj) {
+    void callPostBody(T* obj) {
     	ON_FIRST_INVOCATION_BEGIN();
-    	postTestFunc();
+    	postBody();
     	FOR_EACH_SITE_BEGIN();
-    	postTestFunc(CURRENT_SITE_NUMBER());
+    	postBody(CURRENT_SITE_NUMBER());
     	FOR_EACH_SITE_END();
     	ON_FIRST_INVOCATION_END();
 
         if (async()) {
         	SMC_ARM_internal(obj);
         } else {
-        	processFunc(CURRENT_SITE_NUMBER());
+        	process(CURRENT_SITE_NUMBER());
         	this->serialProcessing(CURRENT_SITE_NUMBER());
 		}
     }

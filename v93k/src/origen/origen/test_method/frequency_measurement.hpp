@@ -23,7 +23,6 @@ public:
     FrequencyMeasurement();
     virtual ~FrequencyMeasurement();
     void SMC_backgroundProcessing();
-    void execute();
 
     FrequencyMeasurement & periodBased(int v);
     FrequencyMeasurement & pin(string v);
@@ -32,15 +31,13 @@ public:
     FrequencyMeasurement & processResults(int v);
 
 protected:
+    typedef FrequencyMeasurement super;
     FrequencyMeasurement & getThis();
+    void _setup();
+    void _execute();
 
-    // Internal variables, declared outside the the execute function body since
-    // they may be useful in callback functions
-    ARRAY_I activeSites;
-    string testSuiteName;
     string label;
     vector<int> funcResults;
-
 };
 
 }
