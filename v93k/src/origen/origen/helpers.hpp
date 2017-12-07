@@ -10,9 +10,11 @@ using namespace std;
 namespace Origen {
 
 string extractPinsFromGroup(const string&);
+bool pinExists(const string& pinName);
 void synchronize(double = 1);
 double calculateFrequency(const ARRAY_I&, double);
 double calculatePeriod(const ARRAY_I&, double);
+void overlaySubroutineOutput(string, string, uint64_t, int, int, int);
 void overlaySubroutine(string, string, uint64_t, int);
 void reverseOverlaySubroutine(string, string, uint64_t, int);
 int numberOfOnes(uint32_t);
@@ -30,6 +32,7 @@ bool isPass(double, LIMIT);
 string loStr(LIMIT);
 string hiStr(LIMIT);
 string upcase(string);
+string downcase(string);
 string lpad(string, int, char);
 string rpad(string, int, char);
 bool isEven(uint64_t);
@@ -39,6 +42,18 @@ uint64_t flip(uint64_t, int);
 string ltrim(string, const char * remove_chars = " \n\t\r\f\v");
 string rtrim(string, const char * remove_chars = " \n\t\r\f\v");
 string trim(string, const char * remove_chars = " \n\t\r\f\v");
+double getUnitMultiplier(const string& units);
+string getLabelFromBurst(const string& burst, const string& port);
+string checksum16bits(const string&);
+
+namespace Time {
+  void initTime(bool = false);
+  int month();
+  int day();
+  int hour();
+  int minute();
+  int second();
+}
 
 }
 
