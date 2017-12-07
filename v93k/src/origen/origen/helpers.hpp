@@ -47,7 +47,7 @@ string getLabelFromBurst(const string& burst, const string& port);
 string checksum16bits(const string&);
 
 namespace Time {
-  void getTime(bool = false);
+  void initTime(bool = false);
   int month();
   int day();
   int hour();

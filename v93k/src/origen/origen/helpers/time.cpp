@@ -21,11 +21,10 @@ static time_t rawtime;
 static struct tm * timeinfo;
 
 
-void getTime(bool reset) {
-  time (&rawtime);
-  timeinfo = localtime (&rawtime);
-
+void initTime(bool reset) {
   if ((!timeSet) || reset) {
+    time (&rawtime);
+    timeinfo = localtime (&rawtime);
     _month = (timeinfo->tm_mon + 1);
     _day = timeinfo->tm_mday;
     _hour = timeinfo->tm_hour;
@@ -35,46 +34,30 @@ void getTime(bool reset) {
   }
 }
 
-/// Get the Month. If not set will query the time for any
-/// subsequent time type calls
+/// Get the Month.
 int month() {
-  if (!timeSet) {
-    getTime();
-    timeSet = true;
-  }
+  initTime();    // set the time if not already
   return _month;
 }
 
-/// Get the Day. Requires to run setTime prior to grab the time.
+/// Get the Day.
 int day() {
-  if (!timeSet) {
-    getTime();
-    timeSet = true;
-  }
+  initTime();    // set the time if not already
   return _day;
 }
-/// Get the Month. Requires to run setTime prior to grab the time.
+/// Get the Hour.
 int hour() {
-  if (!timeSet) {
-    getTime();
-    timeSet = true;
-  }
+  initTime();    // set the time if not already
   return _hour;
 }
-/// Get the Month. Requires to run setTime prior to grab the time.
+/// Get the Minute.
 int minute() {
-  if (!timeSet) {
-    getTime();
-    timeSet = true;
-  }
+  initTime();    // set the time if not already
   return _minute;
 }
-/// Get the Month. Requires to run setTime prior to grab the time.
+/// Get the Second.
 int second() {
-  if (!timeSet) {
-    getTime();
-    timeSet = true;
-  }
+  initTime();    // set the time if not already
   return _second;
 }
    
