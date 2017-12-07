@@ -21,13 +21,6 @@ class Site {
     bool binSet;
     bool softbinSet;
 
-    bool timeSet;
-    int _month;
-    int _day;
-    int _hour;
-    int _minute;
-    int _second;
-
 public:
     Site(int);
     virtual ~Site();
@@ -47,18 +40,9 @@ public:
     int softbin();
     void softbin(int);
     void softbin(int, bool);
-    void getTime(bool = false);
-    int month();
-    int day();
-    int hour();
-    int minute();
-    int second();
 
     /// Returns the site number associated with the given site object
     int number() { return _number; }
-private:
-	 time_t rawtime;
-	 struct tm * timeinfo;
 };
 
 

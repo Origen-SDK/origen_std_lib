@@ -353,6 +353,8 @@ void initializeSites() {
         // Leave an empty space at 0, easier then to fetch by site number (which start at 1)
         Origen::Sites.resize(num_of_sites + 1, Origen::Site(0));
 
+        Origen::Time::getTime(); // get start of flow time for later use
+
     ON_FIRST_INVOCATION_END();
 
     // Instantiate a new site object and save it in the global site array

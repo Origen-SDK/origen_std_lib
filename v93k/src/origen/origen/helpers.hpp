@@ -46,6 +46,15 @@ double getUnitMultiplier(const string& units);
 string getLabelFromBurst(const string& burst, const string& port);
 string checksum16bits(const string&);
 
+namespace Time {
+  void getTime(bool = false);
+  int month();
+  int day();
+  int hour();
+  int minute();
+  int second();
+}
+
 }
 
 #endif

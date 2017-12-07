@@ -14,7 +14,6 @@ Site::Site(int number) {
     ySet = false;
     binSet = false;
     softbinSet = false;
-    timeSet = false;
 }
 Site::~Site() {}
 
@@ -217,61 +216,5 @@ void Site::softbin(int val, bool force) {
 /// bin has been assigned then it will return 0.
 int Site::softbin() {
 	return (softbinSet) ? _softbin : 0;
-}
-void Site::getTime(bool reset) {
-  time (&rawtime);
-  timeinfo = localtime (&rawtime);
-
-  if ((!timeSet) || reset) {
-    _month = (timeinfo->tm_mon + 1);
-    _day = timeinfo->tm_mday;
-    _hour = timeinfo->tm_hour;
-    _minute = timeinfo->tm_min;
-    _second = timeinfo->tm_sec;
-    timeSet = true;
-  }
-}
-
-/// Get the Month. If not set will query the time for any
-/// subsequent time type calls
-int Site::month() {
-	if (!timeSet) {
-        getTime();
-		timeSet = true;
-	}
-   return _month;
-}
-
-/// Get the Day. Requires to run setTime prior to grab the time.
-int Site::day() {
-	if (!timeSet) {
-        getTime();
-		timeSet = true;
-	}
-   return _day;
-}
-/// Get the Month. Requires to run setTime prior to grab the time.
-int Site::hour() {
-	if (!timeSet) {
-        getTime();
-		timeSet = true;
-	}
-   return _hour;
-}
-/// Get the Month. Requires to run setTime prior to grab the time.
-int Site::minute() {
-	if (!timeSet) {
-        getTime();
-		timeSet = true;
-	}
-   return _minute;
-}
-/// Get the Month. Requires to run setTime prior to grab the time.
-int Site::second() {
-	if (!timeSet) {
-        getTime();
-		timeSet = true;
-	}
-   return _second;
 }
 } /* namespace Origen */
