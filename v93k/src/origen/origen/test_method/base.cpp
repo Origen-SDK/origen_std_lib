@@ -175,11 +175,19 @@ int Base::testNumber(string testName) {
 
 /// Returns the base test limits
 TMLimits::LimitInfo Base::testLimits() {
+    // Doesn't seem like this should be required from the documentation, but had some
+    // problems with getLimitRef not working properly without it when other code has set
+    // a specific key.
+    tmLimits.setDefaultLookupKeys();
     return tmLimits.getLimitRef(suiteName, testName());
 }
 
 /// Returns the test limits for the given test name
 TMLimits::LimitInfo Base::testLimits(string testName) {
+    // Doesn't seem like this should be required from the documentation, but had some
+    // problems with getLimitRef not working properly without it when other code has set
+    // a specific key.
+    tmLimits.setDefaultLookupKeys();
     return tmLimits.getLimitRef(suiteName, testName);
 }
 
