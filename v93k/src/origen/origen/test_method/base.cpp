@@ -93,7 +93,9 @@ void Base::datalog(string testName, double value) {
 void Base::judgeAndDatalog(double value) {
 	bool alreadyFailed = suiteFailed[CURRENT_SITE_NUMBER()];
 
-	suiteFailed[CURRENT_SITE_NUMBER()] = !preJudge(value);
+	if (!alreadyFailed) {
+    suiteFailed[CURRENT_SITE_NUMBER()] = !preJudge(value);
+  }
 
 	TESTSET().testnumber(testNumber()).cont(true).judgeAndLog_ParametricTest("", testName(),
 				_forcePass ? toNALimit(testLimits().TEST_API_LIMIT) : testLimits().TEST_API_LIMIT,
@@ -108,7 +110,9 @@ void Base::judgeAndDatalog(double value) {
 void Base::judgeAndDatalog(string testName, double value) {
 	bool alreadyFailed = suiteFailed[CURRENT_SITE_NUMBER()];
 
-	suiteFailed[CURRENT_SITE_NUMBER()] = !preJudge(testName, value);
+	if (!alreadyFailed) {
+    suiteFailed[CURRENT_SITE_NUMBER()] = !preJudge(testName, value);
+  }
 
 	TESTSET().testnumber(testNumber(testName)).cont(true).judgeAndLog_ParametricTest("", testName,
 				_forcePass ? toNALimit(testLimits(testName).TEST_API_LIMIT) : testLimits(testName).TEST_API_LIMIT,
