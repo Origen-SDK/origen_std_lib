@@ -21,7 +21,6 @@ class Site {
     bool binSet;
     bool softbinSet;
 
-
 public:
     Site(int);
     virtual ~Site();
