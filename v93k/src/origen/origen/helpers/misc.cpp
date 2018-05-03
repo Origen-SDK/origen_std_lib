@@ -1,8 +1,5 @@
 /** @file */ 
 #include "../helpers.hpp"
-#include <cerrno>
-#include <stdlib.h>
-#include "../../origen.hpp"
 
 using namespace std;
 

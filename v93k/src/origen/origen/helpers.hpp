@@ -4,6 +4,9 @@
 #include "mapi.hpp"
 #include "rdi.hpp"
 #include <string>
+#include <cerrno>
+#include <stdlib.h>
+#include "../origen.hpp"
 
 using namespace std;
 

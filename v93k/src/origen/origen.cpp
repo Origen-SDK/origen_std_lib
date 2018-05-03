@@ -19,4 +19,6 @@ Site& site(int site) {
     return Sites[site];
 }
 
+bool invertFunctionalResults = false;
+
 }

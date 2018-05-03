@@ -73,6 +73,11 @@ uint64_t Site::lotidInt() {
  	if (id.length() > 5) val << toHex((int)id.at(5));
  	if (id.length() > 6) val << toHex((int)id.at(6));
  	if (id.length() > 7) val << toHex((int)id.at(7));
+	
+	// if conversion was wrong for any reason setup val to a default value to ensure fail.
+	if (val.str().length() > 16) {
+		val.str("FFFFFFFFFFFFFFFE");
+	}
 
  	return toUInt(val.str(), 16);
 }

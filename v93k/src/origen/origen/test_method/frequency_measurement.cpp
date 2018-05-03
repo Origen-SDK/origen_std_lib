@@ -1,10 +1,7 @@
 #include "frequency_measurement.hpp"
 
-using namespace std;
-
 namespace Origen {
 namespace TestMethod {
-
 
 FrequencyMeasurement::FrequencyMeasurement() {
     samples(2000);
@@ -26,26 +23,21 @@ FrequencyMeasurement & FrequencyMeasurement::processResults(int v) { _processRes
 // All test methods must implement these functions
 FrequencyMeasurement & FrequencyMeasurement::getThis() { return *this; }
 
-void FrequencyMeasurement::execute() {
+void FrequencyMeasurement::_setup() {
+	funcResults.resize(numberOfPhysicalSites + 1);
+    label = Primary.getLabel();
+    pin(extractPinsFromGroup(_pin));
+}
 
-    int site, physicalSites;
-    ARRAY_I sites;
+void FrequencyMeasurement::_execute() {
+
+    int site;
 
     ON_FIRST_INVOCATION_BEGIN();
 
-    enableHiddenUpload();
-    GET_ACTIVE_SITES(activeSites);
-    physicalSites = GET_CONFIGURED_SITES(sites);
-    funcResults.resize(physicalSites + 1);
-    GET_TESTSUITE_NAME(testSuiteName);
-    label = Primary.getLabel();
-    pin(extractPinsFromGroup(_pin));
-
-    callPreTestFunc();
-
     RDI_BEGIN();
 
-    SMART_RDI::DIG_CAP & prdi = rdi.digCap(testSuiteName)
+    SMART_RDI::DIG_CAP & prdi = rdi.digCap(suiteName)
 								   .label(label)
 								   .pin(_pin)
 								   .bitPerWord(1)
@@ -62,25 +54,22 @@ void FrequencyMeasurement::execute() {
     FOR_EACH_SITE_END();
 
     ON_FIRST_INVOCATION_END();
-
-    callPostTestFunc(this);
 }
 
 void FrequencyMeasurement::serialProcessing(int site) {
 	if (_processResults) {
 		double result;
-		ARRAY_I captureData = rdi.site(site).id(testSuiteName).getVector();
+		ARRAY_I captureData = rdi.site(site).id(suiteName).getVector();
 
 		if (_periodBased) {
 			result = calculatePeriod(captureData, _periodInNs);
 		} else {
 			result = calculateFrequency(captureData, _periodInNs);
 		}
-		logFunctionalTest(testSuiteName, site, funcResults[site] == 1, label);
-		TESTSET().testnumber(testnumber()).cont(true).testname(testSuiteName).judgeAndLog_FunctionalTest(funcResults[site] == 1);
 
-		logParametricTest(testSuiteName, site, filterResult(result), limits(), _pin);
-		TESTSET().testnumber(testnumber() + 1).judgeAndLog_ParametricTest(_pin, testSuiteName, limits(), filterResult(result));
+		judgeAndDatalog(testName() + "_FUNC", invertFunctionalResultIfRequired(funcResults[site]));
+
+		judgeAndDatalog(filterResult(result));
 	}
 }
 
@@ -89,16 +78,16 @@ void FrequencyMeasurement::SMC_backgroundProcessing() {
 
 	for (int i = 0; i < activeSites.size(); i++) {
 		int site = activeSites[i];
-		processFunc(site);
+		process(site);
 		if (_processResults) {
-			ARRAY_I captureData = rdi.site(site).id(testSuiteName).getVector();
+			ARRAY_I captureData = rdi.site(site).id(suiteName).getVector();
 			if (_periodBased) {
 				result = calculatePeriod(captureData, _periodInNs);
 			} else {
 				result = calculateFrequency(captureData, _periodInNs);
 			}
-			SMC_TEST(site, "", testSuiteName, LIMIT(TM::GE, 1, TM::LE, 1), funcResults[site]);
-			SMC_TEST(site, _pin, testSuiteName, limits(), filterResult(result));
+			SMC_TEST(site, "", suiteName, LIMIT(TM::GE, 1, TM::LE, 1), funcResults[site]);
+			SMC_TEST(site, _pin, suiteName, testLimits().TEST_API_LIMIT, filterResult(result));
 		}
 	}
 }

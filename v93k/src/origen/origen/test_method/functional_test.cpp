@@ -1,17 +1,16 @@
 #include "functional_test.hpp"
 
-using namespace std;
-
 namespace Origen {
 namespace TestMethod {
 
-
+// Defaults
 FunctionalTest::FunctionalTest() {
     pin("");
     capture(0);
     processResults(1);
     bitPerWord(1);
     pattern("");
+    testName("");
 }
 
 FunctionalTest::~FunctionalTest() { }
@@ -26,24 +25,24 @@ FunctionalTest & FunctionalTest::bitPerWord(int v) { _bitPerWord = v; return *th
 FunctionalTest & FunctionalTest::processResults(int v) { _processResults = v; return *this; }
 /// Override the pattern argument from the test suite
 FunctionalTest & FunctionalTest::pattern(string v) { _pattern = v; return *this; }
+/// Override the test name argument from the test suite, this can be useful if the main test item to be logged is
+/// a captured value and the pattern execution is to be logged separately. The override is only valid for one call to execute()
+/// and then it will be removed.
+FunctionalTest & FunctionalTest::testName(string v) { _testNameOverride = v; return *this; }
 
 // All test methods must implement this function
 FunctionalTest & FunctionalTest::getThis() { return *this; }
 
-void FunctionalTest::execute() {
+void FunctionalTest::_setup() {
+	results.resize(numberOfPhysicalSites + 1);
+}
 
-    int site, physicalSites;
-    ARRAY_I sites;
+void FunctionalTest::_execute() {
+
+    int site;
 
     ON_FIRST_INVOCATION_BEGIN();
 
-    enableHiddenUpload();
-    GET_ACTIVE_SITES(activeSites);
-    physicalSites = GET_CONFIGURED_SITES(sites);
-    results.resize(physicalSites + 1);
-    GET_TESTSUITE_NAME(testSuiteName);
-//    testSuiteName = testSuiteName + toStr(CURRENT_SITE_NUMBER());
-//    cout << testSuiteName << endl;
     if (_pattern == "") {
     	label = Primary.getLabel();
     } else {
@@ -54,12 +53,10 @@ void FunctionalTest::execute() {
         pinName = extractPinsFromGroup(_pin);
     }
 
-    callPreTestFunc();
-
     RDI_BEGIN();
 
         if (_capture) {
-            SMART_RDI::DIG_CAP & prdi = rdi.digCap(testSuiteName)
+            SMART_RDI::DIG_CAP & prdi = rdi.digCap(suiteName)
                                            .label(label)
                                            .pin(pinName)
                                            .bitPerWord(_bitPerWord)
@@ -68,8 +65,7 @@ void FunctionalTest::execute() {
             prdi.execute();
 
         } else {
-            SMART_RDI::FUNC & prdi = rdi.func(testSuiteName).label(label);
-//            SMART_RDI::FUNC & prdi = rdi.func(testSuiteName).burst(label);
+            SMART_RDI::FUNC & prdi = rdi.func(suiteName).label(label);
             filterRDI(prdi);
             prdi.execute();
         }
@@ -83,40 +79,41 @@ void FunctionalTest::execute() {
 //        	cout << "PRE " << site << ": " << results[site] << endl;
 
         } else {
-            results[site] = rdi.site(site).id(testSuiteName).getPassFail();
+            results[site] = rdi.site(site).id(suiteName).getPassFail();
 //            cout << "PRE " << site << ": " << results[site] << endl;
         }
     FOR_EACH_SITE_END();
 
     ON_FIRST_INVOCATION_END();
-
-    callPostTestFunc(this);
 }
 
 /// Returns the captured data for the site currently in focus
 ARRAY_I FunctionalTest::capturedData() {
-    return rdi.id(testSuiteName).getVector(pinName);
+    return rdi.id(suiteName).getVector(pinName);
 }
 
 /// Returns the captured data for the given site number
 ARRAY_I FunctionalTest::capturedData(int site) {
-    return rdi.site(site).id(testSuiteName).getVector(pinName);
+    return rdi.site(site).id(suiteName).getVector(pinName);
 }
 
 void FunctionalTest::serialProcessing(int site) {
 	if (_processResults) {
-//		cout << "POST " << site << ": " << results[site] << endl;
-	    logFunctionalTest(testSuiteName, site, results[site] == 1, label);
-	    TESTSET().testnumber(testnumber()).testname(testSuiteName).judgeAndLog_FunctionalTest(results[site] == 1);
+		if (_testNameOverride != "") {
+			judgeAndDatalog(_testNameOverride, invertFunctionalResultIfRequired(results[site]));
+		} else {
+			judgeAndDatalog(invertFunctionalResultIfRequired(results[site]));
+		}
 	}
+	_testNameOverride = "";
 }
 
 void FunctionalTest::SMC_backgroundProcessing() {
 	for (int i = 0; i < activeSites.size(); i++) {
 		int site = activeSites[i];
-		processFunc(site);
+		process(site);
 		if (_processResults) {
-			SMC_TEST(site, "", testSuiteName, LIMIT(TM::GE, 1, TM::LE, 1), results[activeSites[i]]);
+			SMC_TEST(site, "", suiteName, LIMIT(TM::GE, 1, TM::LE, 1), results[activeSites[i]]);
 		}
 	}
 }
