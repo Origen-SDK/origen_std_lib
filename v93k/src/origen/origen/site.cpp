@@ -38,16 +38,16 @@ void Site::lotid(uint64_t val) {
 	lotid(id);
 }
 
-
 /// Get the lot ID. If it has not previously been set to a value it will be automatically queried from the test system.
 string Site::lotid() {
     if (!lotidSet) {
-        char value[CI_CPI_MAX_MODL_STRING_LEN * 2];
-        if (!GetModelfileString(const_cast<char*>("LOT_ID"), value)) {
-            _lotid = (string) value;
-        } else {
-            _lotid = "Undefined";
+        string WId = getModelfileValue("WAFER_ID", "wafer_id");
+        if (WId.empty()) {
+		WId = "UNDEF-W01AA";
         }
+        vector <string> list;
+        tokenize(list, WId, "-wW");
+	_lotid = list.at(0);
         lotidSet = true;
     }
     return _lotid;
