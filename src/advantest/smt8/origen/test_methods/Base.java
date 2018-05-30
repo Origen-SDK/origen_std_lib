@@ -21,7 +21,9 @@ public class Base extends TestMethod {
     /** General testmethod parameters, used by all testmethods */
     public IMeasurement measurement;
     public String testName;
+    // TODO Verify forcePass implementation (also check if implemented in DC_Measurements)
     public Boolean forcePass = false;
+    //TODO Use onpassflag and onFailFlag (check flow variable setting from java code)
     public String onPassFlag;
     public String onFailFlag;
 

@@ -16,7 +16,7 @@ public class Origen {
      * the constants here just work as shorthand for default use cases
      */
     public static final int LOG_METHODTRACE = 9;
-    public static final int LOG_DATA = 8;
+    public static final int LOG_DATA = 10;
     public static final int LOG_PARAM = 3;
     public static final int LOG_FUNC = 4;
     public static final int LOG_FAIL = 2;

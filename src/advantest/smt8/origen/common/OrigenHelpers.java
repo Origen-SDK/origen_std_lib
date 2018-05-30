@@ -117,11 +117,17 @@ public class OrigenHelpers{
 
     }
     public static String longToPaddedBinaryString(Long data, int size, BitSequence.BitOrder order, boolean replace01ToHL) {
+        // Enforce minimum string size
         String format = "%" + size + "s";
         String strData = String.format(format, Long.toBinaryString(data)).replace(" ", "0");
         if(order == BitOrder.LEFT_TO_RIGHT) {
             strData = new StringBuilder(strData).reverse().toString();
+//            System.out.println(strData);
+         // Enforce maximum string size
+            strData = strData.substring(0,size);
         }
+
+
         if(replace01ToHL) {
             strData = strData.replace("0", "L").replace("1","H");
         }

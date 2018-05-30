@@ -331,6 +331,7 @@ public class Functional_test extends Base {
      * @return
      */
     public MultiSiteLong getResultWord(int wordNr) {
+        message(Origen.LOG_METHODTRACE,"Get result word" + wordNr);
         return getResultWord(wordNr, BitOrder.RIGHT_TO_LEFT);
     }
 
@@ -404,12 +405,19 @@ public class Functional_test extends Base {
 
         // Loop through the sites to get the data
         for (int site : context.getActiveSites()) {
+            message(Origen.LOG_METHODTRACE,"Num cap words: " + result.get(site).toLongArray(_bitPerWord,order).length);
             MSL.set(site, result.get(site).toLongArray(_bitPerWord,order)[wordNr]);
         }
         return MSL;
     }
 
-
+//    public MultiSiteLongArray getAllData() {
+//        BitOrder order = BitOrder.RIGHT_TO_LEFT;
+//        MultiSiteBitSequence result = getData();
+//        for (int site : context.getActiveSites()) {
+//            resultPerSite = result.get(site).toLongArray(_bitPerWord,order)
+//    }
+//
     public void executeAndCapture() {
         // Run the measurement
         measurement.digInOut(_pin).result().cyclePassFail().setEnabled(false);

@@ -148,7 +148,7 @@ public class OrigenData {
      * @param addr
      * @param data
      */
-    public void setDataOnSite(int site, long addr, long data) {
+    public void setDataOnSite(int site, long addr, int data) {
         long[] a = mem_addr.get(site);
         long[] d = mem_data.get(site);
         if(a == null) {
@@ -176,7 +176,7 @@ public class OrigenData {
      * @param addr
      * @param data
      */
-    public void setData(int addr, long data) {
+    public void setData(int addr, int data) {
         for (int site : mem_data.getActiveSites()) {
             setDataOnSite(site, addr, data);
         }
