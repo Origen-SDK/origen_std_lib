@@ -4,6 +4,11 @@ module OrigenStdLib
               class_name:            'origen',
 
               functional_test:       {
+                port:             [:string, ''],
+                test_name:        [:string, ''],
+                force_pass:       [:boolean, false],
+                on_pass_flag:     [:string, ''],
+                on_fail_flag:     [:string, '']
               },
 
               dc_measurement:        {
@@ -15,9 +20,15 @@ module OrigenStdLib
                 measure:          [:string, 'VOLT', %w(VOLT CURR v i voltage current)],
                 settling_time:    [:double, 0],
                 pin:              [:string, nil],
+                port:             [:string, ''],
                 force_value:      [:double, 0],
                 i_range:          [:integer, nil],
                 badc:             [:integer, 0],
+                test_name:        [:string, ''],
+                force_pass:       [:boolean, false],
+                on_pass_flag:     [:string, ''],
+                on_fail_flag:     [:string, ''],
+
                 methods:          {
                   finalize: lambda  do |tm|
                     # Clean up the measurement type parameter
@@ -40,8 +51,13 @@ module OrigenStdLib
               frequency_measurement: {
                 period_based: [:integer, 0],
                 pin:          [:string, nil],
+                port:             [:string, ''],
                 samples:      [:integer, 2000],
-                period_in_ns: [:integer, nil]
+                period_in_ns: [:integer, nil],
+                test_name:        [:string, ''],
+                force_pass:       [:boolean, false],
+                on_pass_flag:     [:string, ''],
+                on_fail_flag:     [:string, '']
               },
 
               record_bin:            {

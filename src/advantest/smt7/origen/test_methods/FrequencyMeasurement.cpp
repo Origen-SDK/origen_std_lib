@@ -5,6 +5,7 @@ class FrequencyMeasurement: public Origen::TestMethod::FrequencyMeasurement {
 protected:                                 
   int    mPeriodBased;
   string mPin;
+  string mPort;
   int    mSamples;
   int    mPeriodInNs;
 
@@ -26,6 +27,12 @@ protected:
                  &mPin,
                  testmethod::TM_PARAMETER_INPUT)
       .setComment("Pin to be measured");
+    addParameter("port",
+                 "string",
+                 &mPort,
+                 testmethod::TM_PARAMETER_INPUT)
+      .setDefault("")
+      .setComment("Port the pattern is to be executed on");
     addParameter("samples",
                  "int",
                  &mSamples,
@@ -46,6 +53,7 @@ protected:
   {
       origen.periodBased(mPeriodBased)
             .pin(mPin)
+            .port(mPort)
             .samples(mSamples)
             .periodInNs(mPeriodInNs)
             .execute();

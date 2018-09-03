@@ -13,6 +13,7 @@ protected:
   string  mMeasure;
   double  mSettlingTime;
   string  mPin;
+  string  mPort;
   double  mForceValue;
   double  mIRange;
   int mCheckShutdown;
@@ -61,6 +62,12 @@ protected:
                  &mPin,
                  testmethod::TM_PARAMETER_INPUT)
       .setComment("Pin to be measured");
+    addParameter("port",
+                 "string",
+                 &mPort,
+                 testmethod::TM_PARAMETER_INPUT)
+      .setDefault("")
+      .setComment("Port the pattern is to be executed on");
     addParameter("forceValue",
                  "double",
                  &mForceValue,
@@ -93,6 +100,7 @@ protected:
           .measure(mMeasure)
           .settlingTime(mSettlingTime)
           .pin(mPin)
+          .port(mPort)
           .iRange(mIRange)
           .badc(mBadc)
           .execute();

@@ -15,6 +15,7 @@ class FrequencyMeasurement: public Base  {
 
     int _periodBased;
     string _pin;
+    string _port;
     int _samples;
     int _periodInNs;
     int _processResults;
@@ -26,6 +27,7 @@ public:
 
     FrequencyMeasurement & periodBased(int v);
     FrequencyMeasurement & pin(string v);
+    FrequencyMeasurement & port(string v);
     FrequencyMeasurement & samples(int v);
     FrequencyMeasurement & periodInNs(int v);
     FrequencyMeasurement & processResults(int v);

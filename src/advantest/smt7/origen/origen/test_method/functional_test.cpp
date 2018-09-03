@@ -6,6 +6,7 @@ namespace TestMethod {
 // Defaults
 FunctionalTest::FunctionalTest() {
     pin("");
+    port("");
     capture(0);
     processResults(1);
     bitPerWord(1);
@@ -19,6 +20,8 @@ FunctionalTest::~FunctionalTest() { }
 FunctionalTest & FunctionalTest::capture(int v) { _capture = v; return *this; }
 /// If data capture is requested, supply the pin to capture data from
 FunctionalTest & FunctionalTest::pin(string v) { _pin = v; return *this; }
+/// Optionally supply the name of the test port that should be used to execute the pattern
+FunctionalTest & FunctionalTest::port(string v) { _port = v; return *this; }
 /// Serial capture data will be grouped into words, specify how many bits per word in the serial stream (default 1)
 FunctionalTest & FunctionalTest::bitPerWord(int v) { _bitPerWord = v; return *this; }
 /// When set to 0 the results of the test will not be judged or logged
@@ -43,7 +46,7 @@ void FunctionalTest::_execute() {
 
     ON_FIRST_INVOCATION_BEGIN();
 
-    if (_pattern == "") {
+    if (_pattern.empty()) {
     	label = Primary.getLabel();
     } else {
     	label = _pattern;
@@ -56,18 +59,36 @@ void FunctionalTest::_execute() {
     RDI_BEGIN();
 
         if (_capture) {
-            SMART_RDI::DIG_CAP & prdi = rdi.digCap(suiteName)
-                                           .label(label)
-                                           .pin(pinName)
-                                           .bitPerWord(_bitPerWord)
-                                           .samples(_capture);
-            filterRDI(prdi);
-            prdi.execute();
+            if (_port.empty()) {
+              SMART_RDI::DIG_CAP & prdi = rdi.digCap(suiteName)
+                                             .label(label)
+                                             .pin(pinName)
+                                             .bitPerWord(_bitPerWord)
+                                             .samples(_capture);
+              filterRDI(prdi);
+              prdi.execute();
+
+            } else {
+              SMART_RDI::DIG_CAP & prdi = rdi.port(_port).digCap(suiteName)
+                                             .vecVarOnly()
+                                             .pin(pinName)
+                                             .bitPerWord(_bitPerWord)
+                                             .samples(_capture);
+              filterRDI(prdi);
+              prdi.execute();
+              rdi.port(_port).func().burst(label).execute();
+            }
 
         } else {
-            SMART_RDI::FUNC & prdi = rdi.func(suiteName).label(label);
+            if (_port.empty()) {
+              SMART_RDI::FUNC & prdi = rdi.func(suiteName).label(label);
             filterRDI(prdi);
-            prdi.execute();
+            prdi.execute();            
+	    } else {
+              SMART_RDI::FUNC & prdi = rdi.port(_port).func(suiteName).burst(label);
+            filterRDI(prdi);
+            prdi.execute();		    
+            }
         }
 
     RDI_END();

@@ -3,9 +3,11 @@
 namespace Origen {
 namespace TestMethod {
 
+// Defaults
 FrequencyMeasurement::FrequencyMeasurement() {
     samples(2000);
     processResults(1);
+    port("");
 }
 FrequencyMeasurement::~FrequencyMeasurement() { }
 
@@ -13,6 +15,8 @@ FrequencyMeasurement::~FrequencyMeasurement() { }
 FrequencyMeasurement & FrequencyMeasurement::periodBased(int v) { _periodBased = v; return *this; }
 /// REQUIRED: The name of the pin being measured
 FrequencyMeasurement & FrequencyMeasurement::pin(string v) { _pin = v; return *this; }
+/// Optionally supply the name of the test port that should be used to execute the pattern
+FrequencyMeasurement & FrequencyMeasurement::port(string v) { _port = v; return *this; }
 /// The number of samples captured by the pattern, the default is 2000
 FrequencyMeasurement & FrequencyMeasurement::samples(int v) { _samples = v; return *this; }
 /// REQUIRED: Supply the period of the captured vectors in nanoseconds
@@ -37,14 +41,27 @@ void FrequencyMeasurement::_execute() {
 
     RDI_BEGIN();
 
-    SMART_RDI::DIG_CAP & prdi = rdi.digCap(suiteName)
-								   .label(label)
-								   .pin(_pin)
-								   .bitPerWord(1)
-								   .samples(_samples);
+    if (_port.empty()) {
+      SMART_RDI::DIG_CAP & prdi = rdi.digCap(suiteName)
+                     .label(label)
+                     .pin(_pin)
+                     .bitPerWord(1)
+                     .samples(_samples);
 
-	filterRDI(prdi);
-	prdi.execute();
+      filterRDI(prdi);
+      prdi.execute();
+
+    } else {
+      SMART_RDI::DIG_CAP & prdi = rdi.port(_port).digCap(suiteName)
+                     .vecVarOnly()
+                     .pin(_pin)
+                     .bitPerWord(1)
+                     .samples(_samples);
+
+      filterRDI(prdi);
+      prdi.execute();
+      rdi.port(_port).func().burst(label).execute();
+    }
 
     RDI_END();
 

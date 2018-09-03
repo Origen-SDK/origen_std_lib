@@ -19,6 +19,7 @@ class DCMeasurement: public Base {
     string _measure;
     double _settlingTime;
     string _pin;
+    string _port;
     double _forceValue;
     double _iRange;
     int _processResults;
@@ -35,6 +36,7 @@ public:
     DCMeasurement & measure(string v);
     DCMeasurement & settlingTime(double v);
     DCMeasurement & pin(string v);
+    DCMeasurement & port(string v);
     DCMeasurement & forceValue(double v);
     DCMeasurement & iRange(double v);
     DCMeasurement & processResults(int v);

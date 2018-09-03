@@ -14,6 +14,7 @@ class FunctionalTest: public Base  {
     void serialProcessing(int site);
 
     string _pin;
+    string _port;
     int _capture;
     int _bitPerWord;
     int _processResults;
@@ -27,6 +28,7 @@ public:
 
     FunctionalTest & capture(int v);
     FunctionalTest & pin(string v);
+    FunctionalTest & port(string v);
     FunctionalTest & bitPerWord(int v);
     FunctionalTest & processResults(int v);
     FunctionalTest & pattern(string v);

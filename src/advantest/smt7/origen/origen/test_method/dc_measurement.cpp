@@ -13,6 +13,7 @@ DCMeasurement::DCMeasurement() {
     iRange(0);
     processResults(1);
     badc(0);
+    port("");
 }
 
 DCMeasurement::~DCMeasurement() { }
@@ -23,6 +24,7 @@ DCMeasurement & DCMeasurement::checkShutdown(int v) { _checkShutdown = v; return
 DCMeasurement & DCMeasurement::measure(string v) { _measure = v; return *this; }
 DCMeasurement & DCMeasurement::settlingTime(double v) { _settlingTime = v; return *this; }
 DCMeasurement & DCMeasurement::pin(string v) { _pin = v; return *this; }
+DCMeasurement & DCMeasurement::port(string v) { _port = v; return *this; }
 DCMeasurement & DCMeasurement::forceValue(double v) { _forceValue = v; return *this; }
 DCMeasurement & DCMeasurement::iRange(double v) { _iRange = v; return *this; }
 DCMeasurement & DCMeasurement::processResults(int v) { _processResults = v; return *this; }
@@ -78,46 +80,90 @@ void DCMeasurement::_execute() {
 
         RDI_BEGIN();
 
-        rdi.func(suiteName + "f1").label(label).execute();
+        if (_port.empty()) {
+          rdi.func(suiteName + "f1").label(label).execute();
+        } else {
+          rdi.port(_port).func(suiteName + "f1").burst(label).execute();
+        }
 
         callHoldState();
 
 		if(_measure == "VOLT") {
 
 			if (_badc) {
+        if (_port.empty()) {
           		    rdi.dc(suiteName)
 			       .pin(_pin, TA::BADC)
 			       .measWait(_settlingTime)
 			       .vMeas()
 			       .execute();
+        } else {
+          		    rdi.port(_port).dc(suiteName)
+			       .pin(_pin, TA::BADC)
+			       .measWait(_settlingTime)
+			       .vMeas()
+			       .execute();
+        }
 
 			} else {
+        if (_port.empty()) {
 			    SMART_RDI::dcBase & prdi = rdi.dc(suiteName)
                                         .pin(_pin)
                                         .iForce(_forceValue)
                                         .measWait(_settlingTime)
                                         .relay(TA::ppmuRly_onPPMU_offACDC,TA::ppmuRly_onAC_offDCPPMU)
                                         .vMeas();
-			    filterRDI(prdi);
-			    prdi.execute();
+			 filterRDI(prdi);
+			 prdi.execute();
+        } else {
+			    SMART_RDI::dcBase & prdi = rdi.port(_port).dc(suiteName)
+                                        .pin(_pin)
+                                        .iForce(_forceValue)
+                                        .measWait(_settlingTime)
+                                        .relay(TA::ppmuRly_onPPMU_offACDC,TA::ppmuRly_onAC_offDCPPMU)
+                                        .vMeas();
+			 filterRDI(prdi);
+			 prdi.execute();
+        }
+
 
 			}
 
 
 		} else {
 
-			SMART_RDI::dcBase & prdi = rdi.dc(suiteName)
-										  .pin(_pin)
-										  .vForce(_forceValue)
-										  .relay(TA::ppmuRly_onPPMU_offACDC,TA::ppmuRly_onAC_offDCPPMU)
-										  .measWait(_settlingTime)
-										  .iRange(_iRange)
-										  .iMeas();
+      if (_port.empty()) {
+        SMART_RDI::dcBase & prdi = rdi.dc(suiteName)
+                        .pin(_pin)
+                        .vForce(_forceValue)
+                        .relay(TA::ppmuRly_onPPMU_offACDC,TA::ppmuRly_onAC_offDCPPMU)
+                        .measWait(_settlingTime)
+                        .iRange(_iRange)
+                        .iMeas();
+
 			filterRDI(prdi);
-			prdi.execute();
+			prdi.execute();	      
+      } else {
+        SMART_RDI::dcBase & prdi = rdi.port(_port).dc(suiteName)
+                        .pin(_pin)
+                        .vForce(_forceValue)
+                        .relay(TA::ppmuRly_onPPMU_offACDC,TA::ppmuRly_onAC_offDCPPMU)
+                        .measWait(_settlingTime)
+                        .iRange(_iRange)
+                        .iMeas();
+	      
+			filterRDI(prdi);
+			prdi.execute();	      
+      }
 		}
 
-		if (_applyShutdown) rdi.func(suiteName + "f2").label(_shutdownPattern).execute();
+		if (_applyShutdown) {
+      if (_port.empty()) {
+        rdi.func(suiteName + "f2").label(_shutdownPattern).execute();
+      } else {
+        rdi.port(_port).func(suiteName + "f2").burst(_shutdownPattern).execute();
+      }
+    }
 
         RDI_END();
 
