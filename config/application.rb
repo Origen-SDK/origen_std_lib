@@ -38,25 +38,16 @@ class OrigenStdLibApplication < Origen::Application
 
   config.semantically_version = true
 
-  # Copy the std lib into the app area for inclusion in the gem package
   def before_release_gem
-    d = "#{Origen.root}/stdlib/v93k"
-    FileUtils.rm_rf(d)  if File.exist?(d)
-    FileUtils.mkdir_p(d)
     # Remove all untracked files, e.g. compiled binaries
-    system "git clean -f -d -x #{Origen.root}/../v93k"
-    system "git clean -f -d #{Origen.root}/../v93k"
-    FileUtils.cp_r("#{Origen.root}/../v93k/src/origen", d)
-  end
-
-  # Get rid of the local std lib copy after building
-  def after_release_gem
-    FileUtils.rm_rf "#{Origen.root}/stdlib"
+    system "git clean -f -d -x #{Origen.root}/src"
+    system "git clean -f -d #{Origen.root}/src"
   end
 
   def after_web_site_compile(options={})
     if options[:api]
-      Dir.chdir "#{Origen.app.rc.root}/v93k" do
+      f = File.join(Origen.root, "src", "advantest", "smt7")
+      Dir.chdir f do
         system "doxygen .doxygen"
         d = "#{Origen.root}/web/output"
         FileUtils.mkdir_p(d)
@@ -92,7 +83,7 @@ class OrigenStdLibApplication < Origen::Application
   def before_release_tag(identifier, note, type, selector, options)
     v = Origen::VersionString.new(identifier)
     # Update the version in the C code
-    f = "#{Origen.app.rc.root}/v93k/src/origen/origen.hpp"
+    f = File.join(Origen.root, "src", "advantest", "smt7", "origen", "origen.hpp")
     data = File.read(f) 
     filtered_data = data.sub(/#define ORIGEN_VERSION \"\d+\.\d+\.\d+\"/, "#define ORIGEN_VERSION \"#{v}\"") 
     File.open(f, "w") do |f|
@@ -138,5 +129,4 @@ class OrigenStdLibApplication < Origen::Application
   #config.pattern_name_translator do |name|
   #  name.gsub(/_b\d/, "_bx")
   #end
-
 end
