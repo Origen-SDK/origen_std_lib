@@ -102,7 +102,7 @@ void Base::judgeAndDatalog(double value) {
 			    value);
 
 	// Preserve the first bin assigned within this test suite as the final one
-	if (!alreadyFailed) {
+	if ((!alreadyFailed)&&(!_forcePass)&&(suiteFailed[CURRENT_SITE_NUMBER()])) {
 		SET_MULTIBIN(testLimits().BinsNumString, testLimits().BinhNum);
 	}
 }
@@ -119,7 +119,7 @@ void Base::judgeAndDatalog(string testName, double value) {
 				value);
 
 	// Preserve the first bin assigned within this test suite as the final one
-	if (!alreadyFailed) {
+	if ((!alreadyFailed)&&(!_forcePass)&&(suiteFailed[CURRENT_SITE_NUMBER()])) {
 		SET_MULTIBIN(testLimits().BinsNumString, testLimits().BinhNum);
 	}
 }
