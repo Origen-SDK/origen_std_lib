@@ -17,12 +17,15 @@ import xoc.dta.resultaccess.IMeasurementResult;
 import xoc.dta.resultaccess.datatypes.BitSequence.BitOrder;
 import xoc.dta.resultaccess.datatypes.MultiSiteBitSequence;
 import xoc.dta.setupaccess.IParallelGroup;
+import xoc.dta.testdescriptor.IFunctionalTestDescriptor;
 import xoc.dta.testdescriptor.IParametricTestDescriptor;
 
 /**
  * The Function test template for all functional tests
  */
 public class Functional_test extends Base {
+
+    public IFunctionalTestDescriptor FUNC;
 
     // Class variables
 
@@ -285,7 +288,7 @@ public class Functional_test extends Base {
                 .preserveCaptureResults();
 
         // get all results from measurement pin
-        return digCapture.getBits(_pin);
+        return digCapture.getBits(measurement.getSignal(_pin).getDutSignalName());
     }
 
     /**

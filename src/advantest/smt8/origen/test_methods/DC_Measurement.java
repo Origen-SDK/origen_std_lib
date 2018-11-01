@@ -13,12 +13,16 @@ import xoc.dta.resultaccess.IDigInOutActionResults;
 import xoc.dta.resultaccess.IDigInOutActionResults.IIforceVmeasResults;
 import xoc.dta.resultaccess.IDigInOutActionResults.IVforceImeasResults;
 import xoc.dta.resultaccess.IMeasurementResult;
+import xoc.dta.testdescriptor.IFunctionalTestDescriptor;
 import xoc.dta.testdescriptor.IParametricTestDescriptor;
 
 /**
  * An example test method using test descriptor
  */
 public class DC_Measurement extends Base {
+
+    public IFunctionalTestDescriptor FUNC;
+    public IParametricTestDescriptor PAR;
 
     public enum MEAS
     {

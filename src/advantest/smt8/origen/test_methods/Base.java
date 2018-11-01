@@ -14,10 +14,6 @@ public class Base extends TestMethod {
     /** Execute the process() function or not */
     boolean _processResults;
 
-    /** General testdescriptors used by all testmethods */
-    public IFunctionalTestDescriptor FUNC;
-    public IParametricTestDescriptor PAR;
-
     /** General testmethod parameters, used by all testmethods */
     public IMeasurement measurement;
     public String testName;
@@ -132,7 +128,7 @@ public class Base extends TestMethod {
      */
     public void checkParams() {
         logTrace("Base", "checkParams");
-    };
+    }
 
     public void measure_setup() {
         logTrace("Base", "measure_setup");
