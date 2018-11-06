@@ -148,7 +148,7 @@ public class OrigenData {
      * @param addr
      * @param data
      */
-    public void setDataOnSite(int site, long addr, int data) {
+    public void setDataOnSite(int site, long addr, long data) {
         long[] a = mem_addr.get(site);
         long[] d = mem_data.get(site);
         if(a == null) {
@@ -176,7 +176,7 @@ public class OrigenData {
      * @param addr
      * @param data
      */
-    public void setData(int addr, int data) {
+    public void setData(long addr, long data) {
         for (int site : mem_data.getActiveSites()) {
             setDataOnSite(site, addr, data);
         }
@@ -188,7 +188,7 @@ public class OrigenData {
      * @param addr
      * @return
      */
-    public boolean addrIsSetAnySite(int addr) {
+    public boolean addrIsSetAnySite(long addr) {
         for (int site : mem_data.getActiveSites()) {
             if (addrIsSet(site, addr)) {
                 return true;
@@ -227,18 +227,36 @@ public class OrigenData {
     }
 
     /**
-     * Returns the site specific data for an address
+     * Returns the site specific data for an address, returning -1 for the data if it
+     * has not been previously set
      *
      * @param addr
      * @return
      */
     public MultiSiteLong getDataMSL(long addr) {
+      return getDataMSL(addr, false, "");
+    }
+
+    /**
+     * Returns the site specific data for an address, but raising and error with the given
+     * message if the data has not been previously set
+     *
+     * @param addr
+     * @return
+     */
+    public MultiSiteLong getDataMSL(long addr, String errorMsg) {
+      return getDataMSL(addr, true, errorMsg);
+    }
+
+    private MultiSiteLong getDataMSL(long addr, boolean errorOnNotSet, String errorMsg) {
         MultiSiteLong result = new MultiSiteLong();
         for (int site : mem_data.getActiveSites()) {
             if (addrIsSet(site, addr)) {
                 result.set(site, getDataPerSite(site, addr));
-                System.out.println( getDataPerSite(site, addr));
             } else {
+                if (errorOnNotSet) {
+                  throw new Error(errorMsg);
+                }
                 result.set(site, -1);
             }
         }
