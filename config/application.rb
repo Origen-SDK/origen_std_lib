@@ -46,12 +46,13 @@ class OrigenStdLibApplication < Origen::Application
 
   def after_web_site_compile(options={})
     if options[:api]
-      f = File.join(Origen.root, "src", "advantest", "smt7")
-      Dir.chdir f do
-        system "doxygen .doxygen"
-        d = "#{Origen.root}/web/output"
-        FileUtils.mkdir_p(d)
-        FileUtils.mv "html", "#{d}/v93k"
+      f = Origen.root.join "web", "output", "v93k_smt7"
+      FileUtils.mkdir_p(f)
+      Dir.chdir Origen.root.join "src", "advantest", "smt7" do
+        system "doxygen #{Origen.root.join('config', 'doxygen', 'v93k_smt7')}"
+        #d = "#{Origen.root}/web/output"
+        #FileUtils.mkdir_p(d)
+        #FileUtils.mv "html", "#{d}/v93k_smt7"
       end
     end
   end
