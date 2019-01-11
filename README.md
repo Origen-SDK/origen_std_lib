@@ -1,20 +1,26 @@
 # Origen Standard Library (OrigenStdLib)
 
-OrigenTesters provides low-level, or bare-metal, APIs which allow an application to generate the components of
-an ATE test program.
-The application is expected to bring the knowledge of how these low-level APIs should be used to actually create
-a test on the target ATE platform.
-Similarly, the application is also expected to bring all of the custom code, e.g. C++ or Visual Basic, that it might
-need to implement the tests.
+OrigenStdLib aims to provide a standard ATE library with the following goals:
 
-The goal of this plugin is provides a standard test library which sits between OrigenTesters and an application, with
-the goal of helping application's to reduce the footprint of their custom C++/VB code, and to provide complete
-tests off the shelf.
+* Be agnostic to any particular company or business so that anyone can use this
+* Be higher level than the native functionality provided by the tester vendors - reducing the amount of low-level knowledge required by test engineers and the footprint of custom code required to be written for a particular test program application
+* Complement the Origen test program and test pattern generators (although it can be used standalone with flows and patterns originating from any backend flow)
+
+It should be noted that this library does not aim to provide a common API across different ATE platforms, although the feature set provided by each ATE-specific variant of the library should be broadly similar.
+
+OrigenStdLib provides libraries for the following platforms:
+
+* [Advantest V93000 SMT 7](https://github.com/Origen-SDK/origen_std_lib)
+* [Advantest V93000 SMT 8](https://github.com/Origen-SDK/origen_std_lib)
+
+### Advantest V93000 SMT 7 Library
 
 
-to be agnostic to any particular company or business, so that it can be widely agreed upon and contributed to.
 
 
 
-It provides a standard
 
+
+### Advantest V93000 SMT 8 Library
+
+This library is still in initial development and will be documented soon.
