@@ -4,11 +4,11 @@ module OrigenStdLib
               class_name:            'origen',
 
               functional_test:       {
-                port:             [:string, ''],
-                test_name:        [:string, ''],
-                force_pass:       [:boolean, false],
-                on_pass_flag:     [:string, ''],
-                on_fail_flag:     [:string, '']
+                port:         [:string, ''],
+                test_name:    [:string, ''],
+                force_pass:   [:boolean, false],
+                on_pass_flag: [:string, ''],
+                on_fail_flag: [:string, '']
               },
 
               dc_measurement:        {
@@ -51,13 +51,13 @@ module OrigenStdLib
               frequency_measurement: {
                 period_based: [:integer, 0],
                 pin:          [:string, nil],
-                port:             [:string, ''],
+                port:         [:string, ''],
                 samples:      [:integer, 2000],
                 period_in_ns: [:integer, nil],
-                test_name:        [:string, ''],
-                force_pass:       [:boolean, false],
-                on_pass_flag:     [:string, ''],
-                on_fail_flag:     [:string, '']
+                test_name:    [:string, ''],
+                force_pass:   [:boolean, false],
+                on_pass_flag: [:string, ''],
+                on_fail_flag: [:string, '']
               },
 
               record_bin:            {
