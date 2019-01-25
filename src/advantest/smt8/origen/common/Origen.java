@@ -56,7 +56,8 @@ public class Origen {
      */
     @SuppressWarnings("deprecation")
     public static void message(int level, String msg) {
-        context.message(level,msg);
+        // No longer works on SMT 8.2, should this function be removed completely?
+        //context.message(level,msg);
     }
 
 

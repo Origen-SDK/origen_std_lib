@@ -69,7 +69,9 @@ public class Base extends TestMethod {
         Origen.meas = measurement;
         messageLogLevel = origenLoglevel;
         logTrace("Base", "setup");
-        _setup();
+        if (!dependenciesUnchanged()) {
+          _setup();
+        }
     }
 
     /**

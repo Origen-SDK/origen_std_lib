@@ -288,7 +288,7 @@ public class Functional_test extends Base {
                 .preserveCaptureResults();
 
         // get all results from measurement pin
-        return digCapture.getBits(measurement.getSignal(_pin).getDutSignalName());
+        return digCapture.getSerialBitsAsBitSequence(measurement.getSignal(_pin).getDutSignalName());
     }
 
     /**
