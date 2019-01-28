@@ -1,0 +1,68 @@
+% render "templates/web/layouts/guides.html" do
+
+The following complete test methods are provided to be directly called from a test suite:
+
+* [FunctionalTest](#Functional_Test)
+* [DCMeasurement](#DCMeasurement)
+* [FrequencyMeasurement](#FrequencyMeasurement)
+
+### FunctionalTest
+
+This test will simply execute the pattern (label) defined by the test suite and will set pass/fail
+depending on whether any mis-compares occur during the pattern execution.
+
+#### Arguments
+
+<%= render "snippets/common_args.md.erb", preserve_target: true %>
+
+### DCMeasurement
+
+This test will execute the pattern (label) defined by the test suite and then perform a voltage or
+current measurement on the given pin.
+
+Options exist to configure the measurement and to select whether or not to run a shutdown pattern
+after the measurement has been taken.
+
+
+#### Arguments
+
+* **pin (string)** - (**Required**) The name of the pin to be measured.
+* **measure (string)** - (Optional, Default="VOLT") Define whether to measure current or voltage (the default).
+  Set to "CURR" to measure current.
+* **settlingTime (double)** - (Optional, Default=0) Specify the time to wait after running the pattern before
+  taking the measurement, expressed in ms.
+* **forceValue (double)** - (Optional, Default=0) The value to be forced on the pin during the measurement.
+* **iRange (double)** - (Optional, Default=0) The current range to apply to the measurement in amps, it will
+  be calculated if not supplied (set to 0).
+* **badc (integer)** - (Optional, Default=0) When set to 1 the measurement will be made using the board ADC
+  rather than the PPMU (the default)
+* **applyShutdown (integer)** - (Optional, Default=1) Set to 1 to execute the pattern (label) defined
+  by the `shutdownPattern` argument after the measurement.
+* **shutdownPattern (string)** - (Optional, Default="<PATTERN>_part1") The name of the pattern (label) to be executed after taking
+  the measurement, this argument is required if `applyShutdown` is set to 1. By default it will look for a pattern
+  named after the main pattern (label) with "_part1" appended.
+* **checkShutdown (integer)** - (Optional, Default=1) When set to 1 the executing of the shutdown pattern
+  will be cared and the overall test will fail if any miscompares occur during the shutdown patten execution.
+<%= render "snippets/common_args.md.erb", preserve_target: true %>
+
+### FrequencyMeasurement
+
+Measure the frequency of a clock being output on the given pin.
+
+The pattern run by this test must setup the device to output the clock on the given pin
+and then run additional cycles where the data on the pin under test is digitally captured.
+
+The period of the capture cycles must be less than that of the clock being measured.
+The effect of different settings of the capture period and the number of capture cycles should be
+characterized to determine the optimal settings to meet the application's particular accuracy and
+test time goals.
+
+* **pin (string)** - (**Required**) The name of the pin to be measured.
+* **periodInNs (integer)** - (**Required**) The period of the pattern's capture vectors.
+* **samples (integer)** - (Optional, Default=2000) The number of digital capture cycles made by the
+  pattern.
+* **periodBased (integer)** - (Optional, Default=0) Set to 1 if the test limits are expressed as a
+  period instead of a frequency (the default).
+<%= render "snippets/common_args.md.erb", preserve_target: true %>
+
+% end

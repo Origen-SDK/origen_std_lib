@@ -54,7 +54,7 @@ Not officially. It is open source and comes with no guarantees.
 
 #### So who does support it then?
 
-Right now the Origen core team (who are mainly all NXP employees today, but we hope that will change),
+Right now the Origen core team (comprising engineers from NXP and AMD)
 are the primary
 maintainers and we will consider feature requests and address bug reports that are submitted by users
 of the library.
@@ -62,56 +62,5 @@ of the library.
 However anyone is more then welcome to contribute bug fixes, feature additions,
 documentation, etc. and ultimately we hope to see a self-sustaining community grow around
 this project.
-
-#### What platforms do you intend to support?
-
-Initially we are developing this as an offshoot of some new test programs we are making for
-the Advantest V93K platform.
-
-We do expect to start to adding similar features for Teradyne platforms (likely J570 and UltraFLEX)
-next year.
-
-## V93K Specific
-
-#### Why do we need this?
-
-The standard test method library that comes with SmarTest for AC and DC tests, is no longer
-recommended by Advantest.
-
-However, while its replacement (RDI) is a high-level API in terms of the tester hardware, it is
-still a low level
-API in terms of a complete test. Anyone who wants to implement even a basic test, has
-to write a custom test method from scratch instead of just picking up an existing test
-method off the shelf.
-
-This project aims to fill that void and provide a modern library of off-the-shelf test
-methods that adhere to the latest Advantest guidelines.
-
-#### I will probably still need some custom tests, can this help with those?
-
-Yes. The off-the-shelf test methods provided by this library are very thin wrappers around
-a high level Origen API, which implements high level functions such as "run a functional test",
-"run a pattern and take a DC measurement", etc.
-Each of these functions provides a standard set of callback points so that your test program can easily
-hook into their execution in order to add your own customizations.
-
-Additionally, as well as complete test methods, this project also aims to provide a rich
-library of helper functions
-that can be used when writing your own tests.
-
-#### Does it perform well?
-
-Yes. It uses the latest RDI APIs recommended by Advantest under the hood and it will in future
-fully support background data-processing using the SmartCalc framework.
-
-#### Why is the library not installed at system level?
-
-We want to encourage the users of the library to look inside it, so that they can begin to understand
-it, be empowered to do front line debug, and be able to experiment with adding new features.
-Distributing it as a binary for installation at system level would add a significant barrier
-to the open and inclusive way of working that we want to encourage.
-
-Installing it within the test program itself also makes the test programs self contained and
-therefore more portable between test systems.
 
 % end

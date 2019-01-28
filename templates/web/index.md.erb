@@ -4,18 +4,35 @@
 %# formatting like this, but in most cases that is not required.
 <h1><%= Origen.app.namespace %> <span style="font-size: 14px">(<%= Origen.app.version %>)</span></h1>
 
-### Purpose
+### Introduction
 
-This project provides a modern, standard test method library for the
-Advantest V93000 tester that is freely available for anyone to use.
+OrigenStdLib aims to provide a standard ATE library with the following goals:
+
+* Be agnostic to any particular company or business so that anyone can use this
+* Be higher level than the native functionality provided by the ATE vendors - reducing the amount of low-level knowledge required by test engineers and the footprint of custom code required to be written for a particular test program application
+* Complement the Origen test program and test pattern generators (although it can still be used standalone with flows and patterns originating from any backend flow)
+
+It should be noted that this library does not aim to provide a common API across different ATE platforms. Instead, the goal is to provide
+a library which has a natural look and feel on each platform, while still providing a feature set which is broadly similar
+across all platforms.
+
+If abstraction of the test platform is required then that is expected to be done by higher level program generators, such
+as Origen, which can provide a common API that compiles to tests which target different ATE implementations of
+this library.
+
+Generally, this library provides three main components:
+
+* Helper functions for general use in custom application code
+* Complete tests for use off-the-shelf
+* Customizable test templates that provide core functionality with the ability to customize around the edges
 
 [See the FAQ](<%= path "faq" %>) for more background.
 
-### How To Install
+### Supported Platforms
 
+OrigenStdLib currently provides libraries for the following platforms:
 
-### How To Use
-
-
+* [Advantest V93K SMT7](<%= path 'guides/v93ksmt7/intro' %>)
+* [Advantest V93K SMT8](<%= path 'guides/v93ksmt8/intro' %>)
 
 % end

@@ -4,9 +4,21 @@ title: Origen Std Lib
 <%= render "partials/navbar.html", tab: :guides %>
 
 % index = {}
-% index["V93K"] = {
-%   v93k_intro: "Introduction",
-%   v93k_install: "How to Install",
+% index[nil] = {
+%   intro: "Introduction",
+% }
+% index["V93K SMT7"] = {
+%   v93ksmt7_intro: "Introduction",
+%   v93ksmt7_install: "How to Install",
+%   v93ksmt7_helpers: "Helper Functions",
+%   v93ksmt7_complete: "Complete Tests",
+%   v93ksmt7_customizable: "Customizable Tests",
+%   v93ksmt7_patching: "Patching Patterns (Overlay)",
+%   v93ksmt7_capture: "Data Capture",
+%   v93ksmt7_integration: "Origen Integration",
+% }
+% index["V93K SMT8"] = {
+%   v93ksmt8_intro: "Introduction",
 % }
 
 % opts = options.merge(index: index, root: "guides", prompt: "Search the guides...")
