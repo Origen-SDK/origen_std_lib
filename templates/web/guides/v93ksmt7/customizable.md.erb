@@ -1,3 +1,139 @@
 % render "templates/web/layouts/guides.html" do
 
+The [Complete Tests](<%= path "guides/v93ksm7/complete" %>) provide a way to rapidly build a test program using
+off-the-shelf building blocks, however in many cases it will be desired to run a slightly customized version of these
+tests that is tweaked in some way to suit a particular application domain or for a few specific tests.
+
+This is where the customizable test template system should be used to get an easy way to create the
+following types of test methods:
+
+* Application-specific test primitives, for example a functional test method which calls an applications-specific
+  power up function at the start, or which enforces the use of a particular test port.
+* Test-specific variations on the primitive test methods, for example a functional test which will patch/overlay
+  the pattern with some data before running and/or capture and process some data at the end.
+
+The key goal of this system is to give test engineers the ability to implement common customization scenarios
+while writing an absolute minimum of application-specific code.
+
+## Concept
+
+To create a custom test based on a template, create a test method class that inherits from one of the template classes
+[defined in `Origen::TestMethod`](<%= path "/v93k_smt7/html/namespace_origen_1_1_test_method.html" %>), such as 
+[`FunctionalTest`](<%= path "/v93k_smt7/html/class_origen_1_1_test_method_1_1_functional_test.html" %>):
+
+~~~cpp
+#include "origen/test_method/functional_test.hpp"
+
+class Functional: public Origen::TestMethod::FunctionalTest {
+
+}
+~~~
+
+The test template will take care of many of the low-level details of how to create test methods in SMT7,
+such as having to remember to call `RDI_INIT()` and the use of `ON_FIRST_INVOCATION` and friends.
+
+To achieve this, the template takes control of the conventional SMT7 integration functions `initialize()`, 
+`run()` and `SMC_backgroundProcessing()`, which means that you should not use these within your application code.
+Instead, use the functions that are described here and these will allow you to hook into the test's
+lifecycle at various points during execution of the test.
+**Note that you do not have do define all of these, only the ones that you want to use.**
+
+#### Common Lifecycle Functions
+
+Here is a summary of the available lifecycle functions that should be supported by a majority of the
+templates (exceptions will be noted in the documentation for each template below):
+
+~~~cpp
+// This should be used to define any test methods parameters/arguments, it is a direct equivalent of the standard 
+// initialize() function.
+function init() {
+}
+
+// This will be invoked once (applied to all sites) before executing the main body of the test.
+// It should be used to do any setup that you wish to apply to all sites.
+function preBody() {
+}
+
+// This will be invoked once for each active site and the current site number will be passed in.
+// It should be used to do any site-specific setup.
+function preBody(int site) {
+}
+
+// This is invoked once per site and can be thought of as roughly equivalent to the standard run() function.
+function body() {
+  // By default it calls the test methods execute() method (more on this below), and this will internally apply
+  // ON_FIRST_INVOCATION wrappers as required so you should not add these around the call to origen.
+  origen.execute();
+}
+
+// This will be invoked once (applied to all sites) after executing the main body of the test.
+// It should be used to do any teardown that you wish to apply to all sites.
+// Note that this function is called synchronously, i.e. it will block execution of the test flow until it
+// has completed.
+function postBody() {
+}
+
+// This will be invoked once for each active site and the current site number will be passed in.
+// It should be used to do any site-specific teardown.
+// Note that this function is called synchronously, i.e. it will block execution of the test flow until it
+// has completed.
+function postBody(int site) {
+}
+
+
+// This will be invoked once for each active site and is intended to be the place where any processing of the
+// test result or captured data is performed.
+// If async is enabled then it will be called asynchronously and will not block execution of the test flow.
+// If async is not enabled then it will be called after postBody(int site), but is otherwise equivalent.
+function process(int site) {
+}
+~~~
+
+#### Common Configuration and Execute API
+
+All test templates expose their core functionality via an API that is launched through an object called `origen`.
+This is intended to provide a similar look and feel to the native SMT7 RDI API which is exposed through the `rdi` object.
+
+As mentioned above, the default `body()` function implementation will call `origen.execute()` which as the name
+suggests will execute the test.
+
+Configuration can be done ahead of calling `execute()`, for example a majority of test templates support the concept
+of selecting a port to execute the pattern on, that can be done like this:
+
+~~~cpp
+origen.port("MY_PORT_NAME");
+origen.execute();
+~~~
+
+Or, if you prefer, these can be chained together similar to the RDI API:
+
+~~~cpp
+origen.port("MY_PORT_NAME").execute();
+~~~
+
+To see what configuration options are available from a given test
+[defined in `Origen::TestMethod`](<%= path "/v93k_smt7/html/namespace_origen_1_1_test_method.html" %>), such as 
+
+#### Asynchronous Processing
+
+Asynchronous processing of test results is not supported yet, how to enable it will be described here when it
+is available.
+
+The plan is to provide a global switch that will enable/disable asynchronous processing and then an
+individual test-level switch to allow the global setting to be overridden.
+
+In the meantime, do all processing that could be done asynchronously within the `process(int site)` function
+described above. Your tests will then be ready to take advantage of the asynchronous feature when it becomes available.
+
+
+### Available Templates
+
+There now follows some template-specific guidance, which includes some usage examples:
+
+* [FunctionalTest](#Functional_Test)
+* [DCMeasurement](#DCMeasurement)
+* [FrequencyMeasurement](#FrequencyMeasurement)
+* [Empty](#Empty)
+
+
 % end

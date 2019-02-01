@@ -29,7 +29,7 @@ public class DC_Measurement extends Base {
         CURR, VOLT
     }
 
-    MultiSiteDoubleArray _data;
+    MultiSiteDoubleArray _result;
 
     boolean _applyShutdown;
     String _shutdownPattern;
@@ -133,68 +133,9 @@ public class DC_Measurement extends Base {
         return this;
     }
 
-    // When set to 0 the results of the test will not be judged or logged
-    public DC_Measurement processResults(boolean v) {
-        _processResults = v;
-        return this;
+    public MultiSiteDoubleArray getResult() {
+        return _result;
     }
-
-    public MultiSiteDoubleArray getData() {
-        return _data;
-    }
-
-
-    public MultiSiteDouble prepForjudgeAndDatalog(MultiSiteDoubleArray result,int wordNr) {
-        logTrace("DC_Measurement", "prepForjudgeAndDatalog");
-        // Loop through the sites to get the data
-        MultiSiteDouble MSD = new MultiSiteDouble();
-
-        for (int site : context.getActiveSites()) {
-            if(result.get(site).length > 1) {
-                message(1,"Warning: not all measurements are logged, only the first one, change in DC_Measurement.java to include more");
-            }
-            MSD.set(site, result.get(site)[0]);
-        }
-
-        MSD = filterResult(MSD);
-
-        return MSD;
-    }
-
-    //Convienence functions
-    public MultiSiteDouble prepForjudgeAndDatalog(int wordNr) {
-        return prepForjudgeAndDatalog(getData(),wordNr);
-    }
-    public MultiSiteDouble prepForjudgeAndDatalog() {
-        return prepForjudgeAndDatalog(getData(),1);
-    }
-
-    public MultiSiteDouble logParam(IParametricTestDescriptor t) {
-        MultiSiteDouble MSD = origen.prepForjudgeAndDatalog();
-        t.evaluate(MSD);
-        MultiSiteBoolean pf = t.getPassFail();
-        for (int siteNumber : context.getActiveSites()) {
-                message(Origen.LOG_PARAM,"[" + siteNumber + "](" + t.getTestName() + ") " + MSD.get(siteNumber) + " : " + (pf.get(siteNumber)? "PASSED" : "FAILED"));
-        }
-        return MSD;
-    }
-
-    private MultiSiteDoubleArray capturedData() {
-        logTrace("DC_Measurement", "capturedData");
-        // protect results to be not overwritten
-        IDigInOutActionResults actionResults = measurement.digInOut(_pin).preserveActionResults();
-        releaseTester();
-        if (_measure == MEAS.VOLT) {
-            IIforceVmeasResults ifvmResults = actionResults.iforceVmeas(_actionName);
-            return ifvmResults.getVoltage(_pin);
-        }
-
-        //CURRMEAS
-        IVforceImeasResults ifvmResults = actionResults.vforceImeas(_actionName);
-        return ifvmResults.getCurrent(_pin);
-
-    }
-
 
     @Override
     public void _setup() {
@@ -212,7 +153,6 @@ public class DC_Measurement extends Base {
         limitsHigh(3);
         limitsLow(0);
         averages(1);
-        processResults(true);
         badc(0);
         shutdownPattern("");
 
@@ -314,30 +254,48 @@ public class DC_Measurement extends Base {
         logTrace("DC_Measurement", "run");
         super.run();
         measurement.execute();
-        _data = capturedData();
 
-        MultiSiteBoolean passFail = measurement.hasPassed();
-        MultiSiteBoolean alwaysPass = new MultiSiteBoolean(true);
+        // postBody should be added and called here
 
-        IMeasurementResult measurementResult = measurement.preserveResult();
+        // protect results to be not overwritten
+        IDigInOutActionResults actionResults = measurement.digInOut(_pin).preserveActionResults();
+        IMeasurementResult funcResult = measurement.preserveResult();
 
-        // Log the functional results
-        for (int siteNumber : context.getActiveSites()) {
-                message(Origen.LOG_FUNC,"[" + siteNumber + "] : " + (measurement.hasPassed(siteNumber)? "PASSED" : "FAILED"));
+        // Assume for now that if force pass is set then branching decision could be dependent on the
+        // result of this test, in future add another attribute to control async processing on/off
+        if (!forcePass) {
+            releaseTester();
         }
 
-        if(forcePass) {
-            FUNC.evaluate(alwaysPass);
-        } else {
-            FUNC.evaluate(measurementResult);
+        // Make the DC measurement result available
+        if (_measure == MEAS.VOLT) {
+            IIforceVmeasResults ifvmResults = actionResults.iforceVmeas(_actionName);
+            _result = ifvmResults.getVoltage(_pin);
+
+        } else { // MEAS.CURR
+            IVforceImeasResults ifvmResults = actionResults.vforceImeas(_actionName);
+            _result = ifvmResults.getCurrent(_pin);
         }
 
-        // testDescriptor.evaluate(measurementResult);
+        // Call test method process
+        process();
+
+        judgeAndDatalog(FUNC, funcResult);
+
+        // Loop through the sites to get the data
+        MultiSiteDouble MSD = new MultiSiteDouble();
+        for (int site : context.getActiveSites()) {
+            if(_result.get(site).length > 1) {
+                message(1,"Warning: not all measurements are logged, only the first one, change in DC_Measurement.java to include more");
+            }
+            MSD.set(site, _result.get(site)[0]);
+        }
+        MSD = filterResult(MSD);
+
+        judgeAndDatalog(PAR, MSD);
     }
-
 
     public MultiSiteDouble filterResult(MultiSiteDouble MSD) {
         return MSD;
     }
-
 }

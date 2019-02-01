@@ -5,24 +5,23 @@ import xoc.dta.TestMethod;
 import xoc.dta.measurement.IMeasurement;
 import xoc.dta.testdescriptor.IFunctionalTestDescriptor;
 import xoc.dta.testdescriptor.IParametricTestDescriptor;
+import xoc.dta.datatypes.MultiSiteLong;
+import xoc.dta.datatypes.MultiSiteBoolean;
+import xoc.dta.resultaccess.IMeasurementResult;
 
 /**
  * Origen testmethods base class. All testmethods inherit from this class
  */
 public class Base extends TestMethod {
-
-    /** Execute the process() function or not */
-    boolean _processResults;
-
     /** General testmethod parameters, used by all testmethods */
     public IMeasurement measurement;
     public String testName;
     // TODO Verify forcePass implementation (also check if implemented in DC_Measurements)
     public Boolean forcePass = false;
-    //TODO Use onpassflag and onFailFlag (check flow variable setting from java code)
-    public String onPassFlag;
-    public String onFailFlag;
-
+    // Sites that passed will contain a '1' if forcePass has been set, otherwise undefined
+    public MultiSiteLong setOnPassFlags = new MultiSiteLong();
+    // Sites that failed will contain a '1' if forcePass has been set, otherwise undefined
+    public MultiSiteLong setOnFailFlags = new MultiSiteLong();
     /**
      * The log level that will be used during the execution of the TP. Change the value here to get
      * more, or less logging info
@@ -116,11 +115,12 @@ public class Base extends TestMethod {
             checkParams();
         }
 
-        body();
-
-        if (_processResults) {
-            process();
+        if (forcePass) {
+            setOnPassFlags.set(1);
+            setOnFailFlags.set(0);
         }
+
+        body();
     }
 
     /**
@@ -153,4 +153,82 @@ public class Base extends TestMethod {
         run();
     }
 
+    public void judgeAndDatalog(IFunctionalTestDescriptor t, MultiSiteBoolean passed) {
+        MultiSiteBoolean allPassed = new MultiSiteBoolean(true);
+
+        if(forcePass) {
+            for (int site : context.getActiveSites()) {
+                setOnPassFlags.set(site, setOnPassFlags.get(site) & passed.get(site) ? 1 : 0);
+                setOnFailFlags.set(site, setOnFailFlags.get(site) | passed.get(site) ? 0 : 1);
+            }
+            // Record that this test happened to STDF, but don't know how to log the true result
+            // without also causing it to fail/bin
+            t.evaluate(allPassed);
+        } else {
+            t.evaluate(passed);
+        }
+        for (int site : context.getActiveSites()) {
+            message(Origen.LOG_PARAM,"[" + site + "](" + t.getTestName() + ") " + " : " + (passed.get(site) ? "PASSED" : "FAILED"));
+        }
+    }
+
+
+    public void judgeAndDatalog(IFunctionalTestDescriptor t, IMeasurementResult measurementResult) {
+        MultiSiteBoolean passed = measurementResult.hasPassed();
+        judgeAndDatalog(t, passed);
+    }
+
+
+    /**
+     * Log a multisite double
+     * @param t  Name of the testdescriptor
+     * @param MSD
+     */
+    public void judgeAndDatalog(IParametricTestDescriptor t, MultiSiteDouble MSD) {
+
+        if(forcePass) {
+            double lo = t.getLowLimit(); 
+            double hi = t.getHighLimit(); 
+
+            for (int site : context.getActiveSites()) {
+                boolean passed = true;
+                double val = MSD.get(site);
+
+                // TODO: How to handle difference between LT and LTE?
+                if (lo != Double.NaN) {
+                    if (val < lo) {
+                        passed = false; 
+                    }
+                }
+
+                if (hi != Double.NaN) {
+                    if (val > hi) {
+                        passed = false; 
+                    }
+                }
+
+                setOnPassFlags.set(site, setOnPassFlags.get(site) & passed ? 1 : 0);
+                setOnFailFlags.set(site, setOnFailFlags.get(site) | passed ? 0 : 1);
+            }
+
+            t.setLowLimit(Double.NaN);
+            t.setHighLimit(Double.NaN);
+        }
+
+        t.evaluate(MSD);
+
+        MultiSiteBoolean pf = t.getPassFail();
+        for (int site : context.getActiveSites()) {
+                message(Origen.LOG_PARAM,"[" + site + "](" + t.getTestName() + ") " + MSD.get(site) + " : " + (pf.get(site)? "PASSED" : "FAILED"));
+        }
+    }
+
+    /**
+     * Log a multisite long
+     * @param t Name of the testdescriptor
+     * @param MSL
+     */
+    public void judgeAndDatalog(IParametricTestDescriptor t, MultiSiteLong MSL) {
+        judgeAndDatalog(t, MSL.toMultiSiteDouble());
+    }
 }

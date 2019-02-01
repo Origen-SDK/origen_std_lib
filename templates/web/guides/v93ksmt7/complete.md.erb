@@ -13,7 +13,7 @@ depending on whether any mis-compares occur during the pattern execution.
 
 #### Arguments
 
-<%= render "snippets/common_args.md.erb", preserve_target: true %>
+<%= render "partials/common_args.md.erb", preserve_target: true %>
 
 ### DCMeasurement
 
@@ -43,7 +43,7 @@ after the measurement has been taken.
   named after the main pattern (label) with "_part1" appended.
 * **checkShutdown (integer)** - (Optional, Default=1) When set to 1 the executing of the shutdown pattern
   will be cared and the overall test will fail if any miscompares occur during the shutdown patten execution.
-<%= render "snippets/common_args.md.erb", preserve_target: true %>
+<%= render "partials/common_args.md.erb", preserve_target: true %>
 
 ### FrequencyMeasurement
 
@@ -63,6 +63,6 @@ test time goals.
   pattern.
 * **periodBased (integer)** - (Optional, Default=0) Set to 1 if the test limits are expressed as a
   period instead of a frequency (the default).
-<%= render "snippets/common_args.md.erb", preserve_target: true %>
+<%= render "partials/common_args.md.erb", preserve_target: true %>
 
 % end

@@ -45,7 +45,7 @@ public class Functional_test extends Base {
     private String _testNameOverride;
 
 
-    private MultiSiteBitSequence _data;
+    private MultiSiteBitSequence _capturedData;
 
     // Link to self
     public Functional_test origen;
@@ -71,9 +71,6 @@ public class Functional_test extends Base {
      */
     List<String> dynamicPatternList;
 
-    /** Do we want to release the tester before processing? */
-    boolean enableReleaseTester;
-
     @Override
     public void _setup() {
         message(Origen.LOG_METHODTRACE, "Functional_test --> Setup");
@@ -90,9 +87,6 @@ public class Functional_test extends Base {
         testName("");
 
         measure_setup();
-
-        //TODO Enable releasetester is now ALWAYS true, perhaps make this a variable?
-        enableReleaseTester = true;
     }
 
     /**
@@ -269,86 +263,44 @@ public class Functional_test extends Base {
         return this;
     }
 
-    @Override
-    public void process() {
-        logTrace("Function_test","process");
-    }
-
-    public MultiSiteBitSequence getData() {
-        return _data;
-    }
 
     /**
-     * Get the captured data
-     * @return The captured bits
+     * Gets all captured data
+     * @return
      */
-    private MultiSiteBitSequence capturedData() {
-        // protect results to be not overwritten
-        IDigInOutCaptureResults digCapture = measurement.digInOut(_pin)
-                .preserveCaptureResults();
-
-        // get all results from measurement pin
-        return digCapture.getSerialBitsAsBitSequence(measurement.getSignal(_pin).getDutSignalName());
+    public MultiSiteBitSequence capturedData() {
+        return _capturedData;
     }
 
     /**
-     * Log a multisite double
-     * @param t  Name of the testdescriptor
-     * @param MSD
-     */
-    public void logParam(IParametricTestDescriptor t, MultiSiteDouble MSD) {
-        t.evaluate(MSD);
-        MultiSiteBoolean pf = t.getPassFail();
-        for (int siteNumber : context.getActiveSites()) {
-                message(Origen.LOG_PARAM,"[" + siteNumber + "](" + t.getTestName() + ") " + MSD.get(siteNumber) + " : " + (pf.get(siteNumber)? "PASSED" : "FAILED"));
-        }
-    }
-
-    /**
-     * Log a multisite long
-     * @param t Name of the testdescriptor
-     * @param MSL
-     */
-    public void logParam(IParametricTestDescriptor t, MultiSiteLong MSL) {
-        t.evaluate(MSL);
-        MultiSiteBoolean pf = t.getPassFail();
-        for (int siteNumber : context.getActiveSites()) {
-                message(Origen.LOG_PARAM,"[" + siteNumber + "](" + t.getTestName() + ") " + MSL.get(siteNumber) + " : " + (pf.get(siteNumber)? "PASSED" : "FAILED"));
-        }
-    }
-
-    /**
-     * Log a multisite long with data retrieved from a specific word from the measurement
-     * @param t  Name of the testdescriptor
-     * @param wordNr Wordnumber to log
-     */
-    public void logParam(IParametricTestDescriptor t, int wordNr) {
-        MultiSiteLong MSL = prepForjudgeAndDatalog(getData(),wordNr);
-        logParam(t, MSL);
-    }
-
-    /**
-     * Gets a specific word from the measurement result
+     * Gets a specific word from the captured data
      * Bitorder is fixed to RIGHT_TO_LEFT
      * @param wordNr
      * @return
      */
-    public MultiSiteLong getResultWord(int wordNr) {
-        message(Origen.LOG_METHODTRACE,"Get result word" + wordNr);
-        return getResultWord(wordNr, BitOrder.RIGHT_TO_LEFT);
+    public MultiSiteLong capturedData(int wordNr) {
+        message(Origen.LOG_METHODTRACE,"Get captured data" + wordNr);
+        return capturedData(wordNr, BitOrder.RIGHT_TO_LEFT);
     }
 
     /**
-     * Gets a specific word from the measurement result
+     * Gets a specific word from the captured data
      * Bitorder has to be specified
      * @param wordNr
      * @param order BitOrder (eg. RIGHT_TO_LEFT)
      * @return
      */
-    public MultiSiteLong getResultWord(int wordNr, BitOrder order) {
-        return prepForjudgeAndDatalog(getData(),wordNr, order);
-    }
+    public MultiSiteLong capturedData(int wordNr, BitOrder order) {
+        // Init the MultiSite array
+        MultiSiteLong MSL = new MultiSiteLong();
 
+        // Loop through the sites to get the data
+        for (int site : context.getActiveSites()) {
+            message(Origen.LOG_METHODTRACE,"Num cap words: " + _capturedData.get(site).toLongArray(_bitPerWord,order).length);
+            MSL.set(site, _capturedData.get(site).toLongArray(_bitPerWord,order)[wordNr]);
+        }
+        return MSL;
+    }
 
     /**
      * Gives the string representation of the binary sequence of the result data for a specific wordnr
@@ -359,7 +311,7 @@ public class Functional_test extends Base {
     public MultiSiteString getBinaryWord(int wordNr) {
         MultiSiteString MSS = new MultiSiteString();
         for (int site : context.getActiveSites()) {
-            MSS.set(site,OrigenHelpers.longToPaddedBinaryString(_data.get(site).toLongArray(_bitPerWord,BitOrder.RIGHT_TO_LEFT)[wordNr], _bitPerWord, BitOrder.RIGHT_TO_LEFT, false));
+            MSS.set(site,OrigenHelpers.longToPaddedBinaryString(_capturedData.get(site).toLongArray(_bitPerWord,BitOrder.RIGHT_TO_LEFT)[wordNr], _bitPerWord, BitOrder.RIGHT_TO_LEFT, false));
         }
         return MSS;
     }
@@ -373,7 +325,7 @@ public class Functional_test extends Base {
     public MultiSiteString getHexWord(int wordNr,int nrHexChars) {
         MultiSiteString MSS = new MultiSiteString();
         for (int site : context.getActiveSites()) {
-            MSS.set(site,OrigenHelpers.longToPaddedHexString(_data.get(site).toLongArray(_bitPerWord,BitOrder.RIGHT_TO_LEFT)[wordNr], nrHexChars, BitOrder.RIGHT_TO_LEFT));
+            MSS.set(site,OrigenHelpers.longToPaddedHexString(_capturedData.get(site).toLongArray(_bitPerWord,BitOrder.RIGHT_TO_LEFT)[wordNr], nrHexChars, BitOrder.RIGHT_TO_LEFT));
         }
         return MSS;
     }
@@ -381,52 +333,6 @@ public class Functional_test extends Base {
     /** Helper function for default bitPerWord use */
     public MultiSiteString getHexWord(int wordNr) {
         return getHexWord(wordNr,_bitPerWord/4);
-    }
-    /**
-     * Fills the result array with captured data for a specific wordNr for all sites
-     * BitOrder is fixed to RIGHT_TO_LEFT
-     * @param result
-     * @param wordNr
-     * @return
-     */
-    public MultiSiteLong prepForjudgeAndDatalog(MultiSiteBitSequence result,int wordNr) {
-        return prepForjudgeAndDatalog(result,wordNr, BitOrder.RIGHT_TO_LEFT);
-    }
-
-    /**
-     * Fills the result array with captured data for a specific wordNr for all sites
-     * BitOrder needs to specified
-     * @param result
-     * @param wordNr
-     * @param order
-     * @return
-     */
-    public MultiSiteLong prepForjudgeAndDatalog(MultiSiteBitSequence result,int wordNr, BitOrder order) {
-
-        // Init the MultiSite array
-        MultiSiteLong MSL = new MultiSiteLong();
-
-        // Loop through the sites to get the data
-        for (int site : context.getActiveSites()) {
-            message(Origen.LOG_METHODTRACE,"Num cap words: " + result.get(site).toLongArray(_bitPerWord,order).length);
-            MSL.set(site, result.get(site).toLongArray(_bitPerWord,order)[wordNr]);
-        }
-        return MSL;
-    }
-
-//    public MultiSiteLongArray getAllData() {
-//        BitOrder order = BitOrder.RIGHT_TO_LEFT;
-//        MultiSiteBitSequence result = getData();
-//        for (int site : context.getActiveSites()) {
-//            resultPerSite = result.get(site).toLongArray(_bitPerWord,order)
-//    }
-//
-    public void executeAndCapture() {
-        // Run the measurement
-        measurement.digInOut(_pin).result().cyclePassFail().setEnabled(false);
-        measurement.digInOut(_pin).result().capture().setEnabled(true);
-        measurement.execute();
-        _data = capturedData();
     }
 
     /** Main run function for functional */
@@ -455,14 +361,13 @@ public class Functional_test extends Base {
         // Run the measurement
         measurement.execute();
 
-        MultiSiteBoolean passFail = measurement.hasPassed();
-        MultiSiteBoolean alwaysPass = new MultiSiteBoolean(true);
         IMeasurementResult measurementResult = measurement.preserveResult();
 
         // When captured was enabled, we need to load the captured data for later processing
         // After this is done, the tester can be released
         if (_capture > 0) {
-            _data = capturedData();
+            // protect results to be not overwritten
+            IDigInOutCaptureResults digCapture = measurement.digInOut(_pin).preserveCaptureResults();
         }
 
         // Activate the patched measurements
@@ -471,26 +376,23 @@ public class Functional_test extends Base {
             patchedMeas.activate();
         }
 
-        // next test suite can start and use tester resources
-        // check, if background processing should be enabled
-        if (enableReleaseTester) {
+        // Assume for now that if force pass is set then branching decision could be dependent on the
+        // result of this test, in future add another attribute to control async processing on/off
+        if (!forcePass) {
             releaseTester();
         }
 
-        // Log the functional results
-        for (int siteNumber : context.getActiveSites()) {
-                message(Origen.LOG_FUNC,"[" + siteNumber + "] : " + (measurement.hasPassed(siteNumber)? "PASSED" : "FAILED"));
+        if (_capture > 0) {
+            _capturedData = digCapture.getSerialBitsAsBitSequence(measurement.getSignal(_pin).getDutSignalName());
         }
 
+        // Call test method process method
+        process();
 
-        if(forcePass) {
-            FUNC.evaluate(alwaysPass);
+        if(_hasDynamicMeas) {
+            judgeAndDatalog(FUNC, dynamicMeasurementResult.hasPassed().and(measurementResult.hasPassed()));
         } else {
-            if(_hasDynamicMeas) {
-                FUNC.evaluate(dynamicMeasurementResult.hasPassed().and(measurementResult.hasPassed()));
-            } else {
-                FUNC.evaluate(measurementResult);
-            }
+            judgeAndDatalog(FUNC, measurementResult);
         }
     }
 
