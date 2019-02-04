@@ -6,7 +6,6 @@ import origen.common.Origen;
 import origen.common.OrigenHelpers;
 import xoc.dsa.DeviceSetupFactory;
 import xoc.dsa.IDeviceSetup;
-import xoc.dta.datatypes.MultiSiteBoolean;
 import xoc.dta.datatypes.MultiSiteDouble;
 import xoc.dta.datatypes.MultiSiteDoubleArray;
 import xoc.dta.resultaccess.IDigInOutActionResults;
@@ -29,7 +28,7 @@ public class DC_Measurement extends Base {
         CURR, VOLT
     }
 
-    MultiSiteDoubleArray _result;
+    MultiSiteDouble _result;
 
     boolean _applyShutdown;
     String _shutdownPattern;
@@ -133,7 +132,7 @@ public class DC_Measurement extends Base {
         return this;
     }
 
-    public MultiSiteDoubleArray getResult() {
+    public MultiSiteDouble result() {
         return _result;
     }
 
@@ -250,6 +249,7 @@ public class DC_Measurement extends Base {
 
     @Override
     public void run() {
+        MultiSiteDoubleArray intermediateResult;
 
         logTrace("DC_Measurement", "run");
         super.run();
@@ -270,11 +270,20 @@ public class DC_Measurement extends Base {
         // Make the DC measurement result available
         if (_measure == MEAS.VOLT) {
             IIforceVmeasResults ifvmResults = actionResults.iforceVmeas(_actionName);
-            _result = ifvmResults.getVoltage(_pin);
+            intermediateResult = ifvmResults.getVoltage(_pin);
 
         } else { // MEAS.CURR
             IVforceImeasResults ifvmResults = actionResults.vforceImeas(_actionName);
-            _result = ifvmResults.getCurrent(_pin);
+            intermediateResult = ifvmResults.getCurrent(_pin);
+        }
+
+        // Loop through the sites to get the data
+        _result = new MultiSiteDouble();
+        for (int site : context.getActiveSites()) {
+            if(intermediateResult.get(site).length > 1) {
+                message(1,"Warning: not all measurements are logged, only the first one, change in DC_Measurement.java to include more");
+            }
+            _result.set(site, intermediateResult.get(site)[0]);
         }
 
         // Call test method process
@@ -282,17 +291,7 @@ public class DC_Measurement extends Base {
 
         judgeAndDatalog(FUNC, funcResult);
 
-        // Loop through the sites to get the data
-        MultiSiteDouble MSD = new MultiSiteDouble();
-        for (int site : context.getActiveSites()) {
-            if(_result.get(site).length > 1) {
-                message(1,"Warning: not all measurements are logged, only the first one, change in DC_Measurement.java to include more");
-            }
-            MSD.set(site, _result.get(site)[0]);
-        }
-        MSD = filterResult(MSD);
-
-        judgeAndDatalog(PAR, MSD);
+        judgeAndDatalog(PAR, filterResult(_result));
     }
 
     public MultiSiteDouble filterResult(MultiSiteDouble MSD) {

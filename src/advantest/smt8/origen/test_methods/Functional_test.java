@@ -8,7 +8,6 @@ import origen.common.OrigenHelpers;
 import xoc.dsa.DeviceSetupFactory;
 import xoc.dsa.IDeviceSetup;
 import xoc.dta.datatypes.MultiSiteBoolean;
-import xoc.dta.datatypes.MultiSiteDouble;
 import xoc.dta.datatypes.MultiSiteLong;
 import xoc.dta.datatypes.MultiSiteString;
 import xoc.dta.measurement.IMeasurement;
@@ -18,7 +17,6 @@ import xoc.dta.resultaccess.datatypes.BitSequence.BitOrder;
 import xoc.dta.resultaccess.datatypes.MultiSiteBitSequence;
 import xoc.dta.setupaccess.IParallelGroup;
 import xoc.dta.testdescriptor.IFunctionalTestDescriptor;
-import xoc.dta.testdescriptor.IParametricTestDescriptor;
 
 /**
  * The Function test template for all functional tests
@@ -81,7 +79,6 @@ public class Functional_test extends Base {
         dynamicPatMeas.setSpecificationName(measurement.getSpecificationName());
         pin("");
         capture(0);
-        processResults(true);
         bitPerWord(1);
         pattern("");
         testName("");
@@ -240,16 +237,6 @@ public class Functional_test extends Base {
         return this;
     }
 
-    /**
-     * When set to 0 the results of the test will not be judged or logged
-     * @param v
-     * @return
-     */
-    public Functional_test processResults(boolean v) {
-        _processResults = v;
-        return this;
-    }
-
 
     /**
      * Override the test name argument from the test suite, this can be useful if the main test item
@@ -336,8 +323,11 @@ public class Functional_test extends Base {
     }
 
     /** Main run function for functional */
+    @SuppressWarnings("null")
     @Override
     public void run() {
+        IDigInOutCaptureResults digCapture = null;
+
         logTrace("Functional_test", "run");
         super.run();
 
@@ -367,7 +357,7 @@ public class Functional_test extends Base {
         // After this is done, the tester can be released
         if (_capture > 0) {
             // protect results to be not overwritten
-            IDigInOutCaptureResults digCapture = measurement.digInOut(_pin).preserveCaptureResults();
+            digCapture = measurement.digInOut(_pin).preserveCaptureResults();
         }
 
         // Activate the patched measurements

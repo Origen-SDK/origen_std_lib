@@ -2,12 +2,13 @@ package origen.test_methods;
 
 import origen.common.Origen;
 import xoc.dta.TestMethod;
+import xoc.dta.datatypes.MultiSiteBoolean;
+import xoc.dta.datatypes.MultiSiteDouble;
+import xoc.dta.datatypes.MultiSiteLong;
 import xoc.dta.measurement.IMeasurement;
+import xoc.dta.resultaccess.IMeasurementResult;
 import xoc.dta.testdescriptor.IFunctionalTestDescriptor;
 import xoc.dta.testdescriptor.IParametricTestDescriptor;
-import xoc.dta.datatypes.MultiSiteLong;
-import xoc.dta.datatypes.MultiSiteBoolean;
-import xoc.dta.resultaccess.IMeasurementResult;
 
 /**
  * Origen testmethods base class. All testmethods inherit from this class
@@ -19,9 +20,9 @@ public class Base extends TestMethod {
     // TODO Verify forcePass implementation (also check if implemented in DC_Measurements)
     public Boolean forcePass = false;
     // Sites that passed will contain a '1' if forcePass has been set, otherwise undefined
-    public MultiSiteLong setOnPassFlags = new MultiSiteLong();
+    public MultiSiteLong setOnPassFlags;
     // Sites that failed will contain a '1' if forcePass has been set, otherwise undefined
-    public MultiSiteLong setOnFailFlags = new MultiSiteLong();
+    public MultiSiteLong setOnFailFlags;
     /**
      * The log level that will be used during the execution of the TP. Change the value here to get
      * more, or less logging info
@@ -37,7 +38,6 @@ public class Base extends TestMethod {
     public void logTrace(String className, String method) {
         message(Origen.LOG_METHODTRACE, "\t" + className + "\t" + method + "()");
     }
-
 
 
 
@@ -116,8 +116,8 @@ public class Base extends TestMethod {
         }
 
         if (forcePass) {
-            setOnPassFlags.set(1);
-            setOnFailFlags.set(0);
+            setOnPassFlags = new MultiSiteLong(1);
+            setOnFailFlags = new MultiSiteLong(0);
         }
 
         body();
@@ -158,8 +158,8 @@ public class Base extends TestMethod {
 
         if(forcePass) {
             for (int site : context.getActiveSites()) {
-                setOnPassFlags.set(site, setOnPassFlags.get(site) & passed.get(site) ? 1 : 0);
-                setOnFailFlags.set(site, setOnFailFlags.get(site) | passed.get(site) ? 0 : 1);
+                setOnPassFlags.set(site, setOnPassFlags.get(site) & (passed.get(site) ? 1 : 0));
+                setOnFailFlags.set(site, setOnFailFlags.get(site) | (passed.get(site) ? 0 : 1));
             }
             // Record that this test happened to STDF, but don't know how to log the true result
             // without also causing it to fail/bin
@@ -187,28 +187,42 @@ public class Base extends TestMethod {
     public void judgeAndDatalog(IParametricTestDescriptor t, MultiSiteDouble MSD) {
 
         if(forcePass) {
-            double lo = t.getLowLimit(); 
-            double hi = t.getHighLimit(); 
+            boolean loLimitPresent, hiLimitPresent;
+            double lo = 0;
+            double hi = 0;
+
+            if (t.getLowLimit() == null) {
+                loLimitPresent = false;
+            } else {
+                loLimitPresent = true;
+                lo = t.getLowLimit().doubleValue();
+            }
+            if (t.getHighLimit() == null) {
+                hiLimitPresent = false;
+            } else {
+                hiLimitPresent = true;
+                hi = t.getHighLimit().doubleValue();
+            }
 
             for (int site : context.getActiveSites()) {
                 boolean passed = true;
                 double val = MSD.get(site);
 
                 // TODO: How to handle difference between LT and LTE?
-                if (lo != Double.NaN) {
+                if (loLimitPresent) {
                     if (val < lo) {
-                        passed = false; 
+                        passed = false;
                     }
                 }
 
-                if (hi != Double.NaN) {
+                if (hiLimitPresent) {
                     if (val > hi) {
-                        passed = false; 
+                        passed = false;
                     }
                 }
 
-                setOnPassFlags.set(site, setOnPassFlags.get(site) & passed ? 1 : 0);
-                setOnFailFlags.set(site, setOnFailFlags.get(site) | passed ? 0 : 1);
+                setOnPassFlags.set(site, setOnPassFlags.get(site) & (passed ? 1 : 0));
+                setOnFailFlags.set(site, setOnFailFlags.get(site) | (passed ? 0 : 1));
             }
 
             t.setLowLimit(Double.NaN);
