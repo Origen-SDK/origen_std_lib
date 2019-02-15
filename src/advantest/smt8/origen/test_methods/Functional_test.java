@@ -42,6 +42,8 @@ public class Functional_test extends Base {
     /** Testname to override */
     private String _testNameOverride;
 
+    /** The result of executing the primary pattern */
+    private IMeasurementResult funcResult;
 
     private MultiSiteBitSequence _capturedData;
 
@@ -58,7 +60,8 @@ public class Functional_test extends Base {
     /** The measurement that is only used dynamic pattern switching */
     public IMeasurement dynamicPatMeas;
 
-    IMeasurementResult dynamicMeasurementResult;
+    ArrayList<IMeasurementResult> dynamicMeasurementResults;
+
     boolean _hasDynamicMeas = false;
 
     /** The list of patterns to patch */
@@ -158,28 +161,38 @@ public class Functional_test extends Base {
         return this;
     }
 
+    // Executed the given (previously setup) pattern on all sites
     public void executeDynamicPat(String pat) {
         selectDynamicPat(pat);
         dynamicPatMeas.execute();
-        dynamicMeasurementResult = dynamicPatMeas.preserveResult();
+        dynamicMeasurementResults.add(dynamicPatMeas.preserveResult());
     }
 
-    public void executeDynamicPat(String pat,MultiSiteBoolean bypassSitesMSB) {
-        selectDynamicPat(pat,bypassSitesMSB);
+    // Execute the given (previously setup) pattern on all sites except those where bypass is set to true
+    public void executeDynamicPat(String pat, MultiSiteBoolean bypass) {
+        selectDynamicPat(pat, bypass);
         dynamicPatMeas.execute();
+        dynamicMeasurementResults.add(dynamicPatMeas.preserveResult());
     }
 
-    public Functional_test selectDynamicPat(String pat, MultiSiteBoolean bypassSitesMSB) {
+    // Executed the given (previously setup) patterns on all sites, where each site can have a different pattern
+    public void executeDynamicPat(MultiSiteString pats) {
+        selectDynamicPats(pats);
+        dynamicPatMeas.execute();
+        dynamicMeasurementResults.add(dynamicPatMeas.preserveResult());
+    }
+
+    public Functional_test selectDynamicPat(String pat, MultiSiteBoolean bypass) {
         message(Origen.LOG_METHODTRACE, "Executing dynamic pattern: " + pat);
         boolean patFound = false;
-        MultiSiteBoolean allPass = new MultiSiteBoolean(true);
+        MultiSiteBoolean allSites = new MultiSiteBoolean(true);
         List<IParallelGroup> paraGroups = dynamicPatMeas.operatingSequence().getParallelGroups();
         for (IParallelGroup iParallelGroup : paraGroups) {
               if (iParallelGroup.getName().equals(pat)) {
                       patFound = true;
-                      iParallelGroup.setBypass(bypassSitesMSB);
+                      iParallelGroup.setBypass(bypass);
               } else {
-                  iParallelGroup.setBypass(allPass);
+                  iParallelGroup.setBypass(allSites);
               }
         }
         if(!patFound)  {
@@ -189,8 +202,27 @@ public class Functional_test extends Base {
     }
 
     public Functional_test selectDynamicPat(String pat) {
-        MultiSiteBoolean allPass = new MultiSiteBoolean(true);
-        selectDynamicPat(pat, allPass.not());
+        MultiSiteBoolean noSites = new MultiSiteBoolean(false);
+        selectDynamicPat(pat, noSites);
+        return this;
+    }
+
+    public Functional_test selectDynamicPats(MultiSiteString pats) {
+//        boolean patFound = false;
+
+        List<IParallelGroup> paraGroups = dynamicPatMeas.operatingSequence().getParallelGroups();
+        for (IParallelGroup iParallelGroup : paraGroups) {
+            MultiSiteBoolean bypass = new MultiSiteBoolean(true);
+            for (int site : context.getActiveSites()) {
+                if (iParallelGroup.getName().equals(pats.get(site))) {
+                    bypass.set(site, false);
+                }
+            }
+            iParallelGroup.setBypass(bypass);
+        }
+//        if(!patFound)  {
+//            throw new Error("Dynamic pattern: " + pat + " not found!! Make sure you have it added in setup()");
+//        }
         return this;
     }
 
@@ -322,6 +354,11 @@ public class Functional_test extends Base {
         return getHexWord(wordNr,_bitPerWord/4);
     }
 
+    @Override
+    public void _preBody() {
+        dynamicMeasurementResults = new ArrayList<IMeasurementResult>();
+    }
+
     /** Main run function for functional */
     @SuppressWarnings("null")
     @Override
@@ -351,7 +388,7 @@ public class Functional_test extends Base {
         // Run the measurement
         measurement.execute();
 
-        IMeasurementResult measurementResult = measurement.preserveResult();
+        funcResult = measurement.preserveResult();
 
         // When captured was enabled, we need to load the captured data for later processing
         // After this is done, the tester can be released
@@ -368,28 +405,37 @@ public class Functional_test extends Base {
 
         // Assume for now that if force pass is set then branching decision could be dependent on the
         // result of this test, in future add another attribute to control async processing on/off
-        if (!forcePass) {
+        if (!sync && !forcePass) {
             releaseTester();
         }
 
         if (_capture > 0) {
             _capturedData = digCapture.getSerialBitsAsBitSequence(measurement.getSignal(_pin).getDutSignalName());
         }
-
-        // Call test method process method
-        process();
-
-        if(_hasDynamicMeas) {
-            judgeAndDatalog(FUNC, dynamicMeasurementResult.hasPassed().and(measurementResult.hasPassed()));
-        } else {
-            judgeAndDatalog(FUNC, measurementResult);
-        }
     }
 
     @Override
-    public void checkParams() {
-     // Placeholder
+    public void processResults() {
+        logTrace("Functional_test", "processResults");
 
+        if(_hasDynamicMeas && dynamicMeasurementResults.size() > 0) {
+            MultiSiteBoolean dynamicPassed = null;
+            for (IMeasurementResult result: dynamicMeasurementResults) {
+                if (dynamicPassed == null) {
+                    dynamicPassed = result.hasPassed();
+                } else {
+                    dynamicPassed = dynamicPassed.and(result.hasPassed());
+                }
+            }
+            if (funcResult != null) {
+                judgeAndDatalog(FUNC, dynamicPassed.and(funcResult.hasPassed()));
+            } else {
+                judgeAndDatalog(FUNC, dynamicPassed);
+            }
+        } else {
+            if (funcResult != null) {
+                judgeAndDatalog(FUNC, funcResult);
+            }
+        }
     }
-
 }

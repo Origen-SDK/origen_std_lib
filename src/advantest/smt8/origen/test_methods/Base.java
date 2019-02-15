@@ -23,6 +23,9 @@ public class Base extends TestMethod {
     public MultiSiteLong setOnPassFlags;
     // Sites that failed will contain a '1' if forcePass has been set, otherwise undefined
     public MultiSiteLong setOnFailFlags;
+    // When set to true the tester will never be released by Origen code, though your application
+    // test method code is still free to do so if you want
+    public Boolean sync = false;
     /**
      * The log level that will be used during the execution of the TP. Change the value here to get
      * more, or less logging info
@@ -120,7 +123,17 @@ public class Base extends TestMethod {
             setOnFailFlags = new MultiSiteLong(0);
         }
 
+        // Call the internal pre body function
+        _preBody();
+
+        // Call the application test method body
         body();
+
+        // Call the application test method process method
+        process();
+
+        // Call the internal process results method
+        processResults();
     }
 
     /**
@@ -148,9 +161,16 @@ public class Base extends TestMethod {
         logTrace("Base", "run");
     }
 
+    public void _preBody() {
+        logTrace("Base", "_preBody");
+    }
     public void body() {
         logTrace("Base", "body");
         run();
+    }
+
+    public void processResults() {
+        logTrace("Base", "processResults");
     }
 
     public void judgeAndDatalog(IFunctionalTestDescriptor t, MultiSiteBoolean passed) {

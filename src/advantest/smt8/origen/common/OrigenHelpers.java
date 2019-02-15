@@ -9,6 +9,22 @@ import xoc.dta.setupaccess.IStateCharBuffer;
 
 public class OrigenHelpers{
 
+    public static boolean isEven(int number) {
+        return (number % 2) == 0;
+    }
+
+    public static boolean isOdd(int number) {
+        return (number % 2) != 0;
+    }
+
+    public static boolean isEven(long number) {
+        return (number % 2) == 0;
+    }
+
+    public static boolean isOdd(long number) {
+        return (number % 2) != 0;
+    }
+
     /**
      * String parameter to assert it's not used
      * Default value is "0"
@@ -17,9 +33,6 @@ public class OrigenHelpers{
     public static void assertNotImplStrParam(String params) {
         assertNotImplementedStringParam(new String[] {params},"0");
     }
-
-
-
 
     /**
      * Check list of string parameters to assert they are not used

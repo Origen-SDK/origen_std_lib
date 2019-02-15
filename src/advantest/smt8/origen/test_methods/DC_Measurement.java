@@ -51,6 +51,8 @@ public class DC_Measurement extends Base {
 
     static OrigenHelpers origenHelpers;
 
+    /** The result of executing the primary pattern */
+    private IMeasurementResult funcResult;
 
     @Override
     public void measure_setup() {
@@ -259,11 +261,11 @@ public class DC_Measurement extends Base {
 
         // protect results to be not overwritten
         IDigInOutActionResults actionResults = measurement.digInOut(_pin).preserveActionResults();
-        IMeasurementResult funcResult = measurement.preserveResult();
+        funcResult = measurement.preserveResult();
 
         // Assume for now that if force pass is set then branching decision could be dependent on the
         // result of this test, in future add another attribute to control async processing on/off
-        if (!forcePass) {
+        if (!sync && !forcePass) {
             releaseTester();
         }
 
@@ -286,9 +288,10 @@ public class DC_Measurement extends Base {
             _result.set(site, intermediateResult.get(site)[0]);
         }
 
-        // Call test method process
-        process();
+    }
 
+    @Override
+    public void processResults() {
         judgeAndDatalog(FUNC, funcResult);
 
         judgeAndDatalog(PAR, filterResult(_result));
