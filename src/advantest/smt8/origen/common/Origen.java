@@ -79,8 +79,6 @@ public class Origen {
     }
 
 
-
-
     /**
      * Patch data per site
      *
@@ -133,20 +131,20 @@ public class Origen {
         return dutGroup.get(0).toString();
     }
 
-    /**
-     * Debug function to display the STDF variables to check if they are properly setup
-     */
-    public static void showDieInfoFromSTDF() {
-      Long x_coord =context.testProgram().variables().getLong("STDF.X_COORD").get();
-      Long y_coord =context.testProgram().variables().getLong("STDF.Y_COORD").get();
-      String wafer_id =context.testProgram().variables().getString("STDF.WAFER_ID").get();
-      String lot_id =context.testProgram().variables().getString("STDF.LOT_ID").get();
-      String sublot_id =context.testProgram().variables().getString("STDF.SBLOT_ID").get();
-      message(Origen.LOG_DATA,"Wafer_id:" + wafer_id);
-      message(Origen.LOG_DATA,"Lot_id:" + lot_id);
-      message(Origen.LOG_DATA,"Sublot_id:" + sublot_id);
-      message(Origen.LOG_DATA,"(x,y):(" + x_coord + "," + y_coord + ")");
-    }
+//    /**
+//     * Debug function to display the STDF variables to check if they are properly setup
+//     */
+//    public static void showDieInfoFromSTDF() {
+//      MultiSiteLong x_coord =context.testProgram().variables().getLong("STDF.X_COORD");
+//      MultiSiteLong y_coord =context.testProgram().variables().getLong("STDF.Y_COORD");
+//      MultiSiteString wafer_id =context.testProgram().variables().getString("STDF.WAFER_ID");
+//      MultiSiteString lot_id =context.testProgram().variables().getString("STDF.LOT_ID");
+//      String sublot_id =context.testProgram().variables().getString("STDF.SBLOT_ID").get();
+//      message(Origen.LOG_DATA,"Wafer_id:" + wafer_id);
+//      message(Origen.LOG_DATA,"Lot_id:" + lot_id);
+//      message(Origen.LOG_DATA,"Sublot_id:" + sublot_id);
+//      message(Origen.LOG_DATA,"(x,y):(" + x_coord + "," + y_coord + ")");
+//    }
 
     /** Set the lot ID to the given value, e.g. "ABC1234" */
     public static void lotid(MultiSiteString v) {
@@ -165,6 +163,7 @@ public class Origen {
         return builder.toString();
     }
 
+
     /** Set the lot ID based on the integer representation returned from lotidInt */
     public static void lotid(MultiSiteLong v) {
         MultiSiteString lotStr = new MultiSiteString("");
@@ -175,20 +174,27 @@ public class Origen {
         lotid(lotStr);
     }
 
-    /**
-     * Get the lot ID. If it has not previously been set to a value it will be automatically queried
+      /* Get the lot ID. If it has not previously been set to a value it will be automatically queried
      * from the test system.
      */
     public static MultiSiteString lotid() {
         if (!_lotidSet) {
-            // TODO Don't know how to get LOTID in SMT8
-            // char value[CI_CPI_MAX_MODL_STRING_LEN * 2];
-            // if (!GetModelfileString(const_cast<char*>("LOT_ID"), value)) {
-            // _lotid = (string) value;
-            // } else {
-            _lotid = new MultiSiteString("Undefine");
+            MultiSiteString lot_id = context.testProgram().variables().getString("STDF.WAFER_ID"); //for use with prober
+//            MultiSiteString lot_id = new MultiSiteString("TR7T7290W55D0"); // for debug purpose
+
+
+            MultiSiteString batch_id = new MultiSiteString();
+            for (int site : context.getActiveSites())
+            {
+                String perSiteWID = lot_id.get(site); // per site string contains batch id & wafer number
+                String sBatch = perSiteWID.substring( 0, Math.min(perSiteWID.length(), 8) ); // this will give you batch id
+                batch_id.set(site, sBatch);
+                System.out.println("Wafer batch " + sBatch);
+            }
+
+            _lotid = batch_id;// store the batch number
+            _lotidSet = true;
         }
-        _lotidSet = true;
 
         return _lotid;
     }
@@ -196,19 +202,14 @@ public class Origen {
     /**
      * Returns the lot ID as a 64-bit integer that is suitable for programming to the device. Each
      * character in the lotID is converted to its ASCII code. An error will be raised if the length
-     * of the current lotID overflows 64-bits.
+     * of the current lotID overflows 64-bits.STDF.WAFER_ID
      */
     public static MultiSiteLong lotidInt() {
         MultiSiteLong tempLong = new MultiSiteLong();
         MultiSiteString lotid = lotid();
         for (int site : lotid.getActiveSites()) {
             String id = lotid.get(site);
-            // If the ID is > 8 chars then lose the upper chars, making the assuming that the lower
-            // ones are
-            // the more significant ones for the purposes of identifying a particular lot
-            if (id.length() > 8) {
-                id = id.substring(id.length() - 8, 8);
-            }
+
             // Convert each character to ascii using 2 hex (8 bytes)
             StringBuilder sb = new StringBuilder();
             char[] letters = id.toCharArray();
@@ -223,13 +224,7 @@ public class Origen {
 
     /** Set the wafer number to the given value */
     public static void wafer(MultiSiteLong valMSL) {
-        for (int site : valMSL.getActiveSites()) {
-            long val = valMSL.get(site);
-            if (val < 0 || val > 255) {
-                throw new Error("ERROR: Wafer is out of the range of a UInt8: " + val);
-            }
-            _wafer.set(site, val);
-        }
+        _wafer = valMSL;
         _waferSet = true;
     }
 
@@ -239,25 +234,27 @@ public class Origen {
      */
     public static MultiSiteLong wafer() {
         if (!_waferSet) {
-            // TODO Don't know how to get WAFER in SMT8
-//            Long x_coord =context.testProgram().variables().getLong("STDF.X_COORD").get();
-//            Long y_coord =context.testProgram().variables().getLong("STDF.Y_COORD").get();
-//            String wafer_id =context.testProgram().variables().getString("STDF.WAFER_ID").get();
-//            String lot_id =context.testProgram().variables().getString("STDF.LOT_ID").get();
-//            String sublot_id =context.testProgram().variables().getString("STDF.SBLOT_ID").get();
-//            println("Wafer_id:" + wafer_id);
-//            println("Lot_id:" + lot_id);
-//            println("Sublot_id:" + sublot_id);
-//            println("(x,y):(" + x_coord + "," + y_coord + ")");
-            // char value[CI_CPI_MAX_MODL_STRING_LEN * 2];
-            // if (!GetModelfileString(const_cast<char*>("WAFER_ID"), value)) {
-            // Expect to return something like "AB1234-15AA", where 15 is the wafer number
-            // wafer(toInt(split((string) value, '-')[1].substr(0, 2)));
-            // if (!GetModelfileString(const_cast<char*>("WAFER_NUMBER"), value)) {
-            // wafer(toInt((string) value));
-            // } else {
-            _wafer = new MultiSiteLong(66);
-            // }
+          MultiSiteString wafer_id = context.testProgram().variables().getString("STDF.WAFER_ID"); //for use with prober
+//            MultiSiteString wafer_id = new MultiSiteString("TR7T7290W55D0"); // for debug purpose
+
+            // Expect to return something like "TR7T7290W25D0)", where 25 is the wafer number
+
+            MultiSiteLong mslWnum = new MultiSiteLong(0);
+              for (int site : context.getActiveSites())
+            {
+                String perSiteWID = wafer_id.get(site); // per site string contains batch id & wafer number
+                String sWnum = perSiteWID.substring( perSiteWID.length() - 4, perSiteWID.length() - 2 ); // extracted wafer number as string
+                Long lWnum = new Long(sWnum); // wafer number in Long
+                mslWnum.set(site, lWnum);
+                System.out.println("Wafer number " + lWnum);
+            }
+
+// TBD :check for valid value
+//        if (lWnum < 1 || lWnum > 25) {
+//                  throw new Error("ERROR: Wafer is out of the range : " + mslWnum);
+//              }
+
+            _wafer = mslWnum;// store the wafer number
             _waferSet = true;
         }
         return _wafer;
@@ -265,10 +262,21 @@ public class Origen {
 
     /** Query the X and Y coordinates from the test system and set them for all sites. */
     public static void setXY() {
-     // TODO Implement this using context.testProgram().variables().getLong("STDF.X_COORD")
-//         long lx, ly;
-//         Long lx =context.testProgram().variables().getLong("STDF.X_COORD").get();
-//         Long ly =context.testProgram().variables().getLong("STDF.Y_COORD").get();
+        MultiSiteLong x_coord =context.testProgram().variables().getLong("STDF.X_COORD"); //for use with probe
+        MultiSiteLong y_coord =context.testProgram().variables().getLong("STDF.Y_COORD"); //for use with probe
+
+//        MultiSiteLong x_coord = new MultiSiteLong(99); // for debug purpose
+//        MultiSiteLong y_coord = new MultiSiteLong(101); // for debug purpose
+
+// TBD
+//        if (x_coord.lessThan(-32768) || x_coord.greaterThan(32767) ) {
+
+//             throw new NumberFormatException("Can only patch one signal at a time");
+//           cout << "ERROR: X is out of the range of an Int16: " << lx << endl;
+//           ERROR_EXIT(TM::EXIT_FLOW);
+
+//         }
+
 //         GetDiePosXYOfSite(_number, &lx, &ly);
 //         if (lx < -32768 || lx > 32767) {
 //         cout << "ERROR: X is out of the range of an Int16: " << lx << endl;
@@ -280,8 +288,10 @@ public class Origen {
 //         }
 //         _x = (int) lx;
 //         _y = (int) ly;
-        _x = new MultiSiteLong(99);
-        _y = new MultiSiteLong(101);
+
+
+        _x = x_coord;
+        _y = y_coord;
         _xSet = true;
         _ySet = true;
     }
