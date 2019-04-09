@@ -6,7 +6,7 @@
  * For each testsuite using this test method, one object of this
  * class is created.
  */
-class DCMeasurement: public Origen::TestMethod::DCMeasurement {
+class OrigenDCMeasurement: public Origen::TestMethod::DCMeasurement {
 protected:
   int  mApplyShutdown;
   string  mShutdownPattern;
@@ -106,4 +106,4 @@ protected:
           .execute();
   }
 };
-REGISTER_TESTMETHOD("DCMeasurement", DCMeasurement);
+REGISTER_TESTMETHOD("DCMeasurement", OrigenDCMeasurement);

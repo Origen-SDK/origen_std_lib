@@ -11,7 +11,7 @@ using namespace std;
  * For each testsuite using this test method, one object of this
  * class is created.
  */
-class RecordBin: public testmethod::TestMethod {
+class OrigenRecordBin: public testmethod::TestMethod {
 protected:
   int  mBin;
   int  mSoftbin;
@@ -45,4 +45,4 @@ protected:
   }
 
 };
-REGISTER_TESTMETHOD("RecordBin", RecordBin);
+REGISTER_TESTMETHOD("RecordBin", OrigenRecordBin);

@@ -1,6 +1,6 @@
 #include "origen/test_method/frequency_measurement.hpp"
 
-class FrequencyMeasurement: public Origen::TestMethod::FrequencyMeasurement {
+class OrigenFrequencyMeasurement: public Origen::TestMethod::FrequencyMeasurement {
 
 protected:                                 
   int    mPeriodBased;
@@ -59,4 +59,4 @@ protected:
             .execute();
   }
 };
-REGISTER_TESTMETHOD("FrequencyMeasurement", FrequencyMeasurement);
+REGISTER_TESTMETHOD("FrequencyMeasurement", OrigenFrequencyMeasurement);

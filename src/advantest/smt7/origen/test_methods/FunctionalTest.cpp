@@ -1,7 +1,7 @@
 #include "origen/test_method/functional_test.hpp"
 
 
-class FunctionalTest: public Origen::TestMethod::FunctionalTest {
+class OrigenFunctionalTest: public Origen::TestMethod::FunctionalTest {
 protected:
   string mPort;
 
@@ -31,4 +31,4 @@ protected:
   }
 
 };
-REGISTER_TESTMETHOD("FunctionalTest", FunctionalTest);
+REGISTER_TESTMETHOD("FunctionalTest", OrigenFunctionalTest);
