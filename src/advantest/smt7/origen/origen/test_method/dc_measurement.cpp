@@ -203,7 +203,7 @@ void DCMeasurement::serialProcessing(int site) {
 		judgeAndDatalog(testName(), filterResult(results[site]));
 
         if (_applyShutdown && _checkShutdown) {
-    		judgeAndDatalog(testName() + "_FUNCPOST", invertFunctionalResultIfRequired(funcResultsPre[site]));
+    		judgeAndDatalog(testName() + "_FUNCPOST", invertFunctionalResultIfRequired(funcResultsPost[site]));
         }
 	}
 }
