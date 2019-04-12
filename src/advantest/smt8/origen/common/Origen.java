@@ -180,7 +180,7 @@ public class Origen {
     public static MultiSiteString lotid() {
         if (!_lotidSet) {
             MultiSiteString lot_id = context.testProgram().variables().getString("STDF.WAFER_ID"); //for use with prober
-//            MultiSiteString lot_id = new MultiSiteString("TR7T7290W55D0"); // for debug purpose
+//            MultiSiteString lot_id = new MultiSiteString("TR7T7290W25D0"); // for debug purpose
 
 
             MultiSiteString batch_id = new MultiSiteString();
@@ -193,7 +193,7 @@ public class Origen {
             }
 
             _lotid = batch_id;// store the batch number
-            _lotidSet = true;
+  //          _lotidSet = true;
         }
 
         return _lotid;
@@ -255,7 +255,7 @@ public class Origen {
 //              }
 
             _wafer = mslWnum;// store the wafer number
-            _waferSet = true;
+  //          _waferSet = true;
         }
         return _wafer;
     }
@@ -265,8 +265,8 @@ public class Origen {
         MultiSiteLong x_coord =context.testProgram().variables().getLong("STDF.X_COORD"); //for use with probe
         MultiSiteLong y_coord =context.testProgram().variables().getLong("STDF.Y_COORD"); //for use with probe
 
-//        MultiSiteLong x_coord = new MultiSiteLong(99); // for debug purpose
-//        MultiSiteLong y_coord = new MultiSiteLong(101); // for debug purpose
+//        MultiSiteLong x_coord = new MultiSiteLong(90); // for debug purpose
+//        MultiSiteLong y_coord = new MultiSiteLong(100); // for debug purpose
 
 // TBD
 //        if (x_coord.lessThan(-32768) || x_coord.greaterThan(32767) ) {
@@ -292,8 +292,8 @@ public class Origen {
 
         _x = x_coord;
         _y = y_coord;
-        _xSet = true;
-        _ySet = true;
+ //       _xSet = true;
+ //       _ySet = true;
     }
 
     /**
