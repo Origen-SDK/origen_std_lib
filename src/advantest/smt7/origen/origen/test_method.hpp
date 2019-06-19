@@ -9,9 +9,7 @@
 using namespace std;
 
 namespace Origen {
-namespace TestMethod {
-
-}
+namespace TestMethod {}
 }
 
 #endif

@@ -10,38 +10,37 @@ using namespace std;
 namespace Origen {
 namespace TestMethod {
 
-class FrequencyMeasurement: public Base  {
-    void serialProcessing(int site);
+class FrequencyMeasurement : public Base {
+  void serialProcessing(int site);
 
-    int _periodBased;
-    string _pin;
-    string _port;
-    int _samples;
-    int _periodInNs;
-    int _processResults;
+  int _periodBased;
+  string _pin;
+  string _port;
+  int _samples;
+  int _periodInNs;
+  int _processResults;
 
-public:
-    FrequencyMeasurement();
-    virtual ~FrequencyMeasurement();
-    void SMC_backgroundProcessing();
+ public:
+  FrequencyMeasurement();
+  virtual ~FrequencyMeasurement();
+  void SMC_backgroundProcessing();
 
-    FrequencyMeasurement & periodBased(int v);
-    FrequencyMeasurement & pin(string v);
-    FrequencyMeasurement & port(string v);
-    FrequencyMeasurement & samples(int v);
-    FrequencyMeasurement & periodInNs(int v);
-    FrequencyMeasurement & processResults(int v);
+  FrequencyMeasurement& periodBased(int v);
+  FrequencyMeasurement& pin(string v);
+  FrequencyMeasurement& port(string v);
+  FrequencyMeasurement& samples(int v);
+  FrequencyMeasurement& periodInNs(int v);
+  FrequencyMeasurement& processResults(int v);
 
-protected:
-    typedef FrequencyMeasurement super;
-    FrequencyMeasurement & getThis();
-    void _setup();
-    void _execute();
+ protected:
+  typedef FrequencyMeasurement super;
+  FrequencyMeasurement& getThis();
+  void _setup();
+  void _execute();
 
-    string label;
-    vector<int> funcResults;
+  string label;
+  vector<int> funcResults;
 };
-
 }
 }
 #endif

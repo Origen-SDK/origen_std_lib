@@ -7,9 +7,9 @@
 #define debugger __asm__("int $3");
 #endif
 
-#include "origen/utils.hpp"
 #include "origen/helpers.hpp"
 #include "origen/site.hpp"
+#include "origen/utils.hpp"
 
 namespace Origen {
 
@@ -18,6 +18,5 @@ Utils::Version version();
 Site& site();
 Site& site(int site);
 extern bool invertFunctionalResults;
-
 }
 #endif

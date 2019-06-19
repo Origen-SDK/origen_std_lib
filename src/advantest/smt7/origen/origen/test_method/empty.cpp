@@ -3,13 +3,11 @@
 namespace Origen {
 namespace TestMethod {
 
+Empty::Empty() {}
 
-Empty::Empty() { }
-
-Empty::~Empty() { }
+Empty::~Empty() {}
 
 // All test methods must implement this function
-Empty & Empty::getThis() { return *this; }
-
+Empty& Empty::getThis() { return *this; }
 }
 }

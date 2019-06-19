@@ -4,9 +4,7 @@
 #include "utils/version.hpp"
 
 namespace Origen {
-namespace Utils {
-
-}
+namespace Utils {}
 }
 
 #endif

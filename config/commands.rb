@@ -13,6 +13,12 @@ aliases ={
 # Now branch to the specific task code
 case @command
 
+when "format"
+  Dir.glob("#{Origen.root}/src/**/*.{cpp,hpp}").each do |f|
+    system "clang-format -i #{f}"
+  end
+  exit 0
+
 ## Example of how to make a command to run unit tests, this simply invokes RSpec on
 ## the spec directory
 #when "specs"
@@ -55,6 +61,7 @@ else
   # before handing control back to Origen. Un-comment the example below to get started.
   @application_commands = <<-EOT
  examples     Run the examples (tests), -c will enable coverage
+ format       Format/prettify the library source files (requires clang-format to be available)
   EOT
 
 end 

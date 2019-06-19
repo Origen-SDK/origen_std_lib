@@ -3,7 +3,8 @@
 
 // GCC adds these macros by default, which clobbers our functions
 // of the same name
-#if (defined(__GNUC__) || defined(__GNUG__)) && !(defined(__clang__) || defined(__INTEL_COMPILER))
+#if (defined(__GNUC__) || defined(__GNUG__)) && \
+    !(defined(__clang__) || defined(__INTEL_COMPILER))
 // Not exactly sure the version that this becomes a problem, but for
 // now this fixes the build on the V93K production system
 #if (__GNUC_MINOR__ > 1)
@@ -37,27 +38,25 @@ namespace Utils {
 //     // Do something
 //   }
 class Version {
+ private:
+  vector<int> parse(string ver);
+  int _major;
+  int _minor;
+  int _tiny;
 
-private:
-    vector<int> parse(string ver);
-    int _major;
-    int _minor;
-    int _tiny;
-
-public:
-    int major();
-    int minor();
-    int tiny();
-    Version(string ver);
-    bool operator==(string rhs);
-    bool operator!=(string rhs);
-    bool operator<(string rhs);
-    bool operator<=(string rhs);
-    bool operator>(string rhs);
-    bool operator>=(string rhs);
-    string str();
+ public:
+  int major();
+  int minor();
+  int tiny();
+  Version(string ver);
+  bool operator==(string rhs);
+  bool operator!=(string rhs);
+  bool operator<(string rhs);
+  bool operator<=(string rhs);
+  bool operator>(string rhs);
+  bool operator>=(string rhs);
+  string str();
 };
-
 }
 }
 

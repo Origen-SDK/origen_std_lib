@@ -10,18 +10,15 @@ using namespace std;
 namespace Origen {
 namespace TestMethod {
 
-class Empty: public Base  {
+class Empty : public Base {
+ public:
+  Empty();
+  virtual ~Empty();
 
-public:
-    Empty();
-    virtual ~Empty();
-
-protected:
-    typedef Empty super;
-    Empty & getThis();
+ protected:
+  typedef Empty super;
+  Empty& getThis();
 };
-
-
 }
 }
 #endif

@@ -1,8 +1,8 @@
-/** @file */ 
-#include "../helpers.hpp"
-#include <cerrno>
+/** @file */
 #include <stdlib.h>
+#include <cerrno>
 #include "../../origen.hpp"
+#include "../helpers.hpp"
 
 using namespace std;
 
@@ -18,13 +18,12 @@ static int _minute;
 static int _second;
 
 static time_t rawtime;
-static struct tm * timeinfo;
-
+static struct tm* timeinfo;
 
 void initTime(bool reset) {
   if ((!timeSet) || reset) {
-    time (&rawtime);
-    timeinfo = localtime (&rawtime);
+    time(&rawtime);
+    timeinfo = localtime(&rawtime);
     _month = (timeinfo->tm_mon + 1);
     _day = timeinfo->tm_mday;
     _hour = timeinfo->tm_hour;
@@ -36,32 +35,30 @@ void initTime(bool reset) {
 
 /// Get the Month.
 int month() {
-  initTime();    // set the time if not already
+  initTime();  // set the time if not already
   return _month;
 }
 
 /// Get the Day.
 int day() {
-  initTime();    // set the time if not already
+  initTime();  // set the time if not already
   return _day;
 }
 /// Get the Hour.
 int hour() {
-  initTime();    // set the time if not already
+  initTime();  // set the time if not already
   return _hour;
 }
 /// Get the Minute.
 int minute() {
-  initTime();    // set the time if not already
+  initTime();  // set the time if not already
   return _minute;
 }
 /// Get the Second.
 int second() {
-  initTime();    // set the time if not already
+  initTime();  // set the time if not already
   return _second;
 }
-   
+
 }  // end namespace Time
 }  // end namespace Origen
-
-

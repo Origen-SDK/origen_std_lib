@@ -1,24 +1,18 @@
-/** @file */ 
+/** @file */
 #include "origen.hpp"
 
 namespace Origen {
 
 Utils::Version version() {
-    Utils::Version v(ORIGEN_VERSION);
-    return v;
+  Utils::Version v(ORIGEN_VERSION);
+  return v;
 }
 
 vector<Site> Sites;
 
+Site& site() { return Sites[CURRENT_SITE_NUMBER()]; }
 
-Site& site() {
-    return Sites[CURRENT_SITE_NUMBER()];
-}
-
-Site& site(int site) {
-    return Sites[site];
-}
+Site& site(int site) { return Sites[site]; }
 
 bool invertFunctionalResults = false;
-
 }
