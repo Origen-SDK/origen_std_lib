@@ -22,9 +22,10 @@ public class Base extends TestMethod {
   public MultiSiteLong setOnPassFlags;
   // Sites that failed will contain a '1' if forcePass has been set, otherwise undefined
   public MultiSiteLong setOnFailFlags;
-  // When set to true the tester will never be released by Origen code, though your application
-  // test method code is still free to do so if you want
-  public Boolean sync = false;
+  // When true, the tester will be released by Origen code as soon as possible, when false
+  // the tester will never be released by Origen code (though your application test method
+  // code is still free to do so if you want)
+  public Boolean async = false;
   /**
    * The log level that will be used during the execution of the TP. Change the value here to get
    * more, or less logging info
