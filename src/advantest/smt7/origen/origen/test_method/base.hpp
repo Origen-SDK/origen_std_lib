@@ -104,9 +104,6 @@ class Base : public testmethod::TestMethod {
   }
 
   void callPreBody() {
-    if (syncup()) {
-      synchronize();
-    }
     preBody();
     FOR_EACH_SITE_BEGIN();
     preBody(CURRENT_SITE_NUMBER());

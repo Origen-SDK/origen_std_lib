@@ -5,7 +5,7 @@ using namespace std;
 namespace Origen {
 namespace TestMethod {
 
-Base::Base() { syncup(false); }
+Base::Base() { }
 
 Base::~Base() {}
 

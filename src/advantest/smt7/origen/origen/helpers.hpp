@@ -14,7 +14,6 @@ namespace Origen {
 
 string extractPinsFromGroup(const string&);
 bool pinExists(const string& pinName);
-void synchronize(double = 1);
 double calculateFrequency(const ARRAY_I&, double);
 double calculatePeriod(const ARRAY_I&, double);
 void overlaySubroutineOutput(string, string, uint64_t, int, int, int);
