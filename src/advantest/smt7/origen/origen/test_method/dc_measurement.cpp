@@ -203,46 +203,53 @@ void DCMeasurement::_execute() {
 
   RDI_END();
 
-  FOR_EACH_SITE_BEGIN();
-  site = CURRENT_SITE_NUMBER();
-  funcResultsPre[site] = rdi.id(suiteName + "f1").getPassFail();
-  if (_applyShutdown)
-    funcResultsPost[site] = rdi.id(suiteName + "f2").getPassFail();
-  // TODO: This retrieval needs to move to the SMC func in the async case
-  if (offline()) {
-    double dHigh(0), dLow(0);
-    TM::COMPARE cHigh, cLow;
-    testLimits().TEST_API_LIMIT.get(cLow, dLow, cHigh, dHigh);
-
-    if (cLow != TM::NA && cHigh != TM::NA) {
-      results[site] = ((dHigh - dLow) / 2) + dLow;
-    } else if (cLow != TM::NA) {
-      results[site] = dLow;
-    } else if (cHigh != TM::NA) {
-      results[site] = dHigh;
-    } else {
-      results[site] = 0;
-    }
-
-  } else {
-    results[site] = rdi.id(suiteName).getValue();
+  if (!async()) {
+    FOR_EACH_SITE_BEGIN();
+    _fetchResults(CURRENT_SITE_NUMBER());
+    FOR_EACH_SITE_END();
   }
 
-  FOR_EACH_SITE_END();
-
   ON_FIRST_INVOCATION_END();
+}
+
+void DCMeasurement::_fetchResults(int site) {
+  funcResultsPre[site] = rdi.id(suiteName + "f1").getPassFail();
+  if (_applyShutdown) {
+    funcResultsPost[site] = rdi.id(suiteName + "f2").getPassFail();
+  }
+  // TODO: This retrieval needs to move to the SMC func in the async case
+  //	if (offline()) {
+  //		double dHigh(0), dLow(0);
+  //		TM::COMPARE cHigh, cLow;
+  //		testLimits().TEST_API_LIMIT.get(cLow, dLow, cHigh, dHigh);
+  //
+  //		if (cLow != TM::NA && cHigh != TM::NA) {
+  //			results[site] = ((dHigh - dLow) / 2) + dLow;
+  //		} else if (cLow != TM::NA) {
+  //			results[site] = dLow;
+  //		} else if (cHigh != TM::NA) {
+  //			results[site] = dHigh;
+  //		} else {
+  //			results[site] = 0;
+  //		}
+  //
+  //	} else {
+  results[site] = rdi.id(suiteName).getValue();
+  //	}
 }
 
 void DCMeasurement::serialProcessing(int site) {
   if (_processResults) {
     judgeAndDatalog(testName() + "_FUNCPRE",
-                    invertFunctionalResultIfRequired(funcResultsPre[site]));
+                    invertFunctionalResultIfRequired(funcResultsPre[site]),
+                    site);
 
-    judgeAndDatalog(testName(), filterResult(results[site]));
+    judgeAndDatalog(testName(), filterResult(results[site]), site);
 
     if (_applyShutdown && _checkShutdown) {
       judgeAndDatalog(testName() + "_FUNCPOST",
-                      invertFunctionalResultIfRequired(funcResultsPost[site]));
+                      invertFunctionalResultIfRequired(funcResultsPost[site]),
+                      site);
     }
   }
 }
@@ -250,16 +257,9 @@ void DCMeasurement::serialProcessing(int site) {
 void DCMeasurement::SMC_backgroundProcessing() {
   for (int i = 0; i < activeSites.size(); i++) {
     int site = activeSites[i];
+    _fetchResults(site);
     process(site);
-    if (_processResults) {
-      SMC_TEST(site, "", suiteName, LIMIT(TM::GE, 1, TM::LE, 1),
-               funcResultsPre[site]);
-      if (_applyShutdown && _checkShutdown)
-        SMC_TEST(site, "", suiteName, LIMIT(TM::GE, 1, TM::LE, 1),
-                 funcResultsPost[site]);
-      SMC_TEST(site, _pin, suiteName, testLimits().TEST_API_LIMIT,
-               filterResult(results[site]));
-    }
+    serialProcessing(site);
   }
 }
 }

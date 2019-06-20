@@ -5,10 +5,7 @@ using namespace std;
 namespace Origen {
 namespace TestMethod {
 
-Base::Base() {
-  async(false);
-  syncup(false);
-}
+Base::Base() { syncup(false); }
 
 Base::~Base() {}
 
@@ -27,6 +24,11 @@ void Base::initialize() {
                testmethod::TM_PARAMETER_INPUT);
   addParameter("onFailFlag", "string", &_onFailFlag,
                testmethod::TM_PARAMETER_INPUT);
+  addParameter("async", "int", &_async, testmethod::TM_PARAMETER_INPUT)
+      .setDefault(0)
+      .setComment(
+          "When true, background processing of the results of this test will "
+          "be enabled");
 
   bFirstRun = true;
 
@@ -40,8 +42,6 @@ void Base::run() {
 
   ON_FIRST_INVOCATION_BEGIN();
 
-  enableHiddenUpload();
-
   GET_ACTIVE_SITES(activeSites);
   numberOfPhysicalSites = GET_CONFIGURED_SITES(sites);
   GET_TESTSUITE_NAME(suiteName);
@@ -50,6 +50,8 @@ void Base::run() {
   _setup();
 
   callPreBody();
+
+  enableHiddenUpload();
 
   ON_FIRST_INVOCATION_END();
 
@@ -87,10 +89,14 @@ void Base::datalog(string testName, double value) {
 }
 
 void Base::judgeAndDatalog(double value) {
-  bool alreadyFailed = suiteFailed[CURRENT_SITE_NUMBER()];
+  judgeAndDatalog(value, CURRENT_SITE_NUMBER());
+}
+
+void Base::judgeAndDatalog(double value, int site) {
+  bool alreadyFailed = suiteFailed[site];
 
   if (!alreadyFailed) {
-    suiteFailed[CURRENT_SITE_NUMBER()] = !preJudge(value);
+    suiteFailed[site] = !preJudge(value);
   }
 
   TESTSET()
@@ -102,17 +108,20 @@ void Base::judgeAndDatalog(double value) {
           value);
 
   // Preserve the first bin assigned within this test suite as the final one
-  if ((!alreadyFailed) && (!_forcePass) &&
-      (suiteFailed[CURRENT_SITE_NUMBER()])) {
+  if ((!alreadyFailed) && (!_forcePass) && (suiteFailed[site])) {
     SET_MULTIBIN(testLimits().BinsNumString, testLimits().BinhNum);
   }
 }
 
 void Base::judgeAndDatalog(string testName, double value) {
-  bool alreadyFailed = suiteFailed[CURRENT_SITE_NUMBER()];
+  judgeAndDatalog(testName, value, CURRENT_SITE_NUMBER());
+}
+
+void Base::judgeAndDatalog(string testName, double value, int site) {
+  bool alreadyFailed = suiteFailed[site];
 
   if (!alreadyFailed) {
-    suiteFailed[CURRENT_SITE_NUMBER()] = !preJudge(testName, value);
+    suiteFailed[site] = !preJudge(testName, value);
   }
 
   TESTSET()
@@ -125,8 +134,7 @@ void Base::judgeAndDatalog(string testName, double value) {
           value);
 
   // Preserve the first bin assigned within this test suite as the final one
-  if ((!alreadyFailed) && (!_forcePass) &&
-      (suiteFailed[CURRENT_SITE_NUMBER()])) {
+  if ((!alreadyFailed) && (!_forcePass) && (suiteFailed[site])) {
     SET_MULTIBIN(testLimits().BinsNumString, testLimits().BinhNum);
   }
 }

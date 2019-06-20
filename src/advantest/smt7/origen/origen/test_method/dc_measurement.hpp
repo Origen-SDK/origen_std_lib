@@ -47,6 +47,7 @@ class DCMeasurement : public Base {
   DCMeasurement& getThis();
   void _setup();
   void _execute();
+  void _fetchResults(int site);
 
   string label;
   vector<int> funcResultsPre;

@@ -43,6 +43,7 @@ class FunctionalTest : public Base {
   ARRAY_I capturedData(int);
   void _setup();
   void _execute();
+  void _fetchResults(int site);
 
   string label;
   vector<int> results;

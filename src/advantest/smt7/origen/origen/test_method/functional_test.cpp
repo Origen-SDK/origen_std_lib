@@ -83,6 +83,7 @@ void FunctionalTest::_execute() {
 
   if (_capture) {
     if (_port.empty()) {
+      rdi.burstId(suiteName + "b");
       SMART_RDI::DIG_CAP& prdi = rdi.digCap(suiteName)
                                      .label(label)
                                      .pin(pinName)
@@ -92,6 +93,7 @@ void FunctionalTest::_execute() {
       prdi.execute();
 
     } else {
+      rdi.burstId(suiteName + "b");
       SMART_RDI::DIG_CAP& prdi = rdi.port(_port)
                                      .digCap(suiteName)
                                      .vecVarOnly()
@@ -117,19 +119,21 @@ void FunctionalTest::_execute() {
 
   RDI_END();
 
-  FOR_EACH_SITE_BEGIN();
-  site = CURRENT_SITE_NUMBER();
-  if (_capture) {
-    results[site] = rdi.site(site).getBurstPassFail();
-    //        	cout << "PRE " << site << ": " << results[site] << endl;
-
-  } else {
-    results[site] = rdi.site(site).id(suiteName).getPassFail();
-    //            cout << "PRE " << site << ": " << results[site] << endl;
+  if (!async()) {
+    FOR_EACH_SITE_BEGIN();
+    _fetchResults(CURRENT_SITE_NUMBER());
+    FOR_EACH_SITE_END();
   }
-  FOR_EACH_SITE_END();
 
   ON_FIRST_INVOCATION_END();
+}
+
+void FunctionalTest::_fetchResults(int site) {
+  if (_capture) {
+    results[site] = rdi.id(suiteName + "b").getBurstPassFail();
+  } else {
+    results[site] = rdi.id(suiteName).getPassFail();
+  }
 }
 
 /// Returns the captured data for the site currently in focus
@@ -146,9 +150,9 @@ void FunctionalTest::serialProcessing(int site) {
   if (_processResults) {
     if (_testNameOverride != "") {
       judgeAndDatalog(_testNameOverride,
-                      invertFunctionalResultIfRequired(results[site]));
+                      invertFunctionalResultIfRequired(results[site]), site);
     } else {
-      judgeAndDatalog(invertFunctionalResultIfRequired(results[site]));
+      judgeAndDatalog(invertFunctionalResultIfRequired(results[site]), site);
     }
   }
   _testNameOverride = "";
@@ -157,11 +161,9 @@ void FunctionalTest::serialProcessing(int site) {
 void FunctionalTest::SMC_backgroundProcessing() {
   for (int i = 0; i < activeSites.size(); i++) {
     int site = activeSites[i];
+    _fetchResults(site);
     process(site);
-    if (_processResults) {
-      SMC_TEST(site, "", suiteName, LIMIT(TM::GE, 1, TM::LE, 1),
-               results[activeSites[i]]);
-    }
+    serialProcessing(site);
   }
 }
 }

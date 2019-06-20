@@ -11,21 +11,9 @@ namespace Origen {
 namespace TestMethod {
 
 class Base : public testmethod::TestMethod {
-  bool _async;
-  bool _syncup;
-
  public:
   Base();
   virtual ~Base();
-
-  Base& async(bool v) {
-    _async = v;
-    return *this;
-  }
-  Base& syncup(bool v) {
-    _syncup = v;
-    return *this;
-  }
 
   void execute() { _execute(); }
 
@@ -41,6 +29,7 @@ class Base : public testmethod::TestMethod {
   int _forcePass;
   string _onPassFlag;
   string _onFailFlag;
+  bool _async;
 
   int offline();
   void initialize();
@@ -52,7 +41,9 @@ class Base : public testmethod::TestMethod {
   void datalog(double);
   void datalog(string, double);
   void judgeAndDatalog(double);
+  void judgeAndDatalog(double, int);
   void judgeAndDatalog(string, double);
+  void judgeAndDatalog(string, double, int);
   bool preJudge(double);
   bool preJudge(string, double);
   string testName();
@@ -93,9 +84,7 @@ class Base : public testmethod::TestMethod {
 
   // Called immediately before the final result processing. If the test is
   // configured for async
-  // processing then this will be called later in the background. Contrast this
-  // with the
-  // postTestFunc which will be called before the main test body completes.
+  // processing then this will be called later in the background.
   virtual void process(int site) {}
 
   // Called before the main test result is judged, giving a chance to transform
@@ -103,7 +92,6 @@ class Base : public testmethod::TestMethod {
   virtual double filterResult(double result) { return result; }
 
   virtual bool async() { return _async; }
-  virtual bool syncup() { return _syncup; }
 
   virtual void serialProcessing(int site){};
 
@@ -142,7 +130,7 @@ class Base : public testmethod::TestMethod {
     ON_FIRST_INVOCATION_END();
 
     if (async()) {
-      SMC_ARM_internal(obj);
+      SMC_ARM();
     } else {
       process(CURRENT_SITE_NUMBER());
       this->serialProcessing(CURRENT_SITE_NUMBER());
