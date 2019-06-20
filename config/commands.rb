@@ -17,6 +17,8 @@ when "format"
   Dir.glob("#{Origen.root}/src/**/*.{cpp,hpp}").each do |f|
     system "clang-format -i #{f}"
   end
+  java_files = Dir.glob("#{Origen.root}/src/**/*.java")
+  system "java -jar vendor/google-java-format-1.7-all-deps.jar --replace #{java_files.join(' ')}"
   exit 0
 
 ## Example of how to make a command to run unit tests, this simply invokes RSpec on
@@ -61,7 +63,7 @@ else
   # before handing control back to Origen. Un-comment the example below to get started.
   @application_commands = <<-EOT
  examples     Run the examples (tests), -c will enable coverage
- format       Format/prettify the library source files (requires clang-format to be available)
+ format       Format/prettify the library source files (requires clang-format and java to be available)
   EOT
 
 end 
