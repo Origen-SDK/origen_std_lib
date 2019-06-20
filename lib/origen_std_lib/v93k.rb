@@ -8,7 +8,8 @@ module OrigenStdLib
                 test_name:    [:string, ''],
                 force_pass:   [:boolean, false],
                 on_pass_flag: [:string, ''],
-                on_fail_flag: [:string, '']
+                on_fail_flag: [:string, ''],
+                async:        [:boolean, false]
               },
 
               dc_measurement:        {
@@ -28,6 +29,7 @@ module OrigenStdLib
                 force_pass:       [:boolean, false],
                 on_pass_flag:     [:string, ''],
                 on_fail_flag:     [:string, ''],
+                async:            [:boolean, false],
 
                 methods:          {
                   finalize: lambda  do |tm|
@@ -57,7 +59,8 @@ module OrigenStdLib
                 test_name:    [:string, ''],
                 force_pass:   [:boolean, false],
                 on_pass_flag: [:string, ''],
-                on_fail_flag: [:string, '']
+                on_fail_flag: [:string, ''],
+                async:        [:boolean, false]
               },
 
               record_bin:            {
