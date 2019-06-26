@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    origen_std_lib (0.10.1)
+    origen_std_lib (0.11.0)
       origen (>= 0.7.34)
       origen_testers (>= 0.31.0)
 
