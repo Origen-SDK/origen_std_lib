@@ -29,7 +29,8 @@ class Base : public testmethod::TestMethod {
   int _forcePass;
   string _onPassFlag;
   string _onFailFlag;
-  bool _async;
+  int _async;
+  int _offline;
 
   int offline();
   void initialize();

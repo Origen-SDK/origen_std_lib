@@ -11,9 +11,7 @@ Base::~Base() {}
 
 /// Returns 1 when running in offline mode
 int Base::offline() {
-  int flag;
-  GET_SYSTEM_FLAG("offline", &flag);
-  return flag;
+  return _offline;
 }
 
 void Base::initialize() {
@@ -25,7 +23,7 @@ void Base::initialize() {
   addParameter("onFailFlag", "string", &_onFailFlag,
                testmethod::TM_PARAMETER_INPUT);
   addParameter("async", "int", &_async, testmethod::TM_PARAMETER_INPUT)
-      .setDefault(0)
+      .setDefault("0")
       .setComment(
           "When true, background processing of the results of this test will "
           "be enabled");
@@ -37,6 +35,8 @@ void Base::initialize() {
 
 void Base::run() {
   ARRAY_I sites;
+
+  GET_SYSTEM_FLAG("offline", &_offline);
 
   RDI_INIT();
 
