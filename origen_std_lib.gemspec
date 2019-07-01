@@ -25,5 +25,5 @@ Gem::Specification.new do |spec|
 
   # Add any gems that your plugin needs to run within a host application
   spec.add_runtime_dependency "origen", ">= 0.7.34"
-  spec.add_runtime_dependency "origen_testers", ">= 0.8.1"
+  spec.add_runtime_dependency "origen_testers", ">= 0.31.0"
 end
