@@ -51,7 +51,7 @@ GEM
     nanoc (3.7.5)
       cri (~> 2.3)
     net-ldap (0.16.1)
-    nokogiri (1.10.3)
+    nokogiri (1.10.5)
       mini_portile2 (~> 2.4.0)
     origen (0.52.2)
       activesupport (~> 4.1)
