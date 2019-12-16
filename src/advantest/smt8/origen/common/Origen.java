@@ -39,11 +39,11 @@ public class Origen {
   private static MultiSiteLong _y;
   private static boolean _ySet;
 
-  private static MultiSiteLong _blockCycles;
-  private static boolean _blockCyclesSet;
+  // private static MultiSiteLong _blockCycles;
+  //private static boolean _blockCyclesSet;
 
-  private static MultiSiteLong _pageCycles;
-  private static boolean _pageCyclesSet;
+  //private static MultiSiteLong _pageCycles;
+  //private static boolean _pageCyclesSet;
 
   public static ITestContext context;
   public static IMeasurement meas;
