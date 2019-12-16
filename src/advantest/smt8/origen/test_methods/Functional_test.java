@@ -37,10 +37,11 @@ public class Functional_test extends Base {
   private String _pattern;
 
   /** Testname to override */
+  @SuppressWarnings("unused")
   private String _testNameOverride;
 
   /** The result of executing the primary pattern */
-  private IMeasurementResult funcResult;
+  public IMeasurementResult funcResult;
 
   private MultiSiteBitSequence _capturedData;
 
@@ -57,9 +58,9 @@ public class Functional_test extends Base {
   /** The measurement that is only used dynamic pattern switching */
   public IMeasurement dynamicPatMeas;
 
-  ArrayList<IMeasurementResult> dynamicMeasurementResults;
+  public ArrayList<IMeasurementResult> dynamicMeasurementResults;
 
-  boolean _hasDynamicMeas = false;
+  public boolean _hasDynamicMeas = false;
 
   /** The list of patterns to patch */
   List<String> patchList;
@@ -109,11 +110,24 @@ public class Functional_test extends Base {
     return this;
   }
 
+  //overload for full path pattern. Boolean not used at the moment
+  public Functional_test overlaySubroutinePerSite(String subroutinePattern,
+          MultiSiteLong decData, String pin, int size, Boolean FullPathPattern ) {
+    Origen.overlaySubroutinePerSite(subroutinePattern, pin, decData, size);
+    return this;
+  }
+
   public Functional_test overlaySubroutineAllSites(
       String subroutinePattern, long decData, int size) {
     Origen.overlaySubroutineAllSites(
         "C402TNVMTester.patterns." + subroutinePattern, "NVM_DIN_PIN", decData, size);
     return this;
+  }
+
+  //overload for full path pattern. Boolean not used at the moment
+  public Functional_test overlaySubroutineAllSites(String subroutinePattern, long decData, String pin, int size, Boolean FullPathPattern) {
+      Origen.overlaySubroutineAllSites(subroutinePattern, pin, decData, size);
+      return this;
   }
 
   /**
@@ -388,10 +402,11 @@ public class Functional_test extends Base {
     logTrace("Functional_test", "run");
     super.run();
 
+//  TODO - EP - with SMT 8.2.3 - xoc.dta.UncheckedDTAException: Pattern can only be set in setup().
     // Check if we need to override the pattern name
-    if (_pattern != "") {
-      measurement.setPatternName(_pattern);
-    }
+//    if (_pattern != "") {
+//      measurement.setPatternName(_pattern);
+//    }
 
     // Check if we need to capture anything
     // When capture is enabled, we have to disable the cyclePassFail
