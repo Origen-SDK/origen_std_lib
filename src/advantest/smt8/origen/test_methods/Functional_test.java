@@ -110,11 +110,11 @@ public class Functional_test extends Base {
     return this;
   }
 
-  //overload for full path pattern (from PGM_SOC_DATA) Boolean not used at the moment
+  //overload for full path pattern. Boolean not used at the moment
   public Functional_test overlaySubroutinePerSite(String subroutinePattern,
-          MultiSiteLong decData, int size, Boolean FullPathPattern ) {
-      Origen.overlaySubroutinePerSite(subroutinePattern,"NVM_DIN_PIN", decData, size);
-      return this;
+          MultiSiteLong decData, String pin, int size, Boolean FullPathPattern ) {
+    Origen.overlaySubroutinePerSite(subroutinePattern, pin, decData, size);
+    return this;
   }
 
   public Functional_test overlaySubroutineAllSites(
@@ -124,9 +124,9 @@ public class Functional_test extends Base {
     return this;
   }
 
-  //overload for full path pattern (from PGM_SOC_DATA) Boolean not used at the moment
-  public Functional_test overlaySubroutineAllSites(String subroutinePattern, long decData,int size, Boolean FullPathPattern) {
-      Origen.overlaySubroutineAllSites(subroutinePattern, "NVM_DIN_PIN", decData, size);
+  //overload for full path pattern. Boolean not used at the moment
+  public Functional_test overlaySubroutineAllSites(String subroutinePattern, long decData, String pin, int size, Boolean FullPathPattern) {
+      Origen.overlaySubroutineAllSites(subroutinePattern, pin, decData, size);
       return this;
   }
 
