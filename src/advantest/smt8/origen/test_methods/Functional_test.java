@@ -34,6 +34,7 @@ public class Functional_test extends Base {
   private int _bitPerWord;
 
   /** Pattern name */
+  @SuppressWarnings("unused")
   private String _pattern;
 
   /** Testname to override */
@@ -455,13 +456,9 @@ public class Functional_test extends Base {
     logTrace("Functional_test", "processResults");
 
     if (_hasDynamicMeas && dynamicMeasurementResults.size() > 0) {
-      MultiSiteBoolean dynamicPassed = null;
+      MultiSiteBoolean dynamicPassed = new MultiSiteBoolean(dynamicMeasurementResults.get(0).hasPassed());
       for (IMeasurementResult result : dynamicMeasurementResults) {
-        if (dynamicPassed == null) {
-          dynamicPassed = result.hasPassed();
-        } else {
-          dynamicPassed = dynamicPassed.and(result.hasPassed());
-        }
+              dynamicPassed = dynamicPassed.and(result.hasPassed());
       }
       if (funcResult != null) {
         judgeAndDatalog(FUNC, dynamicPassed.and(funcResult.hasPassed()));
