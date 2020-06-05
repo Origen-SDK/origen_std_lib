@@ -263,7 +263,7 @@ public class DC_Measurement extends Base {
 
     // Assume for now that if force pass is set then branching decision could be dependent on the
     // result of this test, in future add another attribute to control async processing on/off
-    if (!sync && !forcePass) {
+    if (!sync_par && !forcePass) {
       releaseTester();
     }
 

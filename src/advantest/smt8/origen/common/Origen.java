@@ -165,10 +165,12 @@ public class Origen {
    */
   public static MultiSiteString lotid() {
     if (!_lotidSet) {
-      MultiSiteString lot_id =
-          context.testProgram().variables().getString("STDF.WAFER_ID"); // for use with prober
-      //            MultiSiteString lot_id = new MultiSiteString("TR7T7290W25D0"); // for debug
-      // purpose
+
+      MultiSiteString lot_id = new MultiSiteString("TR7T7290W25D0");
+
+      if(!context.testProgram().variables().getString("mi8_recipe_version").get().isEmpty()) {
+          lot_id = context.testProgram().variables().getString("STDF.WAFER_ID"); //for use with prober
+      }
 
       MultiSiteString batch_id = new MultiSiteString();
       for (int site : context.getActiveSites()) {
@@ -222,12 +224,13 @@ public class Origen {
    */
   public static MultiSiteLong wafer() {
     if (!_waferSet) {
-      MultiSiteString wafer_id =
-          context.testProgram().variables().getString("STDF.WAFER_ID"); // for use with prober
-      //            MultiSiteString wafer_id = new MultiSiteString("TR7T7290W55D0"); // for debug
-      // purpose
+ 
+      MultiSiteString wafer_id = new MultiSiteString("TR7T7290W55D0");
 
-      // Expect to return something like "TR7T7290W25D0)", where 25 is the wafer number
+      if(!context.testProgram().variables().getString("mi8_recipe_version").get().isEmpty()) {
+          wafer_id = context.testProgram().variables().getString("STDF.WAFER_ID"); //for use with prober
+          // Expect to return something like "TR7T7290W25D0)", where 25 is the wafer number
+      }
 
       MultiSiteLong mslWnum = new MultiSiteLong(0);
       for (int site : context.getActiveSites()) {
@@ -254,10 +257,14 @@ public class Origen {
 
   /** Query the X and Y coordinates from the test system and set them for all sites. */
   public static void setXY() {
-    MultiSiteLong x_coord =
-        context.testProgram().variables().getLong("STDF.X_COORD"); // for use with probe
-    MultiSiteLong y_coord =
-        context.testProgram().variables().getLong("STDF.Y_COORD"); // for use with probe
+
+    MultiSiteLong x_coord = new MultiSiteLong(90); // for debug purpose
+    MultiSiteLong y_coord = new MultiSiteLong(100); // for debug purpose
+
+    if(!context.testProgram().variables().getString("mi8_recipe_version").get().isEmpty()) {
+        x_coord =context.testProgram().variables().getLong("STDF.X_COORD"); //for use with probe
+        y_coord =context.testProgram().variables().getLong("STDF.Y_COORD"); //for use with probe
+    }
 
     //        MultiSiteLong x_coord = new MultiSiteLong(90); // for debug purpose
     //        MultiSiteLong y_coord = new MultiSiteLong(100); // for debug purpose

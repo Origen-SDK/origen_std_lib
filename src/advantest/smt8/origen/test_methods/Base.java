@@ -24,7 +24,7 @@ public class Base extends TestMethod {
   public MultiSiteLong setOnFailFlags;
   // When set to true the tester will never be released by Origen code, though your application
   // test method code is still free to do so if you want
-  public Boolean sync = false;
+  public Boolean sync_par = false;
   /**
    * The log level that will be used during the execution of the TP. Change the value here to get
    * more, or less logging info
