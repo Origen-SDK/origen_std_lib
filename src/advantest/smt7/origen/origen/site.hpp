@@ -2,6 +2,7 @@
 #define ORIGEN_SITE_HPP_
 
 #include <string>
+#include <inttypes.h>
 using namespace std;
 
 namespace Origen {
