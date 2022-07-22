@@ -152,7 +152,7 @@ GEM
       sync
     treetop (1.6.11)
       polyglot (~> 0.3)
-    tzinfo (1.2.7)
+    tzinfo (1.2.10)
       thread_safe (~> 0.1)
     yard (0.9.25)
 
